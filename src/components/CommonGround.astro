@@ -1,6 +1,6 @@
 ---
 // Figures for 005 · Common Ground. Original, illustrative plan and schedules; not an architectural drawing.
-import { buildIso, iso, ISO, skylights } from './cg/isoBuilding';
+import { buildIso, iso, ISO, skylights, DEFS } from './cg/isoBuilding';
 const zones = [
   { id: 'hall', n: 'The Nature Hall', who: 'Children · elders watch and join', x: 330, y: 150, w: 340, h: 270, c: '#E8A33D',
     t: 'An indoor play landscape built from natural materials: boulders, logs, sand and tree-trunk columns, under a ring of clerestory windows and skylights so children see the sky, clouds and weather while staying indoors. Low benches along the edges invite older adults to watch, cheer and join in.',
@@ -32,7 +32,12 @@ const zones = [
 ];
 const isoSvg = buildIso();
 const zonePoly = (z: { x: number; y: number; w: number; h: number }) => [iso(z.x, z.y), iso(z.x + z.w, z.y), iso(z.x + z.w, z.y + z.h), iso(z.x, z.y + z.h)].map((p) => p.map((v) => v.toFixed(1)).join(',')).join(' ');
-const labelAt = (z: { x: number; y: number }) => iso(z.x + 6, z.y + 6, 0);
+const callouts = zones.map((z, i) => {
+  const cx = z.x + z.w / 2, cy = z.y + z.h / 2;
+  const base = iso(cx, cy, 0), lift = z.id === 'yard' ? 34 : z.id === 'hall' ? 96 : 46;
+  const tag = iso(cx, cy, lift);
+  return { ...z, num: String(i + 1).padStart(2, '0'), base, tag };
+});
 ---
 <section class="cg" aria-labelledby="cg-h">
   <div class="wrap cg-in">
@@ -49,34 +54,43 @@ const labelAt = (z: { x: number; y: number }) => iso(z.x + 6, z.y + 6, 0);
       </div>
       <div class="plan-body">
         <svg viewBox="0 0 1200 820" role="img" aria-label="Cutaway drawing of the Common Ground building" font-family="IBM Plex Mono, monospace">
-          <defs>
-            <filter id="cgblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.6"></feGaussianBlur></filter>
-            <radialGradient id="cgstone" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#E6E0D4"></stop><stop offset=".55" stop-color="#B8AE9E"></stop><stop offset="1" stop-color="#8C8274"></stop></radialGradient>
-            <radialGradient id="cgleaf0" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#B5D58C"></stop><stop offset=".6" stop-color="#6E9E4E"></stop><stop offset="1" stop-color="#46703A"></stop></radialGradient>
-            <radialGradient id="cgleaf1" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#A3C97C"></stop><stop offset=".6" stop-color="#5E8E44"></stop><stop offset="1" stop-color="#3E6432"></stop></radialGradient>
-            <linearGradient id="cgbark" x1="0" x2="1"><stop offset="0" stop-color="#5E4128"></stop><stop offset=".35" stop-color="#9C7448"></stop><stop offset=".7" stop-color="#7A5432"></stop><stop offset="1" stop-color="#4E3520"></stop></linearGradient>
-            <linearGradient id="cgpipe" x1="0" x2="1"><stop offset="0" stop-color="#C9C4BA"></stop><stop offset=".4" stop-color="#FBF9F4"></stop><stop offset="1" stop-color="#BDB7AC"></stop></linearGradient>
-            <linearGradient id="cgglass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D8EEF2"></stop><stop offset=".5" stop-color="#A9D3DC"></stop><stop offset="1" stop-color="#E8F5F7"></stop></linearGradient>
-            <linearGradient id="cgdoor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B98A55"></stop><stop offset="1" stop-color="#8A6238"></stop></linearGradient>
-            <linearGradient id="cgbeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF1C4" stop-opacity=".55"></stop><stop offset="1" stop-color="#FFE7A8" stop-opacity=".08"></stop></linearGradient>
-            <pattern id="cgsand" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#E8D3A6"></rect><circle cx="2" cy="3" r=".8" fill="#C9A86A"></circle><circle cx="6" cy="6.5" r=".7" fill="#B8955A"></circle></pattern>
-            <pattern id="cggrass" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#A9C48A"></rect><path d="M2 12 l1.5 -5 M6 13 l.8 -6 M10 12 l-1 -5 M12 6 l1 -4 M4 5 l-1 -3" stroke="#6B8F4E" stroke-width=".9" opacity=".7"></path></pattern>
-          </defs>
-          <rect width="1200" height="820" fill="#F3ECDF"></rect>
+          <defs set:html={DEFS}></defs>
+          <rect width="1200" height="820" fill="#FBF7EF"></rect>
           <g set:html={isoSvg}></g>
-          <path d="" fill="none" stroke="#E8A33D" stroke-width="4" stroke-dasharray="8 8" class="flowpath" opacity="0" data-doorflow></path>
+          <path d="" fill="none" stroke="#C9871E" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#tArrow)" class="flowpath" opacity="0" data-doorflow></path>
           {zones.map((z) => (
             <g class="zone" data-zone={z.id} tabindex="0" role="button" aria-label={z.n}>
               <polygon points={zonePoly(z)} fill="transparent"></polygon>
             </g>
           ))}
-          {zones.map((z) => { const [lx, ly] = labelAt(z); return (
-            <g class="zlabel" pointer-events="none" transform={`translate(${lx.toFixed(1)} ${ly.toFixed(1)})`}>
-              <rect x="0" y="-11" width={z.n.length * 6.6 + 14} height="17" rx="8.5" fill="#FBF7EF" fill-opacity=".92" stroke="#23201A" stroke-opacity=".25"></rect>
-              <text x="7" y="1" font-size="9.5" fill="#23201A" letter-spacing="1">{z.n.toUpperCase()}</text>
+          {callouts.map((c) => (
+            <g class="zlabel" pointer-events="none">
+              <line x1={c.base[0].toFixed(1)} y1={c.base[1].toFixed(1)} x2={c.tag[0].toFixed(1)} y2={(c.tag[1] + 9).toFixed(1)} stroke="#23201A" stroke-width=".6" stroke-dasharray="1.5 2"></line>
+              <circle cx={c.base[0].toFixed(1)} cy={c.base[1].toFixed(1)} r="2" fill="#23201A"></circle>
+              <g transform={`translate(${c.tag[0].toFixed(1)} ${c.tag[1].toFixed(1)})`}>
+                <circle r="9" fill="#FBF7EF" stroke="#23201A" stroke-width=".8"></circle>
+                <text y="3.4" font-size="9" text-anchor="middle" fill="#23201A">{c.num}</text>
+                <rect x="11" y="-7" width={c.n.length * 6.5 + 8} height="14" fill="#FBF7EF" fill-opacity=".9"></rect>
+                <text x="15" y="3.4" font-size="9" fill="#23201A" letter-spacing="1.2">{c.n.toUpperCase()}</text>
+              </g>
             </g>
-          ); })}
-          <text x="1180" y="806" font-size="10" fill="#776F62" text-anchor="end" letter-spacing="1.4">CUTAWAY · NOT TO SCALE · ORIGINAL ILLUSTRATION</text>
+          ))}
+          <g transform="translate(850 708)" font-size="8.5" fill="#23201A" letter-spacing="1.1">
+            <rect width="330" height="98" fill="#FBF7EF" stroke="#23201A" stroke-width=".8"></rect>
+            <line x1="0" y1="26" x2="330" y2="26" stroke="#23201A" stroke-width=".5"></line>
+            <line x1="0" y1="62" x2="330" y2="62" stroke="#23201A" stroke-width=".5"></line>
+            <line x1="200" y1="26" x2="200" y2="98" stroke="#23201A" stroke-width=".5"></line>
+            <text x="10" y="17" font-size="10" letter-spacing="1.8">COMMON GROUND · FIG. 1</text>
+            <text x="10" y="40">AXONOMETRIC CUTAWAY</text>
+            <text x="10" y="53" fill="#776F62">ROOF REMOVED · NOT TO SCALE</text>
+            <text x="10" y="76">LINEWORK · MATERIALS HATCHED</text>
+            <text x="10" y="89" fill="#776F62">ORIGINAL ILLUSTRATION</text>
+            <text x="210" y="40">SUN (SCHEMATIC)</text>
+            <text x="210" y="53" fill="#C9871E" data-sunread>—</text>
+            <text x="210" y="76">INTERSTICE LAB</text>
+            <text x="210" y="89" fill="#776F62">005 · 2026</text>
+          </g>
+          
         </svg>
         <aside class="plan-card" aria-live="polite">
           <p class="label" data-who></p>
@@ -154,13 +168,19 @@ const labelAt = (z: { x: number; y: number }) => iso(z.x + 6, z.y + 6, 0);
       const k = Math.max(0.05, Math.sin(((h - 6) / 13) * Math.PI));
       const dx = (h - 12.5) * -16, dy = 40 + (1 - k) * 50;
       let s = '';
-      skylights.forEach((q) => {
-        const top = [isoP(q.x0, q.y0, 112), isoP(q.x1, q.y0, 112), isoP(q.x1, q.y1, 112), isoP(q.x0, q.y1, 112)];
+      const sunP = [1130 - ((h - 7) / 11) * 860, 92 - k * 58];
+      s += `<g><circle cx="${sunP[0].toFixed(1)}" cy="${sunP[1].toFixed(1)}" r="9" fill="#FBF7EF" stroke="#C9871E" stroke-width="1.2"></circle>`;
+      for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; s += `<line x1="${(sunP[0] + Math.cos(a) * 12).toFixed(1)}" y1="${(sunP[1] + Math.sin(a) * 12).toFixed(1)}" x2="${(sunP[0] + Math.cos(a) * 17).toFixed(1)}" y2="${(sunP[1] + Math.sin(a) * 17).toFixed(1)}" stroke="#C9871E" stroke-width="1"></line>`; }
+      s += '</g>';
+      skylights.forEach((q, i) => {
         const fl = [isoP(q.x0 + dx, q.y0 + dy), isoP(q.x1 + dx, q.y0 + dy), isoP(q.x1 + dx, Math.min(q.y1 + dy, 425)), isoP(q.x0 + dx, Math.min(q.y1 + dy, 425))];
-        s += `<polygon points="${P([top[0], top[1], fl[1], fl[0]])}" fill="url(#cgbeam)" opacity="${(0.12 + 0.22 * k).toFixed(2)}"></polygon>`;
-        s += `<polygon points="${P([top[3], top[2], fl[2], fl[3]])}" fill="url(#cgbeam)" opacity="${(0.08 + 0.14 * k).toFixed(2)}"></polygon>`;
-        s += `<polygon points="${P(fl)}" fill="#FFF3C9" opacity="${(0.15 + 0.3 * k).toFixed(2)}"></polygon>`;
+        s += `<polygon points="${P(fl)}" fill="url(#tLight)" stroke="#C9871E" stroke-width=".6" stroke-dasharray="3 2"></polygon>`;
+        const topC = isoP((q.x0 + q.x1) / 2, (q.y0 + q.y1) / 2, 112), flC = isoP((q.x0 + q.x1) / 2 + dx, Math.min((q.y0 + q.y1) / 2 + dy, 420));
+        s += `<line x1="${sunP[0].toFixed(1)}" y1="${sunP[1].toFixed(1)}" x2="${topC[0].toFixed(1)}" y2="${topC[1].toFixed(1)}" stroke="#C9871E" stroke-width=".6" stroke-dasharray="2 3" opacity=".7"></line>`;
+        s += `<line x1="${topC[0].toFixed(1)}" y1="${topC[1].toFixed(1)}" x2="${flC[0].toFixed(1)}" y2="${flC[1].toFixed(1)}" stroke="#C9871E" stroke-width=".9" marker-end="url(#tArrow)"></line>`;
       });
+      const rd = plan.querySelector('[data-sunread]');
+      if (rd) rd.textContent = `ALT ≈ ${Math.round(15 + 50 * k)}° · ${h < 12.5 ? 'EAST' : h > 12.5 ? 'WEST' : 'SOUTH'}`;
       beams.innerHTML = s;
       const hh = Math.floor(h), mm = Math.round((h - hh) * 60);
       st.textContent = `${hh}:${String(mm).padStart(2, '0')}`;
@@ -248,7 +268,7 @@ const labelAt = (z: { x: number; y: number }) => iso(z.x + 6, z.y + 6, 0);
   .plan :global(.zone) { cursor: pointer; outline: none; }
   .plan :global(.zone polygon) { transition: fill .2s; }
   .plan :global(.zone:hover polygon), .plan :global(.zone:focus-visible polygon) { fill: rgba(232,163,61,.10); }
-  .plan :global(.zone.on polygon) { fill: rgba(232,163,61,.14); stroke: #E8A33D; stroke-width: 3; stroke-dasharray: 8 5; }
+  .plan :global(.zone.on polygon) { fill: rgba(232,163,61,.16); stroke: #C9871E; stroke-width: 1.6; }
   .plan :global(.doorpanel) { transition: transform .8s cubic-bezier(.3,.7,.2,1), opacity .8s; }
   .plan :global(.doorpanel.up) { transform: translateY(-62px); opacity: .35; }
   .plan :global(.flowpath) { animation: cgflow 1.2s linear infinite; transition: opacity .4s; }
