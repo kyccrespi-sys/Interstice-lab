@@ -2,7 +2,7 @@
 // Figures for 005 · Common Ground. Original, illustrative plan and schedules; not an architectural drawing.
 import { buildIso, iso, ISO, skylights, DEFS } from './cg/isoBuilding';
 const zones = [
-  { id: 'hall', n: 'The Nature Hall', who: 'Children · elders watch and join', x: 330, y: 150, w: 340, h: 270, c: '#E8A33D',
+  { id: 'hall', n: 'The Nature Hall', who: 'Children · elders watch and join', x: 330, y: 150, w: 340, h: 270, c: '#C99242',
     t: 'An indoor play landscape built from natural materials: boulders, logs, sand and tree-trunk columns, under a ring of clerestory windows and skylights so children see the sky, clouds and weather while staying indoors. Low benches along the edges invite older adults to watch, cheer and join in.',
     e: 'Contact with nature is most strongly linked to children’s physical activity and mental health, and natural elements in early-childhood settings are linked to more active play.' },
   { id: 'yard', n: 'The Outdoor Yard', who: 'Everyone, when the door is up', x: 250, y: 470, w: 500, h: 130, c: '#6B8F4E',
@@ -11,7 +11,7 @@ const zones = [
   { id: 'garden', n: 'The Garden Lab', who: 'Shared · STEM', x: 680, y: 150, w: 220, h: 150, c: '#3E7F8C',
     t: 'Hydroponic towers indoors, raised beds outside. Children measure, count, test water and chart growth; elders who have gardened all their lives teach. The harvest goes to the Hearth kitchen.',
     e: 'A STEM lab that also gives older adults a purposeful role. The hydroponic system can follow the design in our framework 007, Thin Air, Deep Roots.' },
-  { id: 'gym', n: 'The Strength Studio', who: 'Shared · separate and together', x: 680, y: 310, w: 220, h: 110, c: '#A8432C',
+  { id: 'gym', n: 'The Strength Studio', who: 'Shared · separate and together', x: 680, y: 310, w: 220, h: 110, c: '#8C4A2F',
     t: 'One room, two programs: balance, functional and strength training for older adults to prevent falls, and age-appropriate strength and movement for children, with some sessions where they train side by side.',
     e: 'Exercise reduces falls in older people by about a quarter, and programs combining balance, functional and resistance exercise by about a third. Supervised strength training is considered safe and effective for children.' },
   { id: 'kids', n: 'Little Ones Rooms', who: 'Children · licensed child care', x: 100, y: 150, w: 220, h: 150, c: '#D8C58E',
@@ -55,9 +55,9 @@ const callouts = zones.map((z, i) => {
       <div class="plan-body">
         <svg viewBox="0 0 1200 820" role="img" aria-label="Cutaway drawing of the Common Ground building" font-family="IBM Plex Mono, monospace">
           <defs set:html={DEFS}></defs>
-          <rect width="1200" height="820" fill="#FBF7EF"></rect>
+          <rect width="1200" height="820" fill="#F7F5F0"></rect>
           <g set:html={isoSvg}></g>
-          <path d="" fill="none" stroke="#C9871E" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#tArrow)" class="flowpath" opacity="0" data-doorflow></path>
+          <path d="" fill="none" stroke="#A8772F" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#tArrow)" class="flowpath" opacity="0" data-doorflow></path>
           {zones.map((z) => (
             <g class="zone" data-zone={z.id} tabindex="0" role="button" aria-label={z.n}>
               <polygon points={zonePoly(z)} fill="transparent"></polygon>
@@ -65,28 +65,28 @@ const callouts = zones.map((z, i) => {
           ))}
           {callouts.map((c) => (
             <g class="zlabel" pointer-events="none">
-              <line x1={c.base[0].toFixed(1)} y1={c.base[1].toFixed(1)} x2={c.tag[0].toFixed(1)} y2={(c.tag[1] + 9).toFixed(1)} stroke="#23201A" stroke-width=".6" stroke-dasharray="1.5 2"></line>
-              <circle cx={c.base[0].toFixed(1)} cy={c.base[1].toFixed(1)} r="2" fill="#23201A"></circle>
+              <line x1={c.base[0].toFixed(1)} y1={c.base[1].toFixed(1)} x2={c.tag[0].toFixed(1)} y2={(c.tag[1] + 9).toFixed(1)} stroke="#1F1D1A" stroke-width=".6" stroke-dasharray="1.5 2"></line>
+              <circle cx={c.base[0].toFixed(1)} cy={c.base[1].toFixed(1)} r="2" fill="#1F1D1A"></circle>
               <g transform={`translate(${c.tag[0].toFixed(1)} ${c.tag[1].toFixed(1)})`}>
-                <circle r="9" fill="#FBF7EF" stroke="#23201A" stroke-width=".8"></circle>
-                <text y="3.4" font-size="9" text-anchor="middle" fill="#23201A">{c.num}</text>
-                <rect x="11" y="-7" width={c.n.length * 6.5 + 8} height="14" fill="#FBF7EF" fill-opacity=".9"></rect>
-                <text x="15" y="3.4" font-size="9" fill="#23201A" letter-spacing="1.2">{c.n.toUpperCase()}</text>
+                <circle r="9" fill="#F7F5F0" stroke="#1F1D1A" stroke-width=".8"></circle>
+                <text y="3.4" font-size="9" text-anchor="middle" fill="#1F1D1A">{c.num}</text>
+                <rect x="11" y="-7" width={c.n.length * 6.5 + 8} height="14" fill="#F7F5F0" fill-opacity=".9"></rect>
+                <text x="15" y="3.4" font-size="9" fill="#1F1D1A" letter-spacing="1.2">{c.n.toUpperCase()}</text>
               </g>
             </g>
           ))}
-          <g transform="translate(850 708)" font-size="8.5" fill="#23201A" letter-spacing="1.1">
-            <rect width="330" height="98" fill="#FBF7EF" stroke="#23201A" stroke-width=".8"></rect>
-            <line x1="0" y1="26" x2="330" y2="26" stroke="#23201A" stroke-width=".5"></line>
-            <line x1="0" y1="62" x2="330" y2="62" stroke="#23201A" stroke-width=".5"></line>
-            <line x1="200" y1="26" x2="200" y2="98" stroke="#23201A" stroke-width=".5"></line>
+          <g transform="translate(850 708)" font-size="8.5" fill="#1F1D1A" letter-spacing="1.1">
+            <rect width="330" height="98" fill="#F7F5F0" stroke="#1F1D1A" stroke-width=".8"></rect>
+            <line x1="0" y1="26" x2="330" y2="26" stroke="#1F1D1A" stroke-width=".5"></line>
+            <line x1="0" y1="62" x2="330" y2="62" stroke="#1F1D1A" stroke-width=".5"></line>
+            <line x1="200" y1="26" x2="200" y2="98" stroke="#1F1D1A" stroke-width=".5"></line>
             <text x="10" y="17" font-size="10" letter-spacing="1.8">COMMON GROUND · FIG. 1</text>
             <text x="10" y="40">AXONOMETRIC CUTAWAY</text>
             <text x="10" y="53" fill="#776F62">ROOF REMOVED · NOT TO SCALE</text>
             <text x="10" y="76">LINEWORK · MATERIALS HATCHED</text>
             <text x="10" y="89" fill="#776F62">ORIGINAL ILLUSTRATION</text>
             <text x="210" y="40">SUN (SCHEMATIC)</text>
-            <text x="210" y="53" fill="#C9871E" data-sunread>—</text>
+            <text x="210" y="53" fill="#A8772F" data-sunread>—</text>
             <text x="210" y="76">INTERSTICE LAB</text>
             <text x="210" y="89" fill="#776F62">005 · 2026</text>
           </g>
@@ -169,15 +169,15 @@ const callouts = zones.map((z, i) => {
       const dx = (h - 12.5) * -16, dy = 40 + (1 - k) * 50;
       let s = '';
       const sunP = [1130 - ((h - 7) / 11) * 860, 92 - k * 58];
-      s += `<g><circle cx="${sunP[0].toFixed(1)}" cy="${sunP[1].toFixed(1)}" r="9" fill="#FBF7EF" stroke="#C9871E" stroke-width="1.2"></circle>`;
-      for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; s += `<line x1="${(sunP[0] + Math.cos(a) * 12).toFixed(1)}" y1="${(sunP[1] + Math.sin(a) * 12).toFixed(1)}" x2="${(sunP[0] + Math.cos(a) * 17).toFixed(1)}" y2="${(sunP[1] + Math.sin(a) * 17).toFixed(1)}" stroke="#C9871E" stroke-width="1"></line>`; }
+      s += `<g><circle cx="${sunP[0].toFixed(1)}" cy="${sunP[1].toFixed(1)}" r="9" fill="#F7F5F0" stroke="#A8772F" stroke-width="1.2"></circle>`;
+      for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; s += `<line x1="${(sunP[0] + Math.cos(a) * 12).toFixed(1)}" y1="${(sunP[1] + Math.sin(a) * 12).toFixed(1)}" x2="${(sunP[0] + Math.cos(a) * 17).toFixed(1)}" y2="${(sunP[1] + Math.sin(a) * 17).toFixed(1)}" stroke="#A8772F" stroke-width="1"></line>`; }
       s += '</g>';
       skylights.forEach((q, i) => {
         const fl = [isoP(q.x0 + dx, q.y0 + dy), isoP(q.x1 + dx, q.y0 + dy), isoP(q.x1 + dx, Math.min(q.y1 + dy, 425)), isoP(q.x0 + dx, Math.min(q.y1 + dy, 425))];
-        s += `<polygon points="${P(fl)}" fill="url(#tLight)" stroke="#C9871E" stroke-width=".6" stroke-dasharray="3 2"></polygon>`;
+        s += `<polygon points="${P(fl)}" fill="url(#tLight)" stroke="#A8772F" stroke-width=".6" stroke-dasharray="3 2"></polygon>`;
         const topC = isoP((q.x0 + q.x1) / 2, (q.y0 + q.y1) / 2, 112), flC = isoP((q.x0 + q.x1) / 2 + dx, Math.min((q.y0 + q.y1) / 2 + dy, 420));
-        s += `<line x1="${sunP[0].toFixed(1)}" y1="${sunP[1].toFixed(1)}" x2="${topC[0].toFixed(1)}" y2="${topC[1].toFixed(1)}" stroke="#C9871E" stroke-width=".6" stroke-dasharray="2 3" opacity=".7"></line>`;
-        s += `<line x1="${topC[0].toFixed(1)}" y1="${topC[1].toFixed(1)}" x2="${flC[0].toFixed(1)}" y2="${flC[1].toFixed(1)}" stroke="#C9871E" stroke-width=".9" marker-end="url(#tArrow)"></line>`;
+        s += `<line x1="${sunP[0].toFixed(1)}" y1="${sunP[1].toFixed(1)}" x2="${topC[0].toFixed(1)}" y2="${topC[1].toFixed(1)}" stroke="#A8772F" stroke-width=".6" stroke-dasharray="2 3" opacity=".7"></line>`;
+        s += `<line x1="${topC[0].toFixed(1)}" y1="${topC[1].toFixed(1)}" x2="${flC[0].toFixed(1)}" y2="${flC[1].toFixed(1)}" stroke="#A8772F" stroke-width=".9" marker-end="url(#tArrow)"></line>`;
       });
       const rd = plan.querySelector('[data-sunread]');
       if (rd) rd.textContent = `ALT ≈ ${Math.round(15 + 50 * k)}° · ${h < 12.5 ? 'EAST' : h > 12.5 ? 'WEST' : 'SOUTH'}`;
@@ -192,7 +192,7 @@ const callouts = zones.map((z, i) => {
   const day = document.getElementById('cgday');
   if (day) {
     const lanes = [
-      { n: 'Children', c: '#E8A33D', b: [
+      { n: 'Children', c: '#C99242', b: [
         [7, 8.5, 'Arrival & free play', 'Families drop off; children start in the Nature Hall, climbing and digging.'],
         [8.5, 9.5, 'Morning circle', 'Classroom time by age group.'],
         [9.5, 10.5, 'Door up · outdoor yard', 'The garage door rises; the yard becomes the classroom.'],
@@ -252,49 +252,49 @@ const callouts = zones.map((z, i) => {
 </script>
 
 <style>
-  .cg { background: #F3ECDF; border-block: 1px solid var(--line); }
+  .cg { background: #EFEBE3; border-block: 1px solid var(--line); }
   .cg-in { padding-block: 88px; display: flex; flex-direction: column; gap: 28px; }
   .cg-head { display: flex; flex-direction: column; gap: 14px; max-width: 780px; }
   .cg-gap { margin-top: 56px; }
-  .plan, .day, .gym { margin: 0; background: #FBF7EF; border: 1px solid var(--line); border-radius: 20px; padding: clamp(16px, 3vw, 28px); display: flex; flex-direction: column; gap: 18px; }
+  .plan, .day, .gym { margin: 0; background: #F7F5F0; border: 1px solid var(--line); border-radius: 20px; padding: clamp(16px, 3vw, 28px); display: flex; flex-direction: column; gap: 18px; }
   .plan-ctl { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; justify-content: space-between; }
-  .door-btn, .gym-tabs :global(button) { border: 1px solid rgba(35,32,26,.25); background: var(--accent); border-color: var(--accent); border-radius: 999px; padding: 9px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; color: var(--ink); }
+  .door-btn, .gym-tabs :global(button) { border: 1px solid rgba(31,29,26,.25); background: var(--accent); border-color: var(--accent); border-radius: 999px; padding: 9px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; color: var(--ink); }
   .door-btn[aria-pressed='true'] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
   .sun-ctl { display: flex; align-items: center; gap: 12px; flex: 1 1 280px; max-width: 460px; }
-  .sun-ctl input { flex: 1; accent-color: #E8A33D; }
+  .sun-ctl input { flex: 1; accent-color: #C99242; }
   .sun-t { font-family: var(--mono); font-size: 13px; min-width: 44px; }
   .plan-body { display: grid; grid-template-columns: minmax(0, 2.4fr) minmax(240px, 1fr); gap: 18px; align-items: start; }
   .plan-body svg { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
   .plan :global(.zone) { cursor: pointer; outline: none; }
   .plan :global(.zone polygon) { transition: fill .2s; }
-  .plan :global(.zone:hover polygon), .plan :global(.zone:focus-visible polygon) { fill: rgba(232,163,61,.10); }
-  .plan :global(.zone.on polygon) { fill: rgba(232,163,61,.16); stroke: #C9871E; stroke-width: 1.6; }
+  .plan :global(.zone:hover polygon), .plan :global(.zone:focus-visible polygon) { fill: rgba(201,146,66,.10); }
+  .plan :global(.zone.on polygon) { fill: rgba(201,146,66,.16); stroke: #A8772F; stroke-width: 1.6; }
   .plan :global(.doorpanel) { transition: transform .8s cubic-bezier(.3,.7,.2,1), opacity .8s; }
   .plan :global(.doorpanel.up) { transform: translateY(-62px); opacity: .35; }
   .plan :global(.flowpath) { animation: cgflow 1.2s linear infinite; transition: opacity .4s; }
   @keyframes cgflow { to { stroke-dashoffset: -24; } }
-  .plan-card { --zc: #E8A33D; background: #F3ECDF; border: 1px solid var(--line); border-top: 4px solid var(--zc); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; position: sticky; top: 24px; }
+  .plan-card { --zc: #C99242; background: #EFEBE3; border: 1px solid var(--line); border-top: 4px solid var(--zc); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; position: sticky; top: 24px; }
   .plan-card .h3 { margin: 0; }
-  .plan-ev { margin: 0; padding-top: 10px; border-top: 1px dashed rgba(35,32,26,.2); font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1.45; color: var(--ink); }
+  .plan-ev { margin: 0; padding-top: 10px; border-top: 1px dashed rgba(31,29,26,.2); font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1.45; color: var(--ink); }
   .day-grid { display: flex; flex-direction: column; gap: 10px; overflow-x: auto; }
   .day :global(.day-axis) { position: relative; height: 18px; margin-left: 110px; min-width: 640px; font-family: var(--mono); font-size: 10px; color: var(--muted-2); }
   .day :global(.day-axis span) { position: absolute; transform: translateX(-50%); }
   .day :global(.day-lane) { display: grid; grid-template-columns: 100px 1fr; gap: 10px; align-items: center; min-width: 750px; }
   .day :global(.day-ln) { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; filter: brightness(.75); }
-  .day :global(.day-track) { position: relative; height: 54px; background: repeating-linear-gradient(90deg, transparent 0 calc(100%/11 - 1px), rgba(35,32,26,.07) calc(100%/11 - 1px) calc(100%/11)); border-radius: 8px; }
-  .day :global(.day-b) { position: absolute; top: 4px; bottom: 4px; border: 0; border-radius: 6px; background: color-mix(in srgb, var(--bc) 30%, #FBF7EF); border-left: 3px solid var(--bc); padding: 4px 6px; text-align: left; cursor: pointer; overflow: hidden; font-size: 11px; line-height: 1.2; color: var(--ink); }
+  .day :global(.day-track) { position: relative; height: 54px; background: repeating-linear-gradient(90deg, transparent 0 calc(100%/11 - 1px), rgba(31,29,26,.07) calc(100%/11 - 1px) calc(100%/11)); border-radius: 8px; }
+  .day :global(.day-b) { position: absolute; top: 4px; bottom: 4px; border: 0; border-radius: 6px; background: color-mix(in srgb, var(--bc) 30%, #F7F5F0); border-left: 3px solid var(--bc); padding: 4px 6px; text-align: left; cursor: pointer; overflow: hidden; font-size: 11px; line-height: 1.2; color: var(--ink); }
   .day :global(.day-b span) { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .day :global(.day-b:hover), .day :global(.day-b.on) { background: var(--bc); color: #FBF7EF; }
+  .day :global(.day-b:hover), .day :global(.day-b.on) { background: var(--bc); color: #F7F5F0; }
   .day :global(.day-b:focus-visible) { outline: 2px solid var(--ink); outline-offset: 1px; }
   .day-read { margin: 0; font-family: var(--serif); font-size: 19px; line-height: 1.45; color: var(--ink); min-height: 1.5em; }
   .gym-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
-  .gym-tabs :global(button) { background: transparent; border-color: rgba(35,32,26,.25); }
+  .gym-tabs :global(button) { background: transparent; border-color: rgba(31,29,26,.25); }
   .gym-tabs :global(button[aria-selected='true']) { background: var(--ink); color: var(--ground); border-color: var(--ink); }
   .gym-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px; }
-  .gym-card { border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); background: #F3ECDF; }
+  .gym-card { border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); background: #EFEBE3; }
   .gym-card .h3 { margin: 0; }
   .g-old { border-top: 4px solid #8E7BA8; }
-  .g-kid { border-top: 4px solid #E8A33D; }
+  .g-kid { border-top: 4px solid #C99242; }
   .g-both { border-top: 4px solid #6B8F4E; background: #EEF2E6; }
   .cap { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--muted-2); line-height: 1.6; }
   @media (max-width: 860px) { .plan-body { grid-template-columns: 1fr; } .plan-card { position: static; } }

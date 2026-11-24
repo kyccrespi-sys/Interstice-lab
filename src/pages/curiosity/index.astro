@@ -36,15 +36,15 @@ const stories = [
         <div class="feat-art" aria-hidden="true">
 {s.art === 'kahn' ? (
           <svg viewBox="0 0 600 380" preserveAspectRatio="xMidYMid slice">
-            <rect width="600" height="380" fill="#F3ECDF"></rect>
-            {Array.from({ length: 12 }, (_, i) => <path d={`M60 190 C 200 190 260 ${190 + (i - 5.5) * 8} 340 ${190 + (i - 5.5) * 22} S 520 ${190 + (i - 5.5) * 30} 580 ${190 + (i - 5.5) * 30}`} fill="none" stroke={i === 5 || i === 6 ? '#23201A' : '#E8A33D'} stroke-opacity={i === 5 || i === 6 ? 0.8 : 0.35 + (i % 3) * 0.15} stroke-width={i === 5 || i === 6 ? 1.6 : 1.1}></path>)}
-            <circle cx="60" cy="190" r="10" fill="#A8432C"></circle>
-            {[300, 350, 400].map((x) => <circle cx={x} cy="190" r="4" fill="#FBF7EF" stroke="#8A5A12"></circle>)}
-            <text x="24" y="356" font-family="IBM Plex Mono, monospace" font-size="11" fill="#8A5A12" letter-spacing="2">RAND · HUDSON · 1947–1983</text>
+            <rect width="600" height="380" fill="#EFEBE3"></rect>
+            {Array.from({ length: 12 }, (_, i) => <path d={`M60 190 C 200 190 260 ${190 + (i - 5.5) * 8} 340 ${190 + (i - 5.5) * 22} S 520 ${190 + (i - 5.5) * 30} 580 ${190 + (i - 5.5) * 30}`} fill="none" stroke={i === 5 || i === 6 ? '#1F1D1A' : '#C99242'} stroke-opacity={i === 5 || i === 6 ? 0.8 : 0.35 + (i % 3) * 0.15} stroke-width={i === 5 || i === 6 ? 1.6 : 1.1}></path>)}
+            <circle cx="60" cy="190" r="10" fill="#8C4A2F"></circle>
+            {[300, 350, 400].map((x) => <circle cx={x} cy="190" r="4" fill="#F7F5F0" stroke="#7A5A2E"></circle>)}
+            <text x="24" y="356" font-family="IBM Plex Mono, monospace" font-size="11" fill="#7A5A2E" letter-spacing="2">RAND · HUDSON · 1947–1983</text>
           </svg>
           ) : (
           <svg viewBox="0 0 600 380" preserveAspectRatio="xMidYMid slice">
-            <rect width="600" height="380" fill="#12110E"></rect>
+            <rect width="600" height="380" fill="#2A3527"></rect>
             {Array.from({ length: 16 }, (_, r) => {
               const base = 120 + r * 16;
               let d = '';
@@ -52,10 +52,10 @@ const stories = [
                 const h = 90 * Math.exp(-(((x - 180 - r * 4) / 80) ** 2)) + 120 * Math.exp(-(((x - 420 + r * 3) / 70) ** 2)) + 10 * Math.sin(x / 17 + r);
                 d += `${x === 0 ? 'M' : 'L'}${x} ${(base - h * (0.4 + r * 0.03)).toFixed(1)} `;
               }
-              return <g><path d={d + `L600 400 L0 400Z`} fill="#12110E"></path><path d={d} fill="none" stroke="#EDE6DA" stroke-opacity={0.2 + r * 0.035} stroke-width="0.8"></path></g>;
+              return <g><path d={d + `L600 400 L0 400Z`} fill="#2A3527"></path><path d={d} fill="none" stroke="#E8EADF" stroke-opacity={0.2 + r * 0.035} stroke-width="0.8"></path></g>;
             })}
-            <circle cx="420" cy="70" r="16" fill="#E8A33D"></circle>
-            <text x="24" y="356" font-family="IBM Plex Mono, monospace" font-size="11" fill="#E8A33D" letter-spacing="2">CAMP HALE · 9,200 FT · 1942–1945</text>
+            <circle cx="420" cy="70" r="16" fill="#C99242"></circle>
+            <text x="24" y="356" font-family="IBM Plex Mono, monospace" font-size="11" fill="#C99242" letter-spacing="2">CAMP HALE · 9,200 FT · 1942–1945</text>
           </svg>
           )}
         </div>
@@ -76,7 +76,7 @@ const stories = [
 <style>
   .cc-head { padding-block: 96px 56px; display: flex; flex-direction: column; gap: 24px; }
   .cc-list { padding-bottom: 104px; display: flex; flex-direction: column; gap: 24px; }
-  .feat { display: flex; flex-wrap: wrap; border-radius: 28px; overflow: hidden; background: var(--card); border: 1px solid var(--line); text-decoration: none; color: var(--ink); box-shadow: 0 24px 60px -30px rgba(138,90,18,0.35); }
+  .feat { display: flex; flex-wrap: wrap; border-radius: 28px; overflow: hidden; background: var(--card); border: 1px solid var(--line); text-decoration: none; color: var(--ink); box-shadow: 0 24px 60px -30px rgba(42,53,39,0.35); }
   .feat:hover { color: var(--ink); }
   .feat-art { flex: 1 1 460px; min-height: 300px; }
   .feat-art svg { width: 100%; height: 100%; display: block; }

@@ -1,7 +1,7 @@
 ---
 // The D-Series maneuvers, March 24 – Easter Sunday (April 9), 1944.
 // Real coordinates for the landmarks; the movement arrows show the general direction, not exact routes.
-const BG = '#F3ECDF', FG = '#23201A', HON = '#D48A1C', HONT = '#8A5A12', COOL = '#3E7F8C', WARM = '#A8432C', DIM = '#776F62';
+const BG = '#EFEBE3', FG = '#1F1D1A', HON = '#D48A1C', HONT = '#7A5A2E', COOL = '#3E7F8C', WARM = '#8C4A2F', DIM = '#776F62';
 const LON0 = -106.46, LON1 = -106.22, LAT0 = 39.33, LAT1 = 39.52;
 const K = Math.cos((39.38 * Math.PI) / 180);
 const X0 = 70, Y0 = 40;
@@ -62,11 +62,11 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
         );
       })}
       <g transform={`translate(${X0 + W - 210} 50)`}>
-        <rect width="200" height="46" rx="3" fill="#FBF7EF" stroke={COOL} stroke-width="1.2"></rect>
+        <rect width="200" height="46" rx="3" fill="#F7F5F0" stroke={COOL} stroke-width="1.2"></rect>
         <path d="M18 9 L18 28" stroke={COOL} stroke-width="5" stroke-linecap="round"></path>
         <circle cx="18" cy="33" r="6" fill={COOL}></circle>
-        <path d="M18 14 L18 30" stroke="#FBF7EF" stroke-width="1.6" stroke-linecap="round"></path>
-        <text x="34" y="28" font-size="22" fill={COOL} font-family="Inter Tight, sans-serif" font-weight="500">−30°F</text>
+        <path d="M18 14 L18 30" stroke="#F7F5F0" stroke-width="1.6" stroke-linecap="round"></path>
+        <text x="34" y="28" font-size="22" fill={COOL} font-family="Instrument Serif, serif" font-weight="500">−30°F</text>
         <text x="112" y="20" font-size="7.5" fill={DIM} letter-spacing="1.2">COLDEST</text>
         <text x="112" y="31" font-size="7.5" fill={DIM} letter-spacing="1.2">≈ −34°C</text>
         <text x="34" y="40" font-size="6.8" fill={DIM} letter-spacing="1">ACCOUNTS RANGE −20° TO −35°F</text>
@@ -82,14 +82,14 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
         <text y="108" font-size="8.5" fill={DIM} letter-spacing="1.4">HOMESTAKE AND RESOLUTION</text>
         <text y="130" font-size="8.5" fill={DIM} letter-spacing="1.4">APR 9 · EASTER SUNDAY · ENDS</text>
         <path d="M0 150 L250 150" stroke={FG} stroke-opacity="0.2"></path>
-        <text y="178" font-size="26" fill={FG} font-family="Inter Tight, sans-serif" font-weight="300">~12,000</text>
+        <text y="178" font-size="26" fill={FG} font-family="Instrument Serif, serif" font-weight="300">~12,000</text>
         <text y="194" font-size="8" fill={DIM} letter-spacing="1.4">SOLDIERS MARCHED OUT</text>
-        <text y="232" font-size="26" fill={HONT} font-family="Inter Tight, sans-serif" font-weight="300">8,673</text>
+        <text y="232" font-size="26" fill={HONT} font-family="Instrument Serif, serif" font-weight="300">8,673</text>
         <text y="248" font-size="8" fill={DIM} letter-spacing="1.4">COMPLETED THE EXERCISE</text>
-        <text y="286" font-size="26" fill={FG} font-family="Inter Tight, sans-serif" font-weight="300">~3 weeks</text>
+        <text y="286" font-size="26" fill={FG} font-family="Instrument Serif, serif" font-weight="300">~3 weeks</text>
         <text y="302" font-size="8" fill={DIM} letter-spacing="1.4">OF SUBZERO TEMPERATURES</text>
         <g transform="translate(0 322)">
-          <rect x="-14" y="0" width="316" height="190" rx="4" fill="#FBF7EF" stroke={FG} stroke-opacity="0.25"></rect>
+          <rect x="-14" y="0" width="316" height="190" rx="4" fill="#F7F5F0" stroke={FG} stroke-opacity="0.25"></rect>
           <text x="4" y="24" font-size="10" fill={FG} letter-spacing="2.4" font-weight="600">LEGEND</text>
           <path d="M4 34 L288 34" stroke={FG} stroke-opacity="0.15"></path>
           <path d="M4 56 L40 56" stroke={HON} stroke-width="2.5" marker-end="url(#dsarrow)"></path>
@@ -100,9 +100,9 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
           <text x="54" y="114" font-size="10" fill={FG} letter-spacing="1">Eagle River</text>
           <circle cx="22" cy="136" r="6" fill={HON}></circle>
           <text x="54" y="140" font-size="10" fill={FG} letter-spacing="1">Start point · Camp Hale</text>
-          <path d="M14 168 L22 154 L30 168Z" fill="#FBF7EF" stroke={FG}></path>
+          <path d="M14 168 L22 154 L30 168Z" fill="#F7F5F0" stroke={FG}></path>
           <text x="54" y="166" font-size="10" fill={FG} letter-spacing="1">Summit</text>
-          <circle cx="160" cy="162" r="4.5" fill="#FBF7EF" stroke={FG}></circle>
+          <circle cx="160" cy="162" r="4.5" fill="#F7F5F0" stroke={FG}></circle>
           <text x="174" y="166" font-size="10" fill={FG} letter-spacing="1">Pass / ski hill</text>
         </g>
       </g>
@@ -123,7 +123,7 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
 
 <style>
   .ds { margin: 8px 0 0; display: flex; flex-direction: column; gap: 10px; }
-  .ds-stage { aspect-ratio: 1000 / 625; border-radius: 6px; overflow: hidden; background: #F3ECDF; border: 1px solid rgba(35,32,26,.14); box-shadow: 0 24px 60px -40px rgba(35,32,26,.35); }
+  .ds-stage { aspect-ratio: 1000 / 625; border-radius: 6px; overflow: hidden; background: #EFEBE3; border: 1px solid rgba(31,29,26,.14); box-shadow: 0 24px 60px -40px rgba(31,29,26,.35); }
   .ds-stage svg { width: 100%; height: 100%; display: block; }
   .ds-cap { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted-2); line-height: 1.5; }
   .ds :global(.ds-move) { stroke-dasharray: 100; stroke-dashoffset: 100; }

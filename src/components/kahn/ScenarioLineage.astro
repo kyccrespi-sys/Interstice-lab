@@ -32,25 +32,25 @@ const rows = [
 
 <style>
   .lin { margin: 8px 0 0; display: flex; flex-direction: column; gap: 10px; }
-  .lin-board { background: #F3ECDF; border: 1px solid rgba(35,32,26,.14); border-radius: 6px; padding: 24px; }
+  .lin-board { background: #EFEBE3; border: 1px solid rgba(31,29,26,.14); border-radius: 6px; padding: 24px; }
   .lin-heads, .lr { display: grid; grid-template-columns: 1fr 96px 1fr; gap: 14px; }
   .lh { margin: 0 0 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
-  .lh-k { color: #8A5A12; text-align: right; }
+  .lh-k { color: #7A5A2E; text-align: right; }
   .lh-s { color: #3E7F8C; }
   .lin-rows { list-style: none; margin: 0; padding: 0; position: relative; }
-  .lin-rows::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-1px); background: linear-gradient(#E8A33D 0 55%, #3E7F8C 60% 100%); }
+  .lin-rows::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-1px); background: linear-gradient(#C99242 0 55%, #3E7F8C 60% 100%); }
   .lr { align-items: center; min-height: 64px; }
   .lc-k { display: flex; justify-content: flex-end; }
   .ly { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .dot { width: 14px; height: 14px; border-radius: 50%; background: #FBF7EF; border: 2.5px solid #8F877A; position: relative; z-index: 1; }
-  .dot.dk { border-color: #E8A33D; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; background: #F7F5F0; border: 2.5px solid #A3AC9B; position: relative; z-index: 1; }
+  .dot.dk { border-color: #C99242; }
   .dot.ds { border-color: #3E7F8C; }
-  .dot.dk.ds { background: linear-gradient(90deg, #E8A33D 50%, #3E7F8C 50%); border-color: #23201A; }
-  .yr { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--ink); background: #F3ECDF; padding: 0 4px; position: relative; z-index: 1; }
+  .dot.dk.ds { background: linear-gradient(90deg, #C99242 50%, #3E7F8C 50%); border-color: #1F1D1A; }
+  .yr { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--ink); background: #EFEBE3; padding: 0 4px; position: relative; z-index: 1; }
   .lr-x { display: flex; justify-content: center; min-height: 0; padding: 8px 0; }
-  .cross { position: relative; font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: #8A5A12; background: #FBF7EF; border: 1px dashed #8A5A12; border-radius: 999px; padding: 3px 10px; z-index: 2; }
-  .ev { max-width: 320px; background: #FBF7EF; border: 1px solid rgba(35,32,26,.12); border-radius: 6px; padding: 10px 14px; margin: 6px 0; }
-  .ev-k { border-right: 3px solid #E8A33D; text-align: right; }
+  .cross { position: relative; font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: #7A5A2E; background: #F7F5F0; border: 1px dashed #7A5A2E; border-radius: 999px; padding: 3px 10px; z-index: 2; }
+  .ev { max-width: 320px; background: #F7F5F0; border: 1px solid rgba(31,29,26,.12); border-radius: 6px; padding: 10px 14px; margin: 6px 0; }
+  .ev-k { border-right: 3px solid #C99242; text-align: right; }
   .ev-s { border-left: 3px solid #3E7F8C; }
   .ev h4 { margin: 0 0 2px; font-size: 15px; font-weight: 600; color: var(--ink); }
   .ev p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }

@@ -9,7 +9,7 @@ const f = (n: number) => n.toFixed(1);
 const pt = (p: P) => `${f(p[0])},${f(p[1])}`;
 const pts = (a: P[]) => a.map(pt).join(' ');
 
-const INK = '#23201A', PAPER = '#FBF7EF';
+const INK = '#1F1D1A', PAPER = '#F7F5F0';
 const HL = `stroke="${INK}" stroke-width=".75" stroke-linejoin="round"`;
 const HL2 = `stroke="${INK}" stroke-width=".45" stroke-linejoin="round"`;
 
@@ -31,11 +31,11 @@ function cyl(x: number, y: number, r: number, h: number, tint = PAPER, z = 0, ha
 }
 function stump(x: number, y: number, r: number, h: number) {
   const [bx, by] = iso(x, y, h), rx = r * S * 1.22, ry = r * S * 0.7;
-  return cyl(x, y, r, h, '#F1E8D8') + [0.62, 0.3].map((k) => `<ellipse cx="${f(bx)}" cy="${f(by)}" rx="${f(rx * k)}" ry="${f(ry * k)}" fill="none" ${HL2}></ellipse>`).join('');
+  return cyl(x, y, r, h, '#ECE6DA') + [0.62, 0.3].map((k) => `<ellipse cx="${f(bx)}" cy="${f(by)}" rx="${f(rx * k)}" ry="${f(ry * k)}" fill="none" ${HL2}></ellipse>`).join('');
 }
 function log(x1: number, y1: number, x2: number, y2: number, r: number) {
   const a = iso(x1, y1, r), b = iso(x2, y2, r), w = 2 * r * S;
-  return ln(a, b, w + 1.5, 'stroke-linecap="round"') + `<line x1="${f(a[0])}" y1="${f(a[1])}" x2="${f(b[0])}" y2="${f(b[1])}" stroke="#F1E8D8" stroke-width="${f(w - 0.2)}" stroke-linecap="round"></line>` +
+  return ln(a, b, w + 1.5, 'stroke-linecap="round"') + `<line x1="${f(a[0])}" y1="${f(a[1])}" x2="${f(b[0])}" y2="${f(b[1])}" stroke="#ECE6DA" stroke-width="${f(w - 0.2)}" stroke-linecap="round"></line>` +
     ln([a[0], a[1] - w * 0.18], [b[0], b[1] - w * 0.18], 0.35) + ln([a[0], a[1] + w * 0.18], [b[0], b[1] + w * 0.18], 0.35) +
     `<ellipse cx="${f(b[0])}" cy="${f(b[1])}" rx="${f(w * 0.42)}" ry="${f(w * 0.5)}" fill="${PAPER}" ${HL}></ellipse><ellipse cx="${f(b[0])}" cy="${f(b[1])}" rx="${f(w * 0.2)}" ry="${f(w * 0.25)}" fill="none" ${HL2}></ellipse>`;
 }
@@ -52,7 +52,7 @@ function boulder(x: number, y: number, r: number, seed: number) {
 }
 function tree(x: number, y: number, s: number) {
   const [tx, ty] = iso(x, y, s * 2.1), rr = s * S * 1.45;
-  let o = cyl(x, y, s * 0.13, s * 1.6, '#F1E8D8', 0, false);
+  let o = cyl(x, y, s * 0.13, s * 1.6, '#ECE6DA', 0, false);
   o += `<circle cx="${f(tx)}" cy="${f(ty)}" r="${f(rr)}" fill="#E4ECDA" fill-opacity=".85" ${HL}></circle>`;
   o += `<circle cx="${f(tx)}" cy="${f(ty)}" r="${f(rr * 0.68)}" fill="none" ${HL2} stroke-dasharray="2 2"></circle>`;
   for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2; o += ln([tx + Math.cos(a) * rr * 0.18, ty + Math.sin(a) * rr * 0.18], [tx + Math.cos(a) * rr * 0.92, ty + Math.sin(a) * rr * 0.92], 0.35); }
@@ -90,8 +90,8 @@ export const DEFS = `
   <pattern id="tSand" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#F4EBD8"></rect><circle cx="1.2" cy="1.5" r=".5" fill="${INK}" opacity=".45"></circle><circle cx="3.7" cy="3.8" r=".4" fill="${INK}" opacity=".35"></circle></pattern>
   <pattern id="tGrass" width="12" height="9" patternUnits="userSpaceOnUse"><rect width="12" height="9" fill="#EEF2E6"></rect><path d="M2 7 l1 -3 l1 3 M8 4 l1 -3 l1 3" fill="none" stroke="#3E5A32" stroke-width=".5" opacity=".7"></path></pattern>
   <pattern id="tGlass" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><rect width="7" height="7" fill="#EAF3F4"></rect><line x1="0" y1="0" x2="0" y2="7" stroke="#6F858C" stroke-width=".4" opacity=".55"></line></pattern>
-  <pattern id="tLight" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-20)"><line x1="0" y1="0" x2="0" y2="4" stroke="#C9871E" stroke-width=".6" opacity=".55"></line></pattern>
-  <marker id="tArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#C9871E"></path></marker>
+  <pattern id="tLight" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-20)"><line x1="0" y1="0" x2="0" y2="4" stroke="#A8772F" stroke-width=".6" opacity=".55"></line></pattern>
+  <marker id="tArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#A8772F"></path></marker>
 `;
 
 type Item = { k: number; s: string };
@@ -152,45 +152,45 @@ export function buildIso(): string {
   const add = (x: number, y: number, s: string) => items.push({ k: x + y, s });
   add(150, 95, boulder(150, 95, 10, 2)); add(205, 100, boulder(205, 100, 12, 5)); add(290, 70, plant(290, 70, 16));
   add(400, 46, box(345, 44, 0, 300, 18, 30));
-  add(470, 80, box(420, 70, 0, 100, 22, 30, '#F1E8D8'));
-  add(560, 115, box(530, 100, 0, 110, 26, 22, '#F1E8D8'));
+  add(470, 80, box(420, 70, 0, 100, 22, 30, '#ECE6DA'));
+  add(560, 115, box(530, 100, 0, 110, 26, 22, '#ECE6DA'));
   for (const cx of [535, 565, 595, 625]) { add(cx, 92, chair(cx - 6, 88)); add(cx, 132, chair(cx - 6, 128)); }
   add(400, 115, person(400, 115, 'elder')); add(420, 120, person(420, 122, 'kid'));
   add(720, 90, box(700, 70, 0, 70, 28, 22, '#E3ECEE')); add(820, 70, box(800, 50, 0, 80, 16, 30)); add(880, 120, plant(880, 120, 14));
-  add(100, 220, box(94, 160, 0, 14, 130, 36, '#F1E8D8'));
+  add(100, 220, box(94, 160, 0, 14, 130, 36, '#ECE6DA'));
   for (const [tx, ty] of [[160, 200], [240, 200]] as P[]) {
-    add(tx, ty, cyl(tx, ty, 16, 16, '#F1E8D8'));
+    add(tx, ty, cyl(tx, ty, 16, 16, '#ECE6DA'));
     for (let k = 0; k < 4; k++) { const sx = tx + Math.cos(k * 1.57 + 0.6) * 24, sy = ty + Math.sin(k * 1.57 + 0.6) * 24; add(sx, sy, cyl(sx, sy, 4.5, 9, PAPER, 0, false)); }
   }
   for (let i = 0; i < 4; i++) add(130 + i * 46, 270, box(126 + i * 46, 262, 0, 36, 18, 7));
   add(240, 210, person(240, 228, 'kid'));
-  add(100, 370, box(94, 320, 0, 12, 100, 44, '#F1E8D8'));
+  add(100, 370, box(94, 320, 0, 12, 100, 44, '#ECE6DA'));
   for (const [ax, ay] of [[150, 330], [200, 330], [150, 385], [200, 385]] as P[]) add(ax + 10, ay + 10, armchair(ax, ay));
-  add(275, 360, box(255, 345, 0, 50, 34, 14, '#F1E8D8')); add(290, 405, plant(290, 405, 14));
+  add(275, 360, box(255, 345, 0, 50, 34, 14, '#ECE6DA')); add(290, 405, plant(290, 405, 14));
   add(178, 372, person(178, 372, 'elder'));
-  for (const [cx, cy] of [[345, 170], [655, 170], [345, 410], [655, 410]] as P[]) add(cx, cy, cyl(cx, cy, 7, 78, '#F1E8D8'));
-  add(500, 230, box(470, 212, 0, 60, 34, 8, '#F1E8D8') + tree(500, 229, 24));
+  for (const [cx, cy] of [[345, 170], [655, 170], [345, 410], [655, 410]] as P[]) add(cx, cy, cyl(cx, cy, 7, 78, '#ECE6DA'));
+  add(500, 230, box(470, 212, 0, 60, 34, 8, '#ECE6DA') + tree(500, 229, 24));
   add(430, 285, log(385, 262, 495, 300, 7)); add(520, 330, log(470, 320, 590, 345, 6));
   add(580, 370, boulder(580, 370, 22, 1)); add(620, 300, boulder(620, 300, 15, 3)); add(405, 375, boulder(405, 375, 9, 6));
   for (const [sx, sy, h] of [[560, 245, 10], [585, 262, 14], [608, 280, 18], [630, 260, 12]] as [number, number, number][]) add(sx, sy, stump(sx, sy, 9, h));
-  add(340, 280, box(334, 230, 0, 18, 110, 12, '#F1E8D8'));
+  add(340, 280, box(334, 230, 0, 18, 110, 12, '#ECE6DA'));
   add(345, 300, person(343, 300, 'elder')); add(452, 287, person(452, 280, 'kid')); add(600, 368, person(596, 352, 'kid')); add(415, 395, person(430, 392, 'kid')); add(560, 400, person(560, 404, 'adult'));
   for (let i = 0; i < 5; i++) add(705 + i * 40, 205, tower(705 + i * 40, 205));
-  add(780, 270, box(700, 258, 0, 190, 24, 24, '#F1E8D8'));
+  add(780, 270, box(700, 258, 0, 190, 24, 24, '#ECE6DA'));
   for (let i = 0; i < 6; i++) add(715 + i * 28, 268, box(708 + i * 28, 262, 24, 22, 14, 3, '#E4ECDA', false));
   add(760, 245, person(760, 245, 'elder')); add(790, 250, person(790, 248, 'kid'));
   for (const yy of [326, 366]) add(740, yy + 9, box(696, yy, 0, 4, 4, 30) + box(776, yy, 0, 4, 4, 30) + box(696, yy, 30, 84, 4, 3));
   add(735, 360, person(735, 352, 'elder'));
-  for (const [i, h] of [[0, 6], [1, 12], [2, 18]] as [number, number][]) add(808 + i * 26, 395, box(800 + i * 26, 384, 0, 24, 20, h, '#F1E8D8'));
-  add(840, 345, box(800, 340, 0, 80, 7, 6, '#F1E8D8')); add(850, 360, person(850, 354, 'kid'));
+  for (const [i, h] of [[0, 6], [1, 12], [2, 18]] as [number, number][]) add(808 + i * 26, 395, box(800 + i * 26, 384, 0, 24, 20, h, '#ECE6DA'));
+  add(840, 345, box(800, 340, 0, 80, 7, 6, '#ECE6DA')); add(850, 360, person(850, 354, 'kid'));
   for (let i = 0; i < 3; i++) {
     const bx = 590 + i * 55;
-    add(bx + 20, 482, box(bx, 470, 0, 44, 26, 16, '#F1E8D8') + poly([iso(bx + 2, 472, 16), iso(bx + 42, 472, 16), iso(bx + 42, 494, 16), iso(bx + 2, 494, 16)], 'url(#tStipple)', HL2));
+    add(bx + 20, 482, box(bx, 470, 0, 44, 26, 16, '#ECE6DA') + poly([iso(bx + 2, 472, 16), iso(bx + 42, 472, 16), iso(bx + 42, 494, 16), iso(bx + 2, 494, 16)], 'url(#tStipple)', HL2));
     for (let k = 0; k < 4; k++) { const [cx, cy] = iso(bx + 6 + k * 10, 482, 18); add(bx + 22, 483, `<circle cx="${f(cx)}" cy="${f(cy)}" r="4" fill="#E4ECDA" ${HL2}></circle>`); }
   }
   add(290, 520, tree(290, 520, 26)); add(720, 585, tree(720, 585, 30)); add(450, 600, tree(450, 600, 22));
   add(360, 500, log(300, 492, 420, 510, 7)); add(500, 560, boulder(500, 560, 18, 4));
-  add(610, 495, box(560, 470, 0, 40, 18, 22, '#F1E8D8'));
+  add(610, 495, box(560, 470, 0, 40, 18, 22, '#ECE6DA'));
   add(395, 560, person(395, 560, 'elder')); add(380, 505, person(380, 498, 'kid')); add(620, 535, person(620, 535, 'kid'));
   items.sort((a, b) => a.k - b.k);
   out.push(...items.map((i) => i.s));

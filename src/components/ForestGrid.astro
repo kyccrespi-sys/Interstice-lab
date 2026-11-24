@@ -2,10 +2,10 @@
 // Figures for 004 · The Forest Grid. All are original, illustrative models, not forecasts.
 // Capacity factors: U.S. EIA, Electric Power Annual Table 4.08.B, 2025.
 const sources = [
-  { id: 'solar', n: 'Solar panels', c: '#E8A33D', cf: '24%', tree: 'Fast pioneer', weak: 'Night, clouds, winter' },
+  { id: 'solar', n: 'Solar panels', c: '#C99242', cf: '24%', tree: 'Fast pioneer', weak: 'Night, clouds, winter' },
   { id: 'wind', n: 'Wind', c: '#3E7F8C', cf: '34%', tree: 'Tall canopy', weak: 'Calm spells, late summer' },
   { id: 'hydro', n: 'Hydro', c: '#5B7FA6', cf: '34%', tree: 'Riverside tree', weak: 'Drought' },
-  { id: 'geo', n: 'Geothermal', c: '#A8432C', cf: '66%', tree: 'Deep taproot', weak: 'Only where the heat is' },
+  { id: 'geo', n: 'Geothermal', c: '#8C4A2F', cf: '66%', tree: 'Deep taproot', weak: 'Only where the heat is' },
   { id: 'nuclear', n: 'Nuclear', c: '#6E5A8A', cf: '91%', tree: 'Old-growth giant', weak: 'Hot rivers, outages' },
   { id: 'csp', n: 'Solar thermal', c: '#C77B2B', cf: '24%', tree: 'Sun that stores heat', weak: 'Cloudy weeks' },
   { id: 'store', n: 'Batteries', c: '#6B8F4E', cf: 'Stores', tree: 'Fungal store', weak: 'Hours, not weeks' },
@@ -49,16 +49,16 @@ const sources = [
       </div>
       <div class="mix-chart">
         <svg viewBox="0 0 900 300" role="img" aria-label="Two weeks of supply against demand" font-family="IBM Plex Mono, monospace">
-          <rect width="900" height="300" fill="#FBF7EF"></rect>
+          <rect width="900" height="300" fill="#F7F5F0"></rect>
           <g data-days></g>
-          <rect x="0" y="34" width="0" height="246" fill="#A8432C" fill-opacity=".07" data-heatband></rect>
-          <path d="" fill="#A8432C" fill-opacity=".22" data-short></path>
-          <path d="" fill="none" stroke="#23201A" stroke-width="1.4" stroke-dasharray="4 3" data-demand></path>
-          <path d="" fill="none" stroke="#E8A33D" stroke-width="2.2" data-supply></path>
-          <text x="20" y="22" font-size="10" fill="#23201A" letter-spacing="1.4">— — DEMAND</text>
-          <text x="130" y="22" font-size="10" fill="#8A5A12" letter-spacing="1.4">━ SUPPLY</text>
-          <text x="226" y="22" font-size="10" fill="#A8432C" letter-spacing="1.4">▇ SHORTFALL</text>
-          <text x="880" y="22" font-size="10" fill="#A8432C" letter-spacing="1.4" text-anchor="end" data-heatlabel></text>
+          <rect x="0" y="34" width="0" height="246" fill="#8C4A2F" fill-opacity=".07" data-heatband></rect>
+          <path d="" fill="#8C4A2F" fill-opacity=".22" data-short></path>
+          <path d="" fill="none" stroke="#1F1D1A" stroke-width="1.4" stroke-dasharray="4 3" data-demand></path>
+          <path d="" fill="none" stroke="#C99242" stroke-width="2.2" data-supply></path>
+          <text x="20" y="22" font-size="10" fill="#1F1D1A" letter-spacing="1.4">— — DEMAND</text>
+          <text x="130" y="22" font-size="10" fill="#7A5A2E" letter-spacing="1.4">━ SUPPLY</text>
+          <text x="226" y="22" font-size="10" fill="#8C4A2F" letter-spacing="1.4">▇ SHORTFALL</text>
+          <text x="880" y="22" font-size="10" fill="#8C4A2F" letter-spacing="1.4" text-anchor="end" data-heatlabel></text>
         </svg>
       </div>
       <div class="mix-out">
@@ -80,9 +80,9 @@ const sources = [
     <figure class="cas" id="fgcas">
       <div class="cas-ctl"><button type="button" class="cas-btn" data-reuse aria-pressed="false">Put the waste heat to work</button></div>
       <svg viewBox="0 0 900 460" role="img" aria-label="Energy cascades through a food chain and a power plant" font-family="IBM Plex Mono, monospace">
-        <rect width="900" height="460" fill="#F3ECDF"></rect>
+        <rect width="900" height="460" fill="#EFEBE3"></rect>
         <text x="30" y="36" font-size="10.5" fill="#6B8F4E" letter-spacing="2">THE FOREST · ENERGY CAPTURED BY PLANTS = 100</text>
-        <text x="30" y="258" font-size="10.5" fill="#8A5A12" letter-spacing="2">THE POWER PLANT · HEAT FROM FUEL = 100</text>
+        <text x="30" y="258" font-size="10.5" fill="#7A5A2E" letter-spacing="2">THE POWER PLANT · HEAT FROM FUEL = 100</text>
         <g data-cas></g>
       </svg>
       <p class="cas-read" data-casread aria-live="polite"></p>
@@ -104,9 +104,9 @@ const sources = [
         <button type="button" class="storm" data-storm>Send a storm ⚡</button>
       </div>
       <svg viewBox="0 0 900 420" role="img" aria-label="Grid network diagram" font-family="IBM Plex Mono, monospace">
-        <rect width="900" height="420" fill="#F3ECDF"></rect>
+        <rect width="900" height="420" fill="#EFEBE3"></rect>
         <g data-layer></g>
-        <g class="bolt" data-bolt opacity="0"><path d="M0 -40 L-14 0 L0 0 L-10 36 L18 -8 L4 -8 L14 -40Z" fill="#E8A33D" stroke="#8A5A12"></path></g>
+        <g class="bolt" data-bolt opacity="0"><path d="M0 -40 L-14 0 L0 0 L-10 36 L18 -8 L4 -8 L14 -40Z" fill="#C99242" stroke="#7A5A2E"></path></g>
       </svg>
       <p class="net-read" data-netread aria-live="polite">Press “Send a storm” to break the main line.</p>
       <figcaption class="cap">Schematic. Networked microgrids are being designed and tested today, for example in Adjuntas, Puerto Rico; this drawing is original and simplified.</figcaption>
@@ -171,7 +171,7 @@ const sources = [
     };
 
     const X = (t: number) => 20 + (t / (H - 1)) * 860, Y = (v: number) => 280 - v * 125;
-    mix.querySelector('[data-days]')!.innerHTML = Array.from({ length: 14 }, (_, d) => `<rect x="${X(d * 24)}" y="34" width="${860 / 14}" height="246" fill="${d % 2 ? '#F3ECDF' : '#FBF7EF'}"></rect><text x="${X(d * 24) + 4}" y="292" font-size="8" fill="#776F62">D${d + 1}</text>`).join('');
+    mix.querySelector('[data-days]')!.innerHTML = Array.from({ length: 14 }, (_, d) => `<rect x="${X(d * 24)}" y="34" width="${860 / 14}" height="246" fill="${d % 2 ? '#EFEBE3' : '#F7F5F0'}"></rect><text x="${X(d * 24) + 4}" y="292" font-size="8" fill="#776F62">D${d + 1}</text>`).join('');
     const pathOf = (a: number[]) => 'M' + a.map((v, t) => `${X(t).toFixed(1)} ${Y(v).toFixed(1)}`).join(' L');
     let wxMode = 'normal';
     const boxes = Array.from(mix.querySelectorAll<HTMLInputElement>('.src input'));
@@ -239,14 +239,14 @@ const sources = [
     const bar = (x: number, y: number, v: number, col: string, label: string, sub: string) => {
       const h = Math.max(3, v * 1.1);
       return `<g><rect x="${x}" y="${y + 110 - h}" width="64" height="${h}" rx="3" fill="${col}"></rect>
-        <text x="${x + 32}" y="${y + 104 - h}" font-size="13" fill="#23201A" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600">${v}</text>
-        <text x="${x + 32}" y="${y + 128}" font-size="9" fill="#23201A" text-anchor="middle" letter-spacing="1">${label}</text>
+        <text x="${x + 32}" y="${y + 104 - h}" font-size="13" fill="#1F1D1A" text-anchor="middle" font-family="Instrument Serif, serif" font-weight="600">${v}</text>
+        <text x="${x + 32}" y="${y + 128}" font-size="9" fill="#1F1D1A" text-anchor="middle" letter-spacing="1">${label}</text>
         <text x="${x + 32}" y="${y + 141}" font-size="8" fill="#776F62" text-anchor="middle">${sub}</text></g>`;
     };
-    const arrow = (x: number, y: number) => `<path d="M${x} ${y} L${x + 40} ${y}" stroke="#8F877A" stroke-width="1.4" marker-end="url(#casar)"></path>`;
-    const heat = (x: number, y: number, v: number) => `<g><path d="M${x} ${y} q 6 -10 0 -20 q -6 -10 0 -20" fill="none" stroke="#A8432C" stroke-width="1.4" opacity=".75"></path><text x="${x + 8}" y="${y - 22}" font-size="9" fill="#A8432C">−${v} heat</text></g>`;
+    const arrow = (x: number, y: number) => `<path d="M${x} ${y} L${x + 40} ${y}" stroke="#A3AC9B" stroke-width="1.4" marker-end="url(#casar)"></path>`;
+    const heat = (x: number, y: number, v: number) => `<g><path d="M${x} ${y} q 6 -10 0 -20 q -6 -10 0 -20" fill="none" stroke="#8C4A2F" stroke-width="1.4" opacity=".75"></path><text x="${x + 8}" y="${y - 22}" font-size="9" fill="#8C4A2F">−${v} heat</text></g>`;
     const draw = () => {
-      let s = `<defs><marker id="casar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#8F877A"></path></marker></defs>`;
+      let s = `<defs><marker id="casar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#A3AC9B"></path></marker></defs>`;
       const fy = 64;
       s += bar(40, fy, 100, '#6B8F4E', 'PLANTS', 'sunlight captured');
       s += arrow(118, fy + 90) + heat(150, fy + 70, 90);
@@ -254,22 +254,22 @@ const sources = [
       s += arrow(278, fy + 90) + heat(310, fy + 70, 9);
       s += bar(360, fy, 1, '#C3D3AE', 'PREDATORS', '~10% of that');
       s += `<path d="M120 ${fy + 152} C 300 ${fy + 175} 520 ${fy + 175} 560 ${fy + 120}" fill="none" stroke="#6B8F4E" stroke-dasharray="4 4" stroke-width="1.4" class="cflow"></path>`;
-      s += `<g transform="translate(520 ${fy + 40})"><rect width="330" height="78" rx="6" fill="#FBF7EF" stroke="#6B8F4E" stroke-opacity=".5"></rect>
+      s += `<g transform="translate(520 ${fy + 40})"><rect width="330" height="78" rx="6" fill="#F7F5F0" stroke="#6B8F4E" stroke-opacity=".5"></rect>
         <text x="16" y="24" font-size="10" fill="#6B8F4E" letter-spacing="1.4">DECOMPOSERS</text>
-        <text x="16" y="44" font-size="11" fill="#23201A" font-family="Inter Tight, sans-serif">Fungi and microbes feed on what every level leaves:</text>
-        <text x="16" y="62" font-size="11" fill="#23201A" font-family="Inter Tight, sans-serif">fallen leaves, dead wood, waste. Nothing is thrown away.</text></g>`;
+        <text x="16" y="44" font-size="11" fill="#1F1D1A" font-family="Instrument Serif, serif">Fungi and microbes feed on what every level leaves:</text>
+        <text x="16" y="62" font-size="11" fill="#1F1D1A" font-family="Instrument Serif, serif">fallen leaves, dead wood, waste. Nothing is thrown away.</text></g>`;
       const py = 286;
-      s += bar(40, py, 100, '#8A5A12', 'FUEL HEAT', 'nuclear or fossil');
+      s += bar(40, py, 100, '#7A5A2E', 'FUEL HEAT', 'nuclear or fossil');
       s += arrow(118, py + 90) + heat(150, py + 70, 67);
-      s += bar(200, py, 33, '#E8A33D', 'ELECTRICITY', '~1/3 of the heat');
+      s += bar(200, py, 33, '#C99242', 'ELECTRICITY', '~1/3 of the heat');
       s += arrow(278, py + 90) + heat(310, py + 70, 2);
       s += bar(360, py, 31, '#F0C27A', 'DELIVERED', '~5% lost on lines');
       if (reuse) {
-        s += `<path d="M150 ${py + 40} C 300 ${py - 10} 500 ${py - 10} 560 ${py + 30}" fill="none" stroke="#A8432C" stroke-width="2" stroke-dasharray="6 5" class="cflow"></path>`;
+        s += `<path d="M150 ${py + 40} C 300 ${py - 10} 500 ${py - 10} 560 ${py + 30}" fill="none" stroke="#8C4A2F" stroke-width="2" stroke-dasharray="6 5" class="cflow"></path>`;
         s += bar(560, py, 40, '#D9826B', 'HEAT REUSED', 'warms buildings');
-        s += `<g transform="translate(650 ${py + 34})"><text font-size="11" fill="#23201A" font-family="Inter Tight, sans-serif">Up to ~70 of 100 units</text><text y="18" font-size="11" fill="#23201A" font-family="Inter Tight, sans-serif">put to use, instead of 31.</text><text y="40" font-size="9" fill="#776F62">Illustrative; depends on the plant</text><text y="53" font-size="9" fill="#776F62">and on nearby heat demand.</text></g>`;
+        s += `<g transform="translate(650 ${py + 34})"><text font-size="11" fill="#1F1D1A" font-family="Instrument Serif, serif">Up to ~70 of 100 units</text><text y="18" font-size="11" fill="#1F1D1A" font-family="Instrument Serif, serif">put to use, instead of 31.</text><text y="40" font-size="9" fill="#776F62">Illustrative; depends on the plant</text><text y="53" font-size="9" fill="#776F62">and on nearby heat demand.</text></g>`;
       } else {
-        s += `<g transform="translate(560 ${py + 44})"><text font-size="11" fill="#23201A" font-family="Inter Tight, sans-serif">About two thirds of the heat leaves</text><text y="18" font-size="11" fill="#23201A" font-family="Inter Tight, sans-serif">through cooling towers or into a river.</text></g>`;
+        s += `<g transform="translate(560 ${py + 44})"><text font-size="11" fill="#1F1D1A" font-family="Instrument Serif, serif">About two thirds of the heat leaves</text><text y="18" font-size="11" fill="#1F1D1A" font-family="Instrument Serif, serif">through cooling towers or into a river.</text></g>`;
       }
       g.innerHTML = s;
       read.textContent = reuse
@@ -292,20 +292,20 @@ const sources = [
     const sub = { x: 360, y: 210 };
     const house = (x: number, y: number, on: boolean, src: boolean) => `
       <g transform="translate(${x} ${y})">
-        <circle r="34" fill="${on ? '#E8A33D' : '#23201A'}" fill-opacity="${on ? 0.18 : 0.08}"></circle>
-        <path d="M-14 6 L-14 -6 L0 -18 L14 -6 L14 6Z" fill="${on ? '#FBF7EF' : '#CFC6B6'}" stroke="#23201A"></path>
-        <rect x="-4" y="-3" width="8" height="9" fill="${on ? '#E8A33D' : '#8F877A'}"></rect>
-        ${src ? `<circle cx="20" cy="-16" r="7" fill="#E8A33D" stroke="#8A5A12"></circle><rect x="-30" y="10" width="12" height="7" fill="#6B8F4E" stroke="#23201A" stroke-width=".6"></rect>` : ''}
+        <circle r="34" fill="${on ? '#C99242' : '#1F1D1A'}" fill-opacity="${on ? 0.18 : 0.08}"></circle>
+        <path d="M-14 6 L-14 -6 L0 -18 L14 -6 L14 6Z" fill="${on ? '#F7F5F0' : '#C9CDBF'}" stroke="#1F1D1A"></path>
+        <rect x="-4" y="-3" width="8" height="9" fill="${on ? '#C99242' : '#A3AC9B'}"></rect>
+        ${src ? `<circle cx="20" cy="-16" r="7" fill="#C99242" stroke="#7A5A2E"></circle><rect x="-30" y="10" width="12" height="7" fill="#6B8F4E" stroke="#1F1D1A" stroke-width=".6"></rect>` : ''}
       </g>`;
-    const line = (a: { x: number; y: number }, b: { x: number; y: number }, ok: boolean, cls = '') => `<path d="M${a.x} ${a.y} L${b.x} ${b.y}" stroke="${ok ? '#8A5A12' : '#A8432C'}" stroke-width="2" ${ok ? 'stroke-dasharray="7 6" class="nf ' + cls + '"' : 'stroke-dasharray="2 6" opacity=".6"'}></path>`;
-    const plantSvg = `<g transform="translate(${plant.x} ${plant.y})"><rect x="-34" y="-30" width="68" height="60" rx="4" fill="#FBF7EF" stroke="#23201A"></rect><path d="M-16 -30 L-16 -52 L-6 -52 L-6 -30 M6 -30 L6 -46 L16 -46 L16 -30" fill="#CFC6B6" stroke="#23201A"></path><text y="48" font-size="10" fill="#23201A" text-anchor="middle" letter-spacing="1.4">BIG PLANT</text></g>`;
-    const subSvg = `<g transform="translate(${sub.x} ${sub.y})"><rect x="-14" y="-14" width="28" height="28" fill="#FBF7EF" stroke="#23201A"></rect><text y="32" font-size="9" fill="#776F62" text-anchor="middle" letter-spacing="1.2">SUBSTATION</text></g>`;
+    const line = (a: { x: number; y: number }, b: { x: number; y: number }, ok: boolean, cls = '') => `<path d="M${a.x} ${a.y} L${b.x} ${b.y}" stroke="${ok ? '#7A5A2E' : '#8C4A2F'}" stroke-width="2" ${ok ? 'stroke-dasharray="7 6" class="nf ' + cls + '"' : 'stroke-dasharray="2 6" opacity=".6"'}></path>`;
+    const plantSvg = `<g transform="translate(${plant.x} ${plant.y})"><rect x="-34" y="-30" width="68" height="60" rx="4" fill="#F7F5F0" stroke="#1F1D1A"></rect><path d="M-16 -30 L-16 -52 L-6 -52 L-6 -30 M6 -30 L6 -46 L16 -46 L16 -30" fill="#C9CDBF" stroke="#1F1D1A"></path><text y="48" font-size="10" fill="#1F1D1A" text-anchor="middle" letter-spacing="1.4">BIG PLANT</text></g>`;
+    const subSvg = `<g transform="translate(${sub.x} ${sub.y})"><rect x="-14" y="-14" width="28" height="28" fill="#F7F5F0" stroke="#1F1D1A"></rect><text y="32" font-size="9" fill="#776F62" text-anchor="middle" letter-spacing="1.2">SUBSTATION</text></g>`;
     const draw = () => {
       let s = '';
       if (mode === 'hub') {
         s += line(plant, sub, !stormed); towns.forEach((t) => (s += line(sub, t, !stormed)));
         s += plantSvg + subSvg; towns.forEach((t) => (s += house(t.x, t.y, !stormed, false)));
-        if (stormed) s += `<text x="${(plant.x + sub.x) / 2}" y="${plant.y + 30}" font-size="11" fill="#A8432C" text-anchor="middle" letter-spacing="1.4">LINE DOWN</text>`;
+        if (stormed) s += `<text x="${(plant.x + sub.x) / 2}" y="${plant.y + 30}" font-size="11" fill="#8C4A2F" text-anchor="middle" letter-spacing="1.4">LINE DOWN</text>`;
       } else {
         const ring = [0, 1, 2, 5, 4, 3, 0];
         for (let i = 0; i < ring.length - 1; i++) s += line(towns[ring[i]], towns[ring[i + 1]], true, 'share');
@@ -313,7 +313,7 @@ const sources = [
         s += line(plant, sub, !stormed); s += line(sub, towns[0], !stormed); s += line(sub, towns[3], !stormed);
         s += plantSvg + subSvg; towns.forEach((t) => (s += house(t.x, t.y, true, true)));
         s += `<text x="630" y="214" font-size="10" fill="#6B8F4E" text-anchor="middle" letter-spacing="1.4">NEIGHBORS SHARE</text>`;
-        if (stormed) s += `<text x="${(plant.x + sub.x) / 2}" y="${plant.y + 30}" font-size="11" fill="#A8432C" text-anchor="middle" letter-spacing="1.4">LINE DOWN · ISLANDED</text>`;
+        if (stormed) s += `<text x="${(plant.x + sub.x) / 2}" y="${plant.y + 30}" font-size="11" fill="#8C4A2F" text-anchor="middle" letter-spacing="1.4">LINE DOWN · ISLANDED</text>`;
       }
       layer.innerHTML = s;
       read.textContent = !stormed ? 'Press “Send a storm” to break the main line.'
@@ -338,26 +338,26 @@ const sources = [
 </script>
 
 <style>
-  .fg { background: #F3ECDF; border-block: 1px solid var(--line); }
+  .fg { background: #EFEBE3; border-block: 1px solid var(--line); }
   .fg-in { padding-block: 88px; display: flex; flex-direction: column; gap: 28px; }
   .fg-head { display: flex; flex-direction: column; gap: 14px; max-width: 780px; }
   .fg-gap { margin-top: 56px; }
-  .mix, .net, .cas { margin: 0; background: #FBF7EF; border: 1px solid var(--line); border-radius: 20px; padding: clamp(16px, 3vw, 28px); display: flex; flex-direction: column; gap: 18px; }
+  .mix, .net, .cas { margin: 0; background: #F7F5F0; border: 1px solid var(--line); border-radius: 20px; padding: clamp(16px, 3vw, 28px); display: flex; flex-direction: column; gap: 18px; }
   .presets, .net-tabs, .weather { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  .presets button, .net-tabs button, .storm, .weather button, .cas-btn { border: 1px solid rgba(35,32,26,.25); background: transparent; border-radius: 999px; padding: 9px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; color: var(--ink); }
+  .presets button, .net-tabs button, .storm, .weather button, .cas-btn { border: 1px solid rgba(31,29,26,.25); background: transparent; border-radius: 999px; padding: 9px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; color: var(--ink); }
   .presets button[aria-pressed='true'], .net-tabs button[aria-selected='true'], .weather button[aria-pressed='true'] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
   .weather button[data-wx='heat'][aria-pressed='true'] { background: var(--clay); border-color: var(--clay); }
   .storm, .cas-btn { background: var(--accent); border-color: var(--accent); }
   .cas-btn[aria-pressed='true'] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
   .mix-ctl { display: flex; flex-direction: column; gap: 14px; }
   .srcs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 10px; }
-  .src { position: relative; display: grid; grid-template-columns: 18px 1fr; column-gap: 10px; row-gap: 2px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; cursor: pointer; background: #F3ECDF; transition: border-color .2s, background .2s; }
+  .src { position: relative; display: grid; grid-template-columns: 18px 1fr; column-gap: 10px; row-gap: 2px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; cursor: pointer; background: #EFEBE3; transition: border-color .2s, background .2s; }
   .src input { position: absolute; opacity: 0; pointer-events: none; }
   .src-dot { grid-row: 1 / 3; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--c); background: transparent; transition: background .2s; }
   .src-n { font-size: 16px; color: var(--ink); }
   .src-n em { font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--c); filter: brightness(.8); margin-left: 4px; }
   .src-t { font-family: var(--mono); font-size: 10px; letter-spacing: .04em; line-height: 1.4; color: var(--muted-2); }
-  .src:has(input:checked) { background: #FBF7EF; border-color: var(--c); box-shadow: 0 8px 20px -14px rgba(35,32,26,.5); }
+  .src:has(input:checked) { background: #F7F5F0; border-color: var(--c); box-shadow: 0 8px 20px -14px rgba(31,29,26,.5); }
   .src:has(input:checked) .src-dot { background: var(--c); }
   .src:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
   .mix-chart svg, .net svg, .cas svg { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
