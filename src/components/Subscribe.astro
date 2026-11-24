@@ -1,0 +1,44 @@
+---
+import { site } from '../data/site';
+const ready = site.newsletterAction.trim() !== '';
+---
+<section id="subscribe" class="subscribe">
+  <div class="wrap sub-row">
+    <div class="sub-copy">
+      <h2 class="h2">A letter from the interstice, <span class="it">every other week.</span></h2>
+      <p class="sub-lede">Ad-free and unhurried: the season’s newest course, the sources behind it, and one industry it could change.</p>
+    </div>
+    {ready ? (
+      <form class="sub-form" action={site.newsletterAction} method="post" target="_blank">
+        <label for="email" class="sub-label">Email address</label>
+        <div class="sub-fields">
+          <input id="email" name="email" type="email" required placeholder="you@example.com" autocomplete="email" />
+          <button type="submit">Join the network</button>
+        </div>
+      </form>
+    ) : (
+      <div class="sub-form">
+        <p class="sub-label">Newsletter</p>
+        <p class="sub-soon">Opening soon. Add your newsletter address in <code>src/data/site.ts</code> to switch this on.</p>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .subscribe { background: var(--accent); color: var(--ink); }
+  .sub-row { padding-block: 96px; display: flex; flex-wrap: wrap; gap: 40px; align-items: end; justify-content: space-between; }
+  .sub-copy { flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+  .sub-copy .it { font-weight: 400; }
+  .sub-lede { margin: 0; font-size: 18px; line-height: 1.55; max-width: 520px; font-weight: 400; }
+  .sub-form { flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .sub-label { margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .sub-fields { display: flex; flex-wrap: wrap; }
+  .sub-fields input { flex: 1 1 240px; min-width: 0; min-height: 52px; padding: 0 22px; border-radius: 999px 0 0 999px; font-family: var(--sans); font-size: 17px; border: 1px solid var(--ink); background: var(--card); color: var(--ink); }
+  .sub-fields button { min-height: 52px; padding: 0 28px; border-radius: 0 999px 999px 0; font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; background: var(--ink); color: var(--ground); border: 1px solid var(--ink); cursor: pointer; }
+  .sub-soon { margin: 0; font-size: 17px; line-height: 1.5; font-weight: 400; }
+  @media (max-width: 520px) {
+    .sub-fields input, .sub-fields button { border-radius: 999px; flex-basis: 100%; }
+    .sub-fields { gap: 8px; }
+  }
+</style>

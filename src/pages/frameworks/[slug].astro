@@ -1,0 +1,219 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import DoughnutFigure from '../../components/DoughnutFigure.astro';
+import Subscribe from '../../components/Subscribe.astro';
+import { site } from '../../data/site';
+import { inline, toRoman } from '../../data/inline';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('frameworks')).sort((a, b) => a.data.course - b.data.course);
+  return all.map((entry, i) => ({ params: { slug: entry.id }, props: { entry, next: all[i + 1] } }));
+}
+const { entry, next } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const forthcoming = d.status === 'forthcoming';
+---
+<Base title={`${d.title} ${d.titleAccent ?? ''}`.trim()} description={d.summary}>
+  <div class="progress" aria-hidden="true"><span data-progress></span></div>
+  <!-- TITLE -->
+  <section class="narrow title-block">
+    <p class="label">Framework {d.number} · Course {toRoman(d.course)} of the {site.season} season</p>
+    <h1 class="fw-title">{d.title} {d.titleAccent && <span class="it clay">{d.titleAccent}</span>}</h1>
+    <p class="fw-dek">{d.dek}</p>
+    <div class="chips">{d.fields.map((f) => <span class="chip">{f}</span>)}</div>
+    {!forthcoming && <p class="label muted">By {d.author}{d.readingTime && ` · ${d.readingTime} min read`}</p>}
+  </section>
+
+  {forthcoming ? (
+    <section class="narrow section"><div class="prose"><Content /></div></section>
+  ) : (
+    <>
+      {d.lineage.length > 0 && (
+        <section class="band" aria-label="Lineage">
+          <div class="wrap lineage">
+            <p class="label">The lineage · {d.lineage.length} roots, one trunk</p>
+            <ol class="lineage-grid">
+              {d.lineage.map((l, i) => (
+                <li class={`card lineage-card ${i === d.lineage.length - 1 ? 'last' : ''}`}>
+                  <span class="lin-year it">{l.year}</span>
+                  <span class="label muted">{l.field}</span>
+                  <span class="lin-work">{l.work}</span>
+                  <span class="lin-by it">{l.by}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      <!-- ESSAY (written in Markdown) -->
+      <section class="narrow section"><div class="prose essay"><Content /></div></section>
+
+      {d.threads && (
+        <section class="band-white">
+          <div class="wrap section stack">
+            <div class="stack-sm">
+              <p class="label">Where they meet</p>
+              <h2 class="h2">{d.threads.rows.length} threads run through <span class="it">every source</span></h2>
+            </div>
+            <div class="table-box">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Thread</th>
+                    {d.threads.columns.map((c, i) => <th scope="col" class={i === d.threads!.columns.length - 1 ? 'honey' : ''}>{c}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {d.threads.rows.map((r) => (
+                    <tr>
+                      <th scope="row">{r.name}</th>
+                      {r.cells.map((c) => <td>{c}</td>)}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {d.synthesis && (
+        <section class="wrap section">
+          <div class="synth">
+            <p class="label">The synthesis</p>
+            <h2 class="h2">{d.synthesis.heading} <span class="it clay">{d.synthesis.accent}</span></h2>
+            {d.synthesis.body.map((p) => <p class="body">{p}</p>)}
+          </div>
+        </section>
+      )}
+
+      {d.figure === 'viable-doughnut' && <DoughnutFigure />}
+
+      {d.principles.length > 0 && (
+        <section class="band">
+          <div class="wrap section stack">
+            <div class="stack-sm">
+              <p class="label">The framework · {d.principles.length} design principles</p>
+              <h2 class="h2">How to build it</h2>
+            </div>
+            <ol class="principles">
+              {d.principles.map((p, i) => (
+                <li class="principle">
+                  <span class="p-num it">{i + 1}.</span>
+                  <h3 class="p-title">{p.title}</h3>
+                  <p class="small">{p.text}</p>
+                  <p class="label muted p-from">{p.from}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {(d.appliesTo.length > 0 || d.questions.length > 0) && (
+        <section class="wrap section apply">
+          {d.appliesTo.length > 0 && (
+            <div class="apply-list">
+              <p class="label">Where it could work</p>
+              <div class="apply-rows">
+                {d.appliesTo.map((a) => (
+                  <div class="apply-row"><span class="apply-name">{a.name}</span><span class="small">{a.how}</span></div>
+                ))}
+              </div>
+            </div>
+          )}
+          {d.questions.length > 0 && (
+            <div class="card questions">
+              <p class="label clay">Open questions</p>
+              <ul>{d.questions.map((q) => <li>{q}</li>)}</ul>
+            </div>
+          )}
+        </section>
+      )}
+
+      {d.sources.length > 0 && (
+        <section class="sources">
+          <div class="narrow sources-inner">
+            <p class="label">Sources · with gratitude</p>
+            <ol class="src-list">{d.sources.map((s) => <li set:html={inline(s)} />)}</ol>
+          </div>
+        </section>
+      )}
+    </>
+  )}
+
+  {next && (
+    <nav class="wrap next" aria-label="Next course">
+      <a href={`/frameworks/${next.id}/`}>Next course: {next.data.title} {next.data.titleAccent} →</a>
+    </nav>
+  )}
+  <Subscribe />
+</Base>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-progress]');
+  const update = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.transform = `scaleX(${max > 0 ? h.scrollTop / max : 0})`;
+  };
+  document.addEventListener('scroll', update, { passive: true });
+  update();
+</script>
+
+<style>
+  .progress { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 20; pointer-events: none; }
+  .progress span { display: block; height: 100%; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+  .stack { display: flex; flex-direction: column; gap: 48px; }
+  .stack-sm { display: flex; flex-direction: column; gap: 16px; max-width: 760px; }
+  .title-block { padding-block: 96px 72px; display: flex; flex-direction: column; gap: 28px; }
+  .fw-title { margin: 0; font-weight: 300; font-size: clamp(52px, 7.4vw, 112px); line-height: 0.95; letter-spacing: -0.035em; }
+  .fw-dek { margin: 0; max-width: 820px; font-family: var(--serif); font-weight: 300; font-size: clamp(22px, 2.4vw, 32px); line-height: 1.35; color: var(--ink-2); }
+
+  .lineage { padding-block: 80px; display: flex; flex-direction: column; gap: 40px; }
+  .lineage-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .lineage-card { padding: 28px; display: flex; flex-direction: column; gap: 12px; }
+  .lineage-card.last { border-color: var(--accent); box-shadow: 0 24px 60px -30px rgba(138,90,18,0.35); }
+  .lin-year { font-size: 40px; color: var(--clay); }
+  .lineage-card.last .lin-year { color: var(--accent-ink); }
+  .lin-work { font-size: 22px; font-weight: 400; line-height: 1.2; }
+  .lin-by { font-size: 17px; color: var(--muted); }
+
+  .essay :global(h3) { margin-top: 64px; }
+  .essay :global(h3:first-child) { margin-top: 0; }
+  .essay :global(h3 + h2) { margin-top: 0; }
+
+  .table-box { overflow-x: auto; border-radius: 20px; border: 1px solid var(--line); }
+  table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 15px; line-height: 1.55; }
+  thead tr { background: var(--ground-2); text-align: left; }
+  thead th { padding: 18px 20px; font-family: var(--mono); font-weight: 400; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+  tbody tr { border-top: 1px solid var(--line); vertical-align: top; }
+  tbody th { padding: 20px; text-align: left; font-weight: 400; width: 16%; }
+  td { padding: 20px; color: var(--ink-2); }
+
+  .synth { max-width: 900px; display: flex; flex-direction: column; gap: 24px; }
+
+  .principles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; }
+  .principle { background: var(--card); border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 14px; }
+  .p-num { font-size: 28px; color: var(--clay); }
+  .p-title { margin: 0; font-weight: 400; font-size: 22px; }
+  .p-from { font-size: 11px; }
+
+  .apply { display: flex; flex-wrap: wrap; gap: 56px; }
+  .apply-list { flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+  .apply-rows { border-top: 1px solid rgba(35,32,26,0.16); }
+  .apply-row { padding: 22px 0; border-bottom: 1px solid rgba(35,32,26,0.16); display: flex; flex-direction: column; gap: 6px; }
+  .apply-name { font-size: 22px; font-weight: 400; }
+  .questions { flex: 1 1 420px; min-width: 0; border-radius: 28px; padding: 40px; display: flex; flex-direction: column; gap: 20px; align-self: flex-start; }
+  .questions ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 14px; font-size: 17px; line-height: 1.6; color: var(--ink-2); }
+
+  .sources { border-top: 1px solid var(--line); }
+  .sources-inner { padding-block: 88px; display: flex; flex-direction: column; gap: 28px; }
+  .src-list { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 14px; font-family: var(--serif); font-size: 19px; line-height: 1.5; color: var(--ink-2); }
+
+  .next { padding-block: 48px; border-top: 1px solid var(--line); }
+  .next a { font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+</style>

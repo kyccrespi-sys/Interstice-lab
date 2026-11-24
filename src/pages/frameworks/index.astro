@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Subscribe from '../../components/Subscribe.astro';
+import { toRoman } from '../../data/inline';
+
+const all = (await getCollection('frameworks')).sort((a, b) => a.data.course - b.data.course);
+---
+<Base title="Frameworks" description="Every framework published by Interstice Lab.">
+  <section class="wrap head">
+    <p class="label">All frameworks</p>
+    <h1 class="h1">The <span class="it honey">frameworks</span></h1>
+    <p class="lede">Each one draws on several fields, names every source, and ends with where it could be put to work.</p>
+  </section>
+  <section class="wrap grid-wrap">
+    <div class="grid">
+      {all.map((f) => {
+        const live = f.data.status === 'published';
+        return (
+          <article class="card item">
+            <p class="label muted">{f.data.number} · Course {toRoman(f.data.course)} · {live ? f.data.category : 'Forthcoming'}</p>
+            <h2 class="h3">{live ? <a href={`/frameworks/${f.id}/`}>{f.data.title} {f.data.titleAccent}</a> : <>{f.data.title} {f.data.titleAccent}</>}</h2>
+            <p class="small">{f.data.summary}</p>
+            <div class="chips">{f.data.fields.map((x) => <span class="chip">{x}</span>)}</div>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+  <Subscribe />
+</Base>
+
+<style>
+  .head { padding-block: 96px 56px; display: flex; flex-direction: column; gap: 24px; }
+  .grid-wrap { padding-bottom: 104px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .item { padding: 32px; display: flex; flex-direction: column; gap: 14px; }
+  .item a { color: var(--ink); text-decoration: none; }
+  .item a:hover { color: var(--accent-ink); }
+</style>

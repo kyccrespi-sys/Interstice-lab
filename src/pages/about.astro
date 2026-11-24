@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import Subscribe from '../components/Subscribe.astro';
+import { site } from '../data/site';
+---
+<Base title="About" description={site.description}>
+  <section class="narrow about">
+    <p class="label">About</p>
+    <h1 class="h1">A lab for what grows <span class="it honey">between fields.</span></h1>
+    <div class="prose">
+      <p>[Write a few paragraphs about why you started Interstice Lab, who it's for, and what readers can expect each season.]</p>
+      <p>Interstice Lab reads across biotechnology, ecology, economics and finance. Each season we publish a small number of frameworks: syntheses that draw on several fields, credit every source, and end with where the idea could be put to work.</p>
+      <h2>How we work</h2>
+      <p>We summarize and link to the research and writing we draw on rather than republishing it. Every framework lists its sources in full, and we welcome corrections.</p>
+      <h2>Contact</h2>
+      <p>{site.editor} · <a href={`mailto:${site.email}`}>{site.email}</a></p>
+    </div>
+  </section>
+  <Subscribe />
+</Base>
+
+<style>
+  .about { padding-block: 96px 104px; display: flex; flex-direction: column; gap: 32px; }
+  .prose { max-width: 720px; margin-top: 24px; }
+</style>
