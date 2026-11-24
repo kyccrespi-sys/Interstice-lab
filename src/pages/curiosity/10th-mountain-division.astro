@@ -1,4 +1,5 @@
 ---
+import GearLab from '../../components/tenth/GearLab.astro';
 import Base from '../../layouts/Base.astro';
 import CampHaleMap from '../../components/tenth/CampHaleMap.astro';
 import WarMap from '../../components/tenth/WarMap.astro';
@@ -46,7 +47,6 @@ const inventors = [
   { n: 'David Brower', unit: '86th Mountain Infantry', made: 'Sierra Club’s first executive director', t: 'Turned an outing club into a national environmental force and was central to passing the 1964 Wilderness Act.', tag: 'Conservation' },
 ];
 
-const kit = ['Stretchy, strong nylon climbing rope', 'The lugged rubber boot sole', 'Gasoline camp stoves', 'Dehydrated trail food', 'Double goose-down sleeping bags', 'The M29 Weasel, a forerunner of the snowcat'];
 ---
 <Base title="The 10th Mountain Division" description="Curiosity Corner: the ski troops of Camp Hale, from the Winter War to Riva Ridge to the founding of the American ski industry.">
   <section class="hero-dark">
@@ -147,11 +147,7 @@ const kit = ['Stretchy, strong nylon climbing rope', 'The lugged rubber boot sol
             </article>
           ))}
         </div>
-        <div class="card kit">
-          <p class="label">Gear that grew out of their experiments</p>
-          <p class="small">The Army spent heavily developing equipment for the mountain troops. Historians credit those trials with advancing gear we now take for granted:</p>
-          <ul>{kit.map((k) => <li>{k}</li>)}</ul>
-        </div>
+        <GearLab />
       </section>
 
       <section class="sources">
@@ -163,6 +159,11 @@ const kit = ['Stretchy, strong nylon climbing rope', 'The lugged rubber boot sol
           <li>Camp Hale Historical Marker, “D-Series,” Historical Marker Database.</li>
           <li>Colorado Department of Education. “Camp Hale and the Tenth Mountain Division.”</li>
           <li>Denver Public Library, 10th Mountain Division Resource Center.</li>
+          <li>William House. “Mountain Equipment for the U.S. Army.” American Alpine Journal, 1946.</li>
+          <li>Peter Shelton. “The legacy of the 10th Mountain men.” High Country News, 2008.</li>
+          <li>Colorado Snowsports Museum. “M29 Weasel all-terrain vehicle was predecessor to the snowcat.” Vail Daily.</li>
+          <li>The Henry Ford. “Jeep” collection notes; Military Trader, “GI Jeep Tale” (Camp Hale MP recollection).</li>
+          <li>Coleman Company history of the G.I. pocket stove; Big Wall Gear, history of pitons and carabiners.</li>
           <li>Peter Shelton. “The legacy of the 10th Mountain men.” <em>High Country News</em>, 2008.</li>
           <li>U.S. Army. “Climb to Glory” and Lake Garda commemoration articles.</li>
           <li>Ski & Snowboard Hall of Fame; Alta Historical Society (Monty Atwater); NOLS (Paul Petzoldt); Gerry company history; University of Oregon (Bill Bowerman).</li>

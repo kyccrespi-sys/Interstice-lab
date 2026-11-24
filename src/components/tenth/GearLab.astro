@@ -1,0 +1,119 @@
+---
+// Gear evaluation: what came out of the mountain-troop equipment program, and how strong the 10th's claim to each item is.
+// Sketches are original fine-line drawings, not tracings of photographs.
+const FG = '#E8E4DA', HON = '#C99242', COOL = '#8FC1CB', WARM = '#D9826B', DIM = '#A8A397';
+const s = (d: string) => `<path d="${d}" fill="none" stroke="${FG}" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>`;
+const a = (d: string) => `<path d="${d}" fill="none" stroke="${HON}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>`;
+const note = (x: number, y: number, t: string, anchor = 'start') => `<text x="${x}" y="${y}" font-size="7.5" fill="${DIM}" letter-spacing="1" text-anchor="${anchor}" font-family="IBM Plex Mono, monospace">${t}</text>`;
+
+const sketch: Record<string, string> = {
+  rope:
+    Array.from({ length: 7 }, (_, i) => `<ellipse cx="${96 + i * 1.6}" cy="${64 + i * 2.2}" rx="${58 - i * 1.6}" ry="${22 - i * 0.6}" fill="none" stroke="${FG}" stroke-opacity="${0.55 + i * 0.06}" stroke-width="1"></ellipse>`).join('') +
+    a('M150 84 C170 96 182 108 204 116') + a('M204 116 l-6 -1 m6 1 l-2 -5') + note(20, 130, '7/16 IN NYLON · 3,400 LB'),
+  sole:
+    s('M86 14 C112 8 136 18 138 44 C140 66 128 78 126 98 C124 120 112 132 98 130 C82 128 76 114 77 98 C78 78 64 46 86 14Z') +
+    [[96, 30], [116, 28], [92, 48], [112, 46], [128, 50], [94, 66], [114, 64], [100, 104], [114, 106], [104, 120]].map(([x, y]) => a(`M${x - 6} ${y + 4} L${x} ${y - 3} L${x + 6} ${y + 4}`)).join('') +
+    s('M86 84 L130 84') + note(150, 70, 'MOULDED') + note(150, 80, 'RUBBER CLEATS'),
+  stove:
+    s('M88 58 L88 112 Q110 120 132 112 L132 58') + `<ellipse cx="110" cy="58" rx="22" ry="7" fill="none" stroke="${FG}"></ellipse>` +
+    s('M104 51 L104 40 L116 40 L116 51') + s('M86 40 L134 40 M90 40 L84 30 M130 40 L136 30 M110 40 L110 30') +
+    a('M104 36 C100 28 108 24 105 16 M112 36 C110 28 117 25 114 18') + `<ellipse cx="110" cy="122" rx="12" ry="4" fill="none" stroke="${HON}"></ellipse>` +
+    s('M122 122 l14 0') + note(140, 125, 'FUEL WHEEL') + note(78, 70, 'M-1942', 'end') + note(78, 80, 'MOUNTAIN', 'end') + note(78, 90, 'STOVE', 'end'),
+  tent:
+    s('M44 116 L92 36 L140 116Z') + s('M92 36 L168 46 L196 112 L140 116') + s('M92 36 L92 116') + s('M92 60 L92 112') +
+    `<path d="M44 116 L20 124 M140 116 L150 130 M196 112 L210 124" stroke="${FG}" stroke-opacity=".5" stroke-dasharray="2 3"></path>` +
+    [[110, 60], [124, 74], [150, 64], [160, 88], [130, 96], [176, 80]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.1" fill="${HON}"></circle>`).join('') +
+    note(150, 30, 'FROST INSIDE'),
+  axe:
+    s('M52 126 L146 32') + s('M126 24 L186 54') + a('M186 54 C176 54 168 50 160 44') + s('M126 24 L112 18 L104 26') + s('M52 126 L46 134') +
+    s('M30 92 L80 92 M34 92 L32 102 M44 92 L42 102 M54 92 L52 102 M64 92 L62 102 M74 92 L72 102') + note(20, 82, 'CRAMPON') + note(150, 84, 'HICKORY SHAFT') + note(150, 94, 'WEAK WELD'),
+  biner:
+    `<rect x="66" y="20" width="52" height="104" rx="26" fill="none" stroke="${FG}" stroke-width="1.4"></rect>` +
+    `<rect x="111" y="44" width="10" height="40" fill="#1C1D1B"></rect>` + a('M116 42 L116 86') + `<circle cx="116" cy="42" r="1.8" fill="${HON}"></circle>` +
+    s('M150 24 L150 94 L158 94 L156 24Z') + `<circle cx="154" cy="18" r="6" fill="none" stroke="${FG}"></circle>` +
+    s('M180 36 L178 116 L186 116 L188 36Z') + `<circle cx="183" cy="30" r="6" fill="none" stroke="${FG}"></circle>` + note(140, 132, 'RING PITONS'),
+  bag:
+    s('M30 70 C30 44 56 38 72 44 L188 58 C200 60 200 82 188 84 L72 98 C56 102 30 96 30 70Z') +
+    `<ellipse cx="46" cy="70" rx="10" ry="16" fill="none" stroke="${HON}"></ellipse>` +
+    [80, 100, 120, 140, 160, 178].map((x) => s(`M${x} ${46 + (x - 72) * 0.12} C${x - 4} 70 ${x - 4} 70 ${x} ${96 - (x - 72) * 0.12}`)).join('') + note(70, 120, 'DOWN, BAFFLED, TWO LAYERS'),
+  ration:
+    s('M50 64 L130 64 L130 118 L50 118Z') + s('M50 64 L74 46 L154 46 L130 64 M154 46 L154 100 L130 118') +
+    [[66, 82], [86, 82], [106, 82], [66, 102], [86, 102], [106, 102]].map(([x, y]) => `<circle cx="${x + 4}" cy="${y}" r="7" fill="none" stroke="${FG}" stroke-opacity=".7"></circle>`).join('') +
+    s('M164 96 L196 96 L192 118 L168 118Z') + a('M172 90 C168 82 176 78 172 70 M184 90 C181 82 188 79 185 72') + note(30, 134, 'DRIED SOUPS · COOK TO EAT'),
+  weasel:
+    s('M28 100 Q28 88 40 88 L184 88 Q196 88 196 100 Q196 112 184 112 L40 112 Q28 112 28 100Z') +
+    [44, 76, 108, 140, 176].map((x) => `<circle cx="${x}" cy="100" r="${x === 44 ? 7 : 8}" fill="none" stroke="${FG}" stroke-opacity=".8"></circle>`).join('') +
+    s('M40 88 L44 62 L118 62 L128 44 L160 44 L176 88') + s('M128 44 L134 62 M118 62 L134 62') + a('M30 122 L200 122') +
+    `<path d="M30 126 L200 126" stroke="${HON}" stroke-opacity=".5" stroke-dasharray="3 4"></path>` + note(30, 36, 'TRACKS · 15 IN WIDE'),
+  jeep:
+    s('M26 94 L26 70 L96 70 L102 48 L106 70 L162 70 L182 78 L182 94 L170 94 A20 20 0 0 0 132 94 L80 94 A20 20 0 0 0 42 94Z') +
+    `<circle cx="61" cy="96" r="15" fill="none" stroke="${FG}"></circle><circle cx="61" cy="96" r="5" fill="none" stroke="${FG}" stroke-opacity=".6"></circle><circle cx="151" cy="96" r="15" fill="none" stroke="${FG}"></circle><circle cx="151" cy="96" r="5" fill="none" stroke="${FG}" stroke-opacity=".6"></circle>` +
+    `<circle cx="20" cy="80" r="11" fill="none" stroke="${FG}" stroke-opacity=".7"></circle>` + s('M160 70 L160 62 M168 72 L168 64') +
+    `<path d="M20 118 C60 108 110 108 200 116" fill="none" stroke="${HON}" stroke-width="1.2"></path>` + note(110, 132, 'SANK TO THE AXLES OFF-ROAD', 'middle'),
+};
+
+type Verdict = 'born' | 'adopted' | 'used';
+const V: Record<Verdict, { label: string; color: string }> = {
+  born: { label: 'Developed for the mountain troops', color: HON },
+  adopted: { label: 'Invented elsewhere, adapted for them', color: COOL },
+  used: { label: 'Used by them, not born there', color: WARM },
+};
+
+const gear: { id: string; name: string; v: Verdict; then: string; them: string; now: string; photo?: { label: string; href: string } }[] = [
+  { id: 'rope', name: 'Nylon climbing rope', v: 'born', then: 'Manila hemp was standard and scarce. Climbers tested nylon with Plymouth Cordage under Richard Leonard.', them: 'Nylon soaked up more than three times the shock of the same weight of manila and stretched about 39% before breaking, versus about 13%. The Army settled on 7/16-inch rope rated at 3,400 lb and used it heavily in its rock schools.', now: 'Stretch that catches a fall is the core idea of every modern dynamic climbing rope.' },
+  { id: 'stove', name: 'The mountain stove', v: 'born', then: 'Coleman built a one-burner pocket stove for the Army in about 60 days. Sierra Club climber Bestor Robinson designed a shorter, sturdier mountain version.', them: 'The M-1942 had a large fuel wheel meant for gloved hands; later models went back to a normal valve. Mountain rations were dried soups that had to be cooked, so the stove mattered.', now: 'Coleman sold a civilian “G.I. Pocket Stove” from 1946 to 1949, and the compact liquid-fuel stove became standard backpacking kit.' },
+  { id: 'tent', name: 'Mountain tent', v: 'born', then: 'A small A-frame modeled on an Everest expedition tent, in cotton lightly coated with synthetic resin.', them: 'It kept wind and rain out but trapped moisture: troops woke to frost inside. Tests found uncoated tents could take on their own dry weight in ice, so late-war work turned to fabrics that let vapor out.', now: 'That condensation problem drove the search for breathable waterproof fabric that defines tents and shells today.' },
+  { id: 'axe', name: 'Ice axe and crampons', v: 'born', then: 'The design team picked a heavy European axe pattern and a 10-point crampon.', them: 'An honest flop. Dry ash ran short, so shafts used heavier hickory; an unauthorized weld weakened many heads; crampons from mass production were unreliable. The designers later said a lighter axe would have served better.', now: 'Lighter axes and stronger alloy crampons came after the war, partly from these lessons.' },
+  { id: 'biner', name: 'Carabiners and pitons', v: 'adopted', then: 'Spring-gate carabiners came from German-speaking climbers before World War I. Pierre Allain made aluminum prototypes in the 1930s.', them: 'The Army bought them by the thousands, mostly heavy steel, since aluminum was scarce in wartime. Angle pitons probably first appeared as Army ring-angle pitons, placed by the thousands during training at Seneca Rocks.', now: 'After the war, Raffi Bedayn’s aluminum ovals and Gerry Cunningham’s triangular carabiner put light alloy gear into civilian hands.', photo: { label: 'Archive photo: pitons and a carabiner', href: 'https://digital.denverlibrary.org/nodes/view/132874' } },
+  { id: 'sole', name: 'Lugged rubber boot sole', v: 'adopted', then: 'Italian climber Vitale Bramani invented the lugged rubber sole in 1937, the origin of Vibram.', them: 'The Army looked at the Bramani sole first, then dropped it when rubber was banned from new gear. Once rubber compounds were available it adopted its own moulded cleat sole for the ski-mountain boot in early 1943.', now: 'Lugged rubber soles became the norm on hiking and mountaineering boots.' },
+  { id: 'bag', name: 'Double down sleeping bag', v: 'born', then: 'Civilian bags were too fragile for soldiers sleeping out in deep mountain cold.', them: 'Historians list the double goose-down bag among the program’s results; the designers said military bags had to be far tougher than civilian ones. Detailed test records are thinner here than for rope or tents.', now: 'Baffled down mummy bags became the standard cold-weather bag.' },
+  { id: 'ration', name: 'Dehydrated mountain ration', v: 'born', then: 'Issued 1942–43 to the 10th and the First Special Service Force, built around dried, cooked food.', them: 'Officers valued hot, easily digested meals at altitude, and troopers learned to cook them alone. Some disliked the noise and bulk of cooking gear on patrol.', now: 'Freeze-dried trail meals are the descendants.' },
+  { id: 'weasel', name: 'M29 Weasel', v: 'used', then: 'Studebaker designed it for a planned commando raid on Norway that was cancelled; it was not built for the 10th.', them: 'The 10th trained with Weasels at Camp Hale and used them in Italy, mostly to evacuate wounded. About 15,000 were built from 1943 to 1945.', now: 'Surplus Weasels hauled rescuers and groomed slopes, and the type is a forerunner of the snowcat.', photo: { label: 'Archive photo: Weasels at Camp Hale', href: 'https://digital.denverlibrary.org/nodes/view/132960' } },
+  { id: 'jeep', name: 'The Jeep', v: 'used', then: 'Designed in 1940 by Bantam, Willys and Ford for the Army’s Quartermaster Corps, before the mountain troops existed.', them: 'Jeeps were everywhere at Camp Hale, hauling men and even howitzers through snow. Off the plowed road they bogged down: one camp MP recalled a jeep sinking to its axles 100 feet into the snow. That gap is why the tracked Weasel mattered.', now: 'Willys turned it into the CJ-2A in 1945, the first mass-produced civilian four-wheel drive.', photo: { label: 'Archive photo: Jeeps outside the field house', href: 'https://digital.denverlibrary.org/nodes/view/133077' } },
+];
+---
+<div class="gl">
+  <div class="gl-head">
+    <p class="label">Gear that came out of the program · evaluated</p>
+    <p class="small">The Army brought in America’s best climbers to design and test equipment for its mountain troops. Some of it was truly new, some was borrowed and improved, and some famous gear was simply used there. Each item is graded on how strong the 10th’s claim really is.</p>
+    <div class="gl-key">{(Object.keys(V) as Verdict[]).map((k) => <span><i style={`background:${V[k].color}`}></i>{V[k].label}</span>)}</div>
+  </div>
+  <div class="gl-grid">
+    {gear.map((g) => (
+      <article class="gl-card">
+        <svg viewBox="0 0 220 140" role="img" aria-label={`Sketch: ${g.name}`} set:html={sketch[g.id]}></svg>
+        <p class="gl-v" style={`color:${V[g.v].color}`}><i style={`background:${V[g.v].color}`}></i>{V[g.v].label}</p>
+        <h3>{g.name}</h3>
+        <dl>
+          <dt>Then</dt><dd>{g.then}</dd>
+          <dt>With the 10th</dt><dd>{g.them}</dd>
+          <dt>Now</dt><dd>{g.now}</dd>
+        </dl>
+        {g.photo && <a class="gl-photo" href={g.photo.href} target="_blank" rel="noopener">{g.photo.label} ↗</a>}
+      </article>
+    ))}
+  </div>
+  <p class="gl-foot">Sketches are original drawings for this page. Archive photos open at the Denver Public Library’s 10th Mountain Division Resource Center.</p>
+</div>
+
+<style>
+  .gl { background: #1C1D1B; color: #E8E4DA; border-radius: 6px; padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+  .gl-head { display: flex; flex-direction: column; gap: 10px; max-width: 760px; }
+  .gl .label { color: #C99242; }
+  .gl .small { color: #CFCBC0; }
+  .gl-key { display: flex; flex-wrap: wrap; gap: 8px 20px; font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: #CFCBC0; }
+  .gl-key span, .gl-v { display: inline-flex; align-items: center; gap: 8px; }
+  .gl-key i, .gl-v i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+  .gl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+  .gl-card { background: #1C1D1B; border: 1px solid rgba(232, 228, 218, .16); border-radius: 4px; padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; }
+  .gl-card svg { width: 100%; height: auto; display: block; border-bottom: 1px solid rgba(232, 228, 218, .1); padding-bottom: 8px; }
+  .gl-v { font-family: var(--mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; margin: 0; }
+  .gl-card h3 { font-family: var(--display); font-weight: 400; font-size: 26px; line-height: 1.1; margin: 0; color: #F2EFE7; }
+  .gl-card dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 2px; }
+  .gl-card dt { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #A8A397; margin-top: 8px; }
+  .gl-card dd { margin: 0; font-size: 14.5px; line-height: 1.55; color: #D6D2C7; }
+  .gl-photo { margin-top: auto; padding-top: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: #8FC1CB; text-decoration: none; border-top: 1px dashed rgba(232, 228, 218, .15); }
+  .gl-photo:hover { text-decoration: underline; }
+  .gl-foot { font-family: var(--mono); font-size: 10.5px; color: #A8A397; letter-spacing: .03em; margin: 0; }
+  @media (max-width: 600px) { .gl { padding: 22px 16px; } }
+</style>
