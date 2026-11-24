@@ -2,7 +2,7 @@
 // Framework 006 — Climate-Rated Performance.
 // An interactive "rated kit card": choose an activity, the feels-like temperature
 // and conditions, and get a Comfort / Limit / Caution rating plus fuel, warm-up,
-// effort and kit. All guidance text lives in the DATA block in the script below.
+// effort, kit and recovery. All guidance text lives in the DATA block in the script below.
 ---
 <section id="planner" class="band-white" aria-label="Climate-rated kit planner">
   <div class="wrap section planner">
@@ -55,6 +55,7 @@
         <div class="kit-col"><p class="label">Warm-up</p><ul data-list="warm"></ul></div>
         <div class="kit-col"><p class="label">Effort</p><ul data-list="effort"></ul></div>
         <div class="kit-col"><p class="label">Kit</p><ul data-list="kit"></ul></div>
+        <div class="kit-col"><p class="label">Recovery</p><ul data-list="recovery"></ul></div>
       </div>
       <p class="kit-note">General guidance, not medical advice. Bodies differ: adjust for your fitness, health and how you feel, and check the forecast's feels-like temperature before you go.</p>
     </article>
@@ -103,6 +104,18 @@
     b5: ['5 min easy, in the shade if possible', 'Static stretching after'],
     b6: ['Keep it short: 5 min easy, in the shade', 'Cool down and stretch somewhere cool'],
     b7: ['Minimal warm-up, indoors or in shade', 'Cool down somewhere cool'],
+  };
+
+  // After the outing, per band.
+  const RECOVERY: Record<string, string[]> = {
+    b0: ['Get out of damp layers right away; you cool fast once you stop', 'Warm drink, then a meal with carbs and protein within about 2 hours', 'Gentle static stretches once you are warm indoors'],
+    b1: ['Change out of sweaty layers quickly', 'Warm drink, then carbs and protein within about 2 hours', 'Static stretches indoors'],
+    b2: ['Change out of damp layers soon', 'Carbs and protein within about 2 hours', '5–10 min of static stretching'],
+    b3: ['Walk a few minutes to cool down', 'Water, then carbs and protein within about 2 hours', '5–10 min of static stretching'],
+    b4: ['Walk a few minutes to cool down', 'Water, then carbs and protein within about 2 hours', '5–10 min of static stretching'],
+    b5: ['Cool down in the shade', 'Rehydrate; carbs and protein within about 2 hours', 'Stretch somewhere cool'],
+    b6: ['Get to shade or indoors; a cool shower helps', 'Rehydrate with electrolytes, then a meal with carbs and protein', 'Stretch once you have cooled'],
+    b7: ['Cool off right away: shade, air conditioning, cool water', 'Rehydrate with electrolytes', 'Watch for headache, dizziness or nausea afterward; seek help if they persist'],
   };
 
   const BY_ACTIVITY: Record<string, { effort: Record<string, string[]>; kit: Record<string, string[]> }> = {
@@ -228,6 +241,10 @@
       fill('warm', WARM[band.id]);
       fill('effort', effort);
       fill('kit', kit);
+      const rec = [...RECOVERY[band.id]];
+      if (state.activity === 'cycling') rec.push('Easy spin for the last few minutes');
+      if (state.activity === 'hiking') rec.push('Feet up for a bit; check for blisters');
+      fill('recovery', rec);
 
       const tierEl = root.querySelector<HTMLElement>('[data-tier]')!;
       tierEl.textContent = tier[0].toUpperCase() + tier.slice(1);
@@ -285,7 +302,7 @@
   .kit:hover { transform: none; }
   .kit-head { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
   .kit-summary { margin: 4px 0 0; font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1.3; color: var(--ink); }
-  .kit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+  .kit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 28px; }
   .kit-col { display: flex; flex-direction: column; gap: 10px; }
   .kit-col ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 16px; line-height: 1.5; color: var(--ink-2); }
   .kit-note { margin: 0; padding-top: 18px; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.5; color: var(--muted-2); }

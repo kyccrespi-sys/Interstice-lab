@@ -5,8 +5,8 @@ title: "Climate-Rated"
 titleAccent: "Performance"
 pairing: "sleeping-bag temperature ratings, paired with running, hiking and cycling"
 question: "Your sleeping bag has a temperature rating. Why doesn't your run?"
-summary: "Camping gear tells you the temperatures it's built for. This framework gives every outing the same kind of rating, with the fuel, warm-up, effort and kit to match the weather."
-dek: "Sleeping bags carry a temperature rating. Your run, hike or ride can too: one rating for the weather, and the fuel, warm-up, effort and kit to match."
+summary: "Camping gear tells you the temperatures it's built for. This framework gives every outing the same kind of rating, with the fuel, warm-up, effort, kit and recovery to match the weather."
+dek: "Sleeping bags carry a temperature rating. Your run, hike or ride can too: one rating for the weather, and the fuel, warm-up, effort, kit and recovery to match."
 category: "Outdoor & Apparel"
 fields: ["Physiology", "Sports nutrition", "Textiles", "Climate"]
 author: "K Crespin"
@@ -26,7 +26,7 @@ sources:
   - "ISO 23537-1:2022. *Requirements for sleeping bags.* The Comfort, Limit and Extreme rating model this framework borrows."
   - "National Weather Service. *Wind Chill Chart* and frostbite times."
   - "National Weather Service. *Heat Index* danger classifications."
-  - "Mayo Clinic. \"Eating and exercise: 5 tips to maximize your workouts.\" Meal timing and the American College of Sports Medicine's pre-exercise hydration guidance."
+  - "Mayo Clinic. \"Eating and exercise: 5 tips to maximize your workouts.\" Meal timing before and after exercise, and the American College of Sports Medicine's pre-exercise hydration guidance."
   - "Colorado State University Extension. \"Timing of Meals and Snacks for Athletes.\""
   - "Cleveland Clinic. \"Do You Really Lose Most of Your Body Heat Through Your Head?\""
 ---
@@ -35,7 +35,7 @@ sources:
 
 ## A rating for the outing, not just the gear
 
-Camping gear already tells you the temperatures it's built for. Sleeping bags are tested to an international standard and labelled with a Comfort temperature, a Limit and an Extreme. Outdoor activity has nothing like it, even though the same questions decide whether a run, hike or ride goes well: what to eat, how to warm up, how hard to go and what to wear.
+Camping gear already tells you the temperatures it's built for. Sleeping bags are tested to an international standard and labelled with a Comfort temperature, a Limit and an Extreme. Outdoor activity has nothing like it, even though the same questions decide whether a run, hike or ride goes well: what to eat, how to warm up, how hard to go, what to wear and how to recover.
 
 This framework borrows the camping model and applies it to the whole outing. Choose your activity and the feels-like temperature, and you get one of three ratings:
 
