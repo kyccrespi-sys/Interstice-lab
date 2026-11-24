@@ -9,7 +9,7 @@ import { inline, toRoman } from '../data/inline';
 const all = (await getCollection('frameworks')).sort((a, b) => a.data.course - b.data.course);
 const featured = all.find((f) => f.data.featured && f.data.status === 'published') ?? all[0];
 const fieldsOfStudy = ['Biotechnology', 'Ecology', 'Economics', 'Finance', 'Material science', 'Design & policy'];
-const researchers = featured.data.lineage.map((l) => l.by.split(' · ')[0]);
+const researchers = [...new Set(all.filter((f) => f.data.status === 'published').flatMap((f) => f.data.lineage.map((l) => l.by.split(' · ')[0])))];
 ---
 <Base>
   <!-- HERO -->

@@ -1,6 +1,6 @@
 ---
-number: "003"
-course: 3
+number: "004"
+course: 4
 title: "Mycelial Supply"
 titleAccent: "Networks"
 pairing: "fungal resource sharing, paired with distributed logistics"

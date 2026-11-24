@@ -1,6 +1,6 @@
 ---
-number: "004"
-course: 4
+number: "005"
+course: 5
 title: "Metabolic"
 titleAccent: "Accounting"
 pairing: "industrial ecology, paired with cost-of-capital models"

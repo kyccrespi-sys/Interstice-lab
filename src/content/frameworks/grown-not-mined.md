@@ -1,6 +1,6 @@
 ---
-number: "005"
-course: 5
+number: "006"
+course: 6
 title: "Grown, Not"
 titleAccent: "Mined"
 pairing: "bio-fabricated materials, paired with circular supply chains"

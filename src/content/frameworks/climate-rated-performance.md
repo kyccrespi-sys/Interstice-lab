@@ -1,6 +1,6 @@
 ---
-number: "006"
-course: 6
+number: "001"
+course: 1
 title: "Climate-Rated"
 titleAccent: "Performance"
 pairing: "sleeping-bag temperature ratings, paired with running, hiking and cycling"
@@ -11,6 +11,7 @@ category: "Outdoor & Apparel"
 fields: ["Physiology", "Sports nutrition", "Textiles", "Climate"]
 author: "K Crespin"
 readingTime: "3"
+featured: true
 figure: "climate-rated"
 
 appliesTo:

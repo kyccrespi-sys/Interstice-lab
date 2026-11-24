@@ -1,6 +1,6 @@
 ---
-number: "001"
-course: 1
+number: "002"
+course: 2
 title: "The Viable"
 titleAccent: "Doughnut"
 pairing: "cybernetics and living systems, paired with doughnut economics"
@@ -11,7 +11,6 @@ category: "Systems & Economics"
 fields: ["Cybernetics", "Systems dynamics", "Biology", "Economics"]
 author: "K Crespin"
 readingTime: "8"
-featured: true
 figure: "viable-doughnut"
 
 appliesTo:
