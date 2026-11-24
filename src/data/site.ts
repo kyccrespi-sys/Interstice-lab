@@ -20,6 +20,4 @@ export const site = {
   // Leave empty ('') and the form will show a "coming soon" note instead.
   newsletterAction: '',
 
-  // Contact email shown in the footer and on the About page.
-  email: '[YOUR EMAIL]',
 };

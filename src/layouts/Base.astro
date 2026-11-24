@@ -62,7 +62,7 @@ const nav = [
     <footer class="site-footer">
       <div class="wrap footer-row">
         <span>{site.name} — {site.tagline}</span>
-        <span>Summaries link to original sources · <a href={`mailto:${site.email}`}>{site.email}</a></span>
+        <span>© {new Date().getFullYear()} {site.name} · Summaries link to original sources</span>
       </div>
     </footer>
     <script>
@@ -94,7 +94,6 @@ const nav = [
   .nav a:hover, .nav a[aria-current='page'] { color: var(--ink); }
   .site-footer { border-top: 1px solid var(--line); }
   .footer-row { padding-block: 48px 56px; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-2); }
-  .footer-row a { color: var(--accent-ink); text-transform: none; letter-spacing: 0.04em; }
   @media (max-width: 760px) { .nav { gap: 18px; order: 3; width: 100%; } }
   @media (max-width: 480px) { .wm-rule, .wm-lab { display: none; } .wm-name { letter-spacing: 0.24em; font-size: 15px; } .header-row .btn { min-height: 44px; padding: 0 18px; } }
 </style>

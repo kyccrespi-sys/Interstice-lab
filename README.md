@@ -37,7 +37,7 @@ The website for Interstice Lab — where branching fields reconnect.
 
 You can edit any file directly on github.com: open the file, click the **pencil icon**, make your change, and click **Commit changes**. Vercel republishes the site automatically within a minute.
 
-### Change your name, email, season or newsletter
+### Change your name, season or newsletter
 
 Edit **`src/data/site.ts`**. Everything is labelled.
 
