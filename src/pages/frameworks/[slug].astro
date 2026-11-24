@@ -39,7 +39,7 @@ const forthcoming = d.status === 'forthcoming';
         <section class="band" aria-label="Lineage">
           <div class="wrap lineage">
             <p class="label">The lineage · {d.lineage.length} roots, one trunk</p>
-            <div class="reveal"><LineageTree items={d.lineage} title={`${d.title} ${d.titleAccent ?? ''}`.trim()} /></div>
+            <div><LineageTree items={d.lineage} title={`${d.title} ${d.titleAccent ?? ''}`.trim()} /></div>
           </div>
         </section>
       )}
