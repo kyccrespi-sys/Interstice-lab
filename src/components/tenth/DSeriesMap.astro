@@ -1,7 +1,7 @@
 ---
 // The D-Series maneuvers, March 24 – Easter Sunday (April 9), 1944.
 // Real coordinates for the landmarks; the movement arrows show the general direction, not exact routes.
-const BG = '#12110E', FG = '#EDE6DA', HON = '#E8A33D', COOL = '#8FC1CB', WARM = '#D9826B', DIM = '#8F877A';
+const BG = '#F3ECDF', FG = '#23201A', HON = '#D48A1C', HONT = '#8A5A12', COOL = '#3E7F8C', WARM = '#A8432C', DIM = '#776F62';
 const LON0 = -106.46, LON1 = -106.22, LAT0 = 39.33, LAT1 = 39.52;
 const K = Math.cos((39.38 * Math.PI) / 180);
 const X0 = 70, Y0 = 40;
@@ -32,14 +32,14 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
   <div class="ds-stage">
     <svg viewBox="0 0 1000 625" role="img" aria-label="The D-Series maneuver area between Tennessee Pass and Resolution Mountain, with landmark coordinates" font-family="IBM Plex Mono, monospace">
       <defs>
-        <radialGradient id="dsglow"><stop offset="0" stop-color={HON} stop-opacity=".5"></stop><stop offset="1" stop-color={HON} stop-opacity="0"></stop></radialGradient>
-        <pattern id="dshatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 0 L0 8" stroke={WARM} stroke-opacity="0.22" stroke-width="1"></path></pattern>
+        <radialGradient id="dsglow"><stop offset="0" stop-color={HON} stop-opacity=".35"></stop><stop offset="1" stop-color={HON} stop-opacity="0"></stop></radialGradient>
+        <pattern id="dshatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 0 L0 8" stroke={WARM} stroke-opacity="0.18" stroke-width="1"></path></pattern>
         <marker id="dsarrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill={HON}></path></marker>
       </defs>
       <rect width="1000" height="625" fill={BG}></rect>
       <rect x={X0} y={Y0} width={W} height={H} fill="none" stroke={FG} stroke-opacity="0.35"></rect>
-      {latTicks.map((l) => <g><path d={`M${X0} ${py(l)} L${X0 + W} ${py(l)}`} stroke={FG} stroke-opacity="0.07" stroke-dasharray="2 4"></path><text x={X0 - 8} y={py(l) + 3} font-size="8.5" fill={DIM} text-anchor="end">{l.toFixed(2)}°N</text></g>)}
-      {lonTicks.map((l) => <g><path d={`M${px(l)} ${Y0} L${px(l)} ${Y0 + H}`} stroke={FG} stroke-opacity="0.07" stroke-dasharray="2 4"></path><text x={px(l)} y={Y0 + H + 16} font-size="8.5" fill={DIM} text-anchor="middle">{Math.abs(l).toFixed(2)}°W</text></g>)}
+      {latTicks.map((l) => <g><path d={`M${X0} ${py(l)} L${X0 + W} ${py(l)}`} stroke={FG} stroke-opacity="0.12" stroke-dasharray="2 4"></path><text x={X0 - 8} y={py(l) + 3} font-size="8.5" fill={DIM} text-anchor="end">{l.toFixed(2)}°N</text></g>)}
+      {lonTicks.map((l) => <g><path d={`M${px(l)} ${Y0} L${px(l)} ${Y0 + H}`} stroke={FG} stroke-opacity="0.12" stroke-dasharray="2 4"></path><text x={px(l)} y={Y0 + H + 16} font-size="8.5" fill={DIM} text-anchor="middle">{Math.abs(l).toFixed(2)}°W</text></g>)}
       <path d={areaD} fill="url(#dshatch)" stroke={WARM} stroke-opacity="0.8" stroke-width="1" stroke-dasharray="5 4"></path>
       <text x={px(-106.43)} y={py(39.395)} font-size="9" fill={WARM} letter-spacing="2">MANEUVER AREA (APPROX.)</text>
       <path d={riverD} fill="none" stroke={COOL} stroke-width="1.3" class="ds-flow"></path>
@@ -56,14 +56,14 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
             {p.role === 'peak' ? <path d={`M${x - 8} ${y + 6} L${x} ${y - 8} L${x + 8} ${y + 6}Z`} fill={BG} stroke={FG} stroke-opacity="0.9"></path>
               : p.role === 'town' ? <rect x={x - 3} y={y - 3} width="6" height="6" fill="none" stroke={FG} stroke-opacity="0.7"></rect>
               : <circle cx={x} cy={y} r={p.role === 'start' ? 5 : 3.5} fill={p.role === 'start' ? HON : BG} stroke={p.role === 'start' ? HON : FG} stroke-opacity="0.9"></circle>}
-            <text x={x + p.dx} y={y + p.dy - (p.role === 'peak' ? 14 : 4)} font-size="9.5" fill={p.role === 'start' ? HON : FG} fill-opacity="0.9" letter-spacing="1.5" text-anchor={p.a}>{p.n.toUpperCase()}</text>
+            <text x={x + p.dx} y={y + p.dy - (p.role === 'peak' ? 14 : 4)} font-size="9.5" fill={p.role === 'start' ? HONT : FG} fill-opacity="0.9" letter-spacing="1.5" text-anchor={p.a}>{p.n.toUpperCase()}</text>
             <text x={x + p.dx} y={y + p.dy + (p.role === 'peak' ? 20 : 9)} font-size="8" fill={DIM} letter-spacing="1" text-anchor={p.a}>{p.lat.toFixed(4)}°N {Math.abs(p.lon).toFixed(4)}°W · {p.el}</text>
           </g>
         );
       })}
       <text x={X0 + W} y="30" font-size="10" fill={FG} fill-opacity="0.7" text-anchor="end" letter-spacing="2">N ↑</text>
       <g transform={`translate(${X0 + W + 50} 60)`}>
-        <text font-size="9" fill={HON} letter-spacing="2">D-SERIES · 1944</text>
+        <text font-size="9" fill={HONT} letter-spacing="2">D-SERIES · 1944</text>
         <text y="22" font-size="8.5" fill={DIM} letter-spacing="1.4">MAR 24 · OUT OF CAMP,</text>
         <text y="36" font-size="8.5" fill={DIM} letter-spacing="1.4">UP THE TENNESSEE PASS ROAD</text>
         <text y="58" font-size="8.5" fill={DIM} letter-spacing="1.4">WEEK 1 · TENNESSEE PASS,</text>
@@ -74,7 +74,7 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
         <path d="M0 150 L250 150" stroke={FG} stroke-opacity="0.2"></path>
         <text y="178" font-size="26" fill={FG} font-family="Inter Tight, sans-serif" font-weight="300">~12,000</text>
         <text y="194" font-size="8" fill={DIM} letter-spacing="1.4">SOLDIERS MARCHED OUT</text>
-        <text y="232" font-size="26" fill={HON} font-family="Inter Tight, sans-serif" font-weight="300">8,673</text>
+        <text y="232" font-size="26" fill={HONT} font-family="Inter Tight, sans-serif" font-weight="300">8,673</text>
         <text y="248" font-size="8" fill={DIM} letter-spacing="1.4">COMPLETED THE EXERCISE</text>
         <text y="286" font-size="26" fill={FG} font-family="Inter Tight, sans-serif" font-weight="300">~3 weeks</text>
         <text y="302" font-size="8" fill={DIM} letter-spacing="1.4">OF SUBZERO TEMPERATURES</text>
@@ -100,7 +100,7 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
 
 <style>
   .ds { margin: 8px 0 0; display: flex; flex-direction: column; gap: 10px; }
-  .ds-stage { aspect-ratio: 1000 / 625; border-radius: 6px; overflow: hidden; background: #12110E; box-shadow: 0 30px 80px -40px rgba(18,17,14,.7); }
+  .ds-stage { aspect-ratio: 1000 / 625; border-radius: 6px; overflow: hidden; background: #F3ECDF; border: 1px solid rgba(35,32,26,.14); box-shadow: 0 24px 60px -40px rgba(35,32,26,.35); }
   .ds-stage svg { width: 100%; height: 100%; display: block; }
   .ds-cap { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted-2); line-height: 1.5; }
   .ds :global(.ds-move) { stroke-dasharray: 100; stroke-dashoffset: 100; }
