@@ -31,9 +31,21 @@ function person(x: number, y: number, z = 0, op = 0.9) {
   const [px, py] = iso(x, y, z);
   return `<g stroke="${FG}" stroke-opacity="${op}" stroke-width=".8" fill="none"><circle cx="${f(px)}" cy="${f(py - 9)}" r="1.6" fill="${FG}" fill-opacity="${op}"></circle><path d="M${f(px)} ${f(py - 7.5)} L${f(px)} ${f(py - 3)} M${f(px)} ${f(py - 3)} L${f(px - 1.6)} ${f(py)} M${f(px)} ${f(py - 3)} L${f(px + 1.6)} ${f(py)} M${f(px - 2)} ${f(py - 6)} L${f(px + 2)} ${f(py - 5)}"></path></g>`;
 }
-function skierGlyph() {
-  // drawn around 0,0, leaning downhill
-  return `<g stroke="${FG}" stroke-width=".9" fill="none" stroke-linecap="round"><circle cx="1" cy="-9" r="1.6" fill="${FG}"></circle><path d="M1 -7.5 L-0.5 -3 L1.5 0 M-0.5 -3 L-2.5 -1 M0.5 -6 L4 -3 M0.5 -6 L-3 -4"></path><path d="M-5 1.2 L5 -0.6" stroke="${HON}" stroke-width="1.1"></path></g>`;
+function skierGlyph(dir = 1) {
+  // side view, facing +x when dir = 1: two parallel skis with upturned tips, crouched stance, two poles planted behind
+  return `<g transform="scale(${dir} 1)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-7 0.6 L6 0.6 Q8 0.6 8.6 -1.2 M-6 2.2 L7 2.2 Q9 2.2 9.6 0.4" stroke="${HON}" stroke-width="1"></path>
+    <g stroke="${FG}" stroke-width=".9">
+      <circle cx="2.2" cy="-11" r="1.6" fill="${FG}"></circle>
+      <path d="M2 -9.4 L-0.6 -5.2"></path>
+      <path d="M-0.6 -5.2 L2.2 -3 L0.6 0.4 M-0.6 -5.2 L3 -2.4 L1.6 2"></path>
+      <path d="M1.4 -8.4 L4 -6.2 M1.2 -8.2 L3.2 -5.6"></path>
+    </g>
+    <g stroke="${FG}" stroke-opacity=".75" stroke-width=".6">
+      <path d="M4 -6.2 L-4.6 0.4 M3.2 -5.6 L-3.4 1.9"></path>
+      <path d="M-5.6 0.4 h2 M-4.4 1.9 h2"></path>
+    </g>
+  </g>`;
 }
 function walker() {
   return `<g stroke="${FG}" stroke-opacity=".9" stroke-width=".8" fill="none"><circle cx="0" cy="-9" r="1.6" fill="${FG}"></circle><path d="M0 -7.5 L0 -3 M0 -3 L-1.6 0 M0 -3 L1.6 0 M-2 -6 L2 -5"></path></g>`;
@@ -56,25 +68,28 @@ export function buildCamp(): string {
     o.push(`<polyline points="${pts(ridge)}" fill="none" stroke="${FG}" stroke-opacity="${(0.12 + k * 0.05).toFixed(2)}" stroke-width=".7"></polyline>`);
   }
   // ---- the ski slope on the mountainside ("B Slope"): run band, tow line, skiers
-  const slope = (t: number, s: number): P => { const x = 690 + s * 120; const y = -150 + t * 150; return iso(x, y, 150 * (1 - t) + 4); };
+  const slope = (t: number, s: number): P => { const x = 690 + s * 120; const y = -150 + t * 105; return iso(x, y, 150 * (1 - t) + 4); };
   const runL: P[] = [], runR: P[] = [];
   for (let t = 0; t <= 1.0001; t += 0.1) { runL.push(slope(t, 0)); runR.push(slope(t, 1)); }
   o.push(`<polygon points="${pts([...runL, ...runR.reverse()])}" fill="${FG}" fill-opacity=".05" stroke="${FG}" stroke-opacity=".35" stroke-width=".6" stroke-dasharray="3 3"></polygon>`);
-  const towA = iso(870, 0, 4), towB = iso(870, -150, 154);
+  const towA = iso(870, -45, 4), towB = iso(870, -150, 154);
   o.push(L(towA, towB, 0.8, 0.8));
-  for (let t = 0; t <= 1.001; t += 0.25) { const p = iso(870, -150 * t, 4 + 150 * t); o.push(L(p, [p[0], p[1] - 9], 0.8, 1.2)); }
+  for (let t = 0; t <= 1.001; t += 0.25) { const p = iso(870, -45 - 105 * t, 4 + 150 * t); o.push(L(p, [p[0], p[1] - 9], 0.8, 1.2)); }
   // tow riders going up
-  o.push(`<g><animateMotion dur="14s" repeatCount="indefinite" path="M${f(towA[0])} ${f(towA[1] - 6)} L${f(towB[0])} ${f(towB[1] - 6)}"></animateMotion>${skierGlyph()}</g>`);
-  o.push(`<g><animateMotion dur="14s" begin="-7s" repeatCount="indefinite" path="M${f(towA[0])} ${f(towA[1] - 6)} L${f(towB[0])} ${f(towB[1] - 6)}"></animateMotion>${skierGlyph()}</g>`);
+  o.push(`<g><animateMotion dur="14s" repeatCount="indefinite" path="M${f(towA[0])} ${f(towA[1] - 6)} L${f(towB[0])} ${f(towB[1] - 6)}"></animateMotion>${skierGlyph(1)}</g>`);
+  o.push(`<g><animateMotion dur="14s" begin="-7s" repeatCount="indefinite" path="M${f(towA[0])} ${f(towA[1] - 6)} L${f(towB[0])} ${f(towB[1] - 6)}"></animateMotion>${skierGlyph(1)}</g>`);
   // skiers carving down in S-turns
   const carve = (phase: number) => { let d = ''; for (let t = 0; t <= 1.0001; t += 0.04) { const s = 0.5 + 0.38 * Math.sin(t * Math.PI * 5 + phase); const p = slope(t, s); d += `${t === 0 ? 'M' : 'L'}${f(p[0])} ${f(p[1] - 2)} `; } return d; };
   [0, 2.1, 4.2].forEach((ph, i) => {
     const d = carve(ph);
     o.push(`<path d="${d}" fill="none" stroke="${FG}" stroke-opacity=".18" stroke-width=".6"></path>`);
-    o.push(`<g><animateMotion dur="${9 + i * 2}s" begin="-${i * 3}s" repeatCount="indefinite" rotate="0" path="${d}"></animateMotion>${skierGlyph()}</g>`);
+    o.push(`<g><animateMotion dur="${9 + i * 2}s" begin="-${i * 3}s" repeatCount="indefinite" rotate="0" path="${d}"></animateMotion>${skierGlyph(-1)}</g>`);
   });
   o.push(`<text x="972" y="258" font-size="9" fill="${HON}" letter-spacing="1.6" text-anchor="end">SKI SLOPE &amp; TOW</text><text x="972" y="271" font-size="9" fill="${HON}" fill-opacity=".75" letter-spacing="1.6" text-anchor="end">TRAINING ABOVE CAMP</text>`);
 
+  o.push(hut(720, -62, 34, 14, 8, 5));
+  for (let x = 690; x <= 830; x += 10) o.push(L(iso(x, -38, 4), iso(x, -38, 9), 0.45, 0.6));
+  o.push(L(iso(690, -38, 8), iso(830, -38, 8), 0.45, 0.6));
   // ---- rock-climbing cliffs on the west wall
   const cliff: P[] = [iso(-40, 60, 0), iso(-40, 60, 70), iso(-40, 140, 92), iso(-40, 220, 64), iso(-40, 220, 0)];
   o.push(`<polygon points="${pts(cliff)}" fill="${BG}" stroke="${FG}" stroke-opacity=".7" stroke-width=".8"></polygon>`);
@@ -111,10 +126,21 @@ export function buildCamp(): string {
   const rl = iso(930, 18, 0); o.push(`<text x="${f(rl[0] + 8)}" y="${f(rl[1] - 10)}" font-size="9" fill="${FG}" fill-opacity=".75" letter-spacing="1.6">D&amp;RGW SIDING · COAL TRAINS</text>`);
 
   // ---- the straightened river along the south edge
-  o.push(L(iso(-60, 282), iso(960, 282), 0.9, 1.2).replace(`stroke="${FG}"`, `stroke="${COOL}"`));
-  o.push(L(iso(-60, 292), iso(960, 292), 0.9, 1.2).replace(`stroke="${FG}"`, `stroke="${COOL}"`));
-  o.push(`<line x1="${f(iso(-60, 287)[0])}" y1="${f(iso(-60, 287)[1])}" x2="${f(iso(960, 287)[0])}" y2="${f(iso(960, 287)[1])}" stroke="${COOL}" stroke-width=".8" stroke-dasharray="6 9" class="c3-flow"></line>`);
-  const rv = iso(120, 312, 0); o.push(`<text transform="translate(${f(rv[0])} ${f(rv[1])}) rotate(30)" font-size="9" fill="${COOL}" letter-spacing="1.6">EAGLE RIVER · CHANNELED STRAIGHT</text>`);
+  const rc = (x: number) => 318 + 16 * Math.sin(x / 85) + 6 * Math.sin(x / 31 + 1);
+  const rw = (x: number) => 11 + 3 * Math.sin(x / 57);
+  const bankN: P[] = [], bankS: P[] = [], mid: P[] = [];
+  for (let x = -60; x <= 960; x += 6) { bankN.push(iso(x, rc(x) - rw(x))); bankS.push(iso(x, rc(x) + rw(x))); mid.push(iso(x, rc(x))); }
+  o.push(`<polygon points="${pts([...bankN, ...[...bankS].reverse()])}" fill="${COOL}" fill-opacity=".07" stroke="none"></polygon>`);
+  o.push(`<polyline points="${pts(bankN)}" fill="none" stroke="${COOL}" stroke-opacity=".9" stroke-width="1.1"></polyline>`);
+  o.push(`<polyline points="${pts(bankS)}" fill="none" stroke="${COOL}" stroke-opacity=".9" stroke-width="1.1"></polyline>`);
+  // current lines
+  [-0.45, 0, 0.45].forEach((k, i) => {
+    const cur: P[] = []; for (let x = -60; x <= 960; x += 6) cur.push(iso(x, rc(x) + k * rw(x)));
+    o.push(`<polyline points="${pts(cur)}" fill="none" stroke="${COOL}" stroke-opacity="${i === 1 ? '.7' : '.35'}" stroke-width=".7" stroke-dasharray="${i === 1 ? '7 11' : '3 14'}" class="c3-flow"></polyline>`);
+  });
+  // snowy bank ticks
+  for (let x = -40; x <= 940; x += 26) { const a = iso(x, rc(x) - rw(x) - 2), b = iso(x + 6, rc(x + 6) - rw(x + 6) - 6); o.push(L(a, b, 0.25, 0.5)); }
+  const rv = iso(120, rc(120) + rw(120) + 10, 0); o.push(`<text transform="translate(${f(rv[0])} ${f(rv[1])}) rotate(30)" font-size="9" fill="${COOL}" letter-spacing="1.6">EAGLE RIVER</text>`);
 
   // ---- buildings (painter's order: back to front)
   type B = { k: number; s: string };
@@ -153,8 +179,8 @@ export function buildCamp(): string {
     o.push(`<g><animateMotion dur="18s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.5;1" calcMode="linear" path="M${f(pA[0] + c * 6 - r * 5)} ${f(pA[1] + c * 3 + r * 3)} L${f(pB[0] + c * 6 - r * 5)} ${f(pB[1] + c * 3 + r * 3)}"></animateMotion>${walker()}</g>`);
   }
   // a few soldiers on skis crossing camp
-  o.push(`<g><animateMotion dur="26s" repeatCount="indefinite" path="M${f(iso(120, 270)[0])} ${f(iso(120, 270)[1])} L${f(iso(690, 270)[0])} ${f(iso(690, 270)[1])}"></animateMotion>${skierGlyph()}</g>`);
-  o.push(`<g><animateMotion dur="26s" begin="-1.2s" repeatCount="indefinite" path="M${f(iso(120, 270)[0])} ${f(iso(120, 270)[1])} L${f(iso(690, 270)[0])} ${f(iso(690, 270)[1])}"></animateMotion>${skierGlyph()}</g>`);
+  o.push(`<g><animateMotion dur="26s" repeatCount="indefinite" path="M${f(iso(130, 44)[0])} ${f(iso(130, 44)[1])} L${f(iso(680, 44)[0])} ${f(iso(680, 44)[1])}"></animateMotion>${skierGlyph()}</g>`);
+  o.push(`<g><animateMotion dur="26s" begin="-1.2s" repeatCount="indefinite" path="M${f(iso(130, 44)[0])} ${f(iso(130, 44)[1])} L${f(iso(680, 44)[0])} ${f(iso(680, 44)[1])}"></animateMotion>${skierGlyph()}</g>`);
 
   // ---- labels with leaders
   const tag = (x: number, y: number, z: number, text: string, dx: number, dy: number, col = FG) => {
@@ -164,7 +190,7 @@ export function buildCamp(): string {
   o.push(tag(55, 45, 40, 'HQ', -36, -26, HON));
   o.push(tag(60, 225, 8, 'HOSPITAL', -60, 30));
   o.push(tag(420, 100, 14, 'BARRACKS · ONE OF 1,000+ BUILDINGS', 40, -120));
-  o.push(tag(790, 95, 34, 'FIELD HOUSE', 40, -44));
+  o.push(tag(790, 95, 34, 'FIELD HOUSE', 110, 4));
   o.push(tag(820, 228, 14, 'STABLES · MULE PACK TRAINS', 50, 26));
   o.push(tag(640, 200, 0, 'PARADE GROUND', -40, 70));
   o.push(tag(220, 60, 34, 'COAL SMOKE · “THE PANDO HACK”', 60, -110, DIM));
