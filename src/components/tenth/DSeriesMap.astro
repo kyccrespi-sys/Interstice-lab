@@ -61,6 +61,16 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
           </g>
         );
       })}
+      <g transform={`translate(${X0 + W - 210} 50)`}>
+        <rect width="200" height="46" rx="3" fill="#FBF7EF" stroke={COOL} stroke-width="1.2"></rect>
+        <path d="M18 9 L18 28" stroke={COOL} stroke-width="5" stroke-linecap="round"></path>
+        <circle cx="18" cy="33" r="6" fill={COOL}></circle>
+        <path d="M18 14 L18 30" stroke="#FBF7EF" stroke-width="1.6" stroke-linecap="round"></path>
+        <text x="34" y="28" font-size="22" fill={COOL} font-family="Inter Tight, sans-serif" font-weight="500">−30°F</text>
+        <text x="112" y="20" font-size="7.5" fill={DIM} letter-spacing="1.2">COLDEST</text>
+        <text x="112" y="31" font-size="7.5" fill={DIM} letter-spacing="1.2">≈ −34°C</text>
+        <text x="34" y="40" font-size="6.8" fill={DIM} letter-spacing="1">ACCOUNTS RANGE −20° TO −35°F</text>
+      </g>
       <text x={X0 + W} y="30" font-size="10" fill={FG} fill-opacity="0.7" text-anchor="end" letter-spacing="2">N ↑</text>
       <g transform={`translate(${X0 + W + 50} 60)`}>
         <text font-size="9" fill={HONT} letter-spacing="2">D-SERIES · 1944</text>
@@ -78,14 +88,27 @@ const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
         <text y="248" font-size="8" fill={DIM} letter-spacing="1.4">COMPLETED THE EXERCISE</text>
         <text y="286" font-size="26" fill={FG} font-family="Inter Tight, sans-serif" font-weight="300">~3 weeks</text>
         <text y="302" font-size="8" fill={DIM} letter-spacing="1.4">OF SUBZERO TEMPERATURES</text>
-        <path d="M0 330 L24 330" stroke={HON} stroke-width="2" marker-end="url(#dsarrow)"></path>
-        <text x="34" y="333" font-size="8" fill={DIM} letter-spacing="1.2">GENERAL DIRECTION, NOT EXACT ROUTE</text>
-        <rect y="346" width="24" height="12" fill="url(#dshatch)" stroke={WARM} stroke-dasharray="3 3"></rect>
-        <text x="34" y="356" font-size="8" fill={DIM} letter-spacing="1.2">MANEUVER AREA, APPROXIMATE</text>
+        <g transform="translate(0 322)">
+          <rect x="-14" y="0" width="316" height="190" rx="4" fill="#FBF7EF" stroke={FG} stroke-opacity="0.25"></rect>
+          <text x="4" y="24" font-size="10" fill={FG} letter-spacing="2.4" font-weight="600">LEGEND</text>
+          <path d="M4 34 L288 34" stroke={FG} stroke-opacity="0.15"></path>
+          <path d="M4 56 L40 56" stroke={HON} stroke-width="2.5" marker-end="url(#dsarrow)"></path>
+          <text x="54" y="60" font-size="10" fill={FG} letter-spacing="1">Direction of movement (general)</text>
+          <rect x="4" y="74" width="36" height="16" fill="url(#dshatch)" stroke={WARM} stroke-dasharray="4 3"></rect>
+          <text x="54" y="86" font-size="10" fill={FG} letter-spacing="1">Maneuver area (approximate)</text>
+          <path d="M4 110 L40 110" stroke={COOL} stroke-width="1.6" stroke-dasharray="7 5"></path>
+          <text x="54" y="114" font-size="10" fill={FG} letter-spacing="1">Eagle River</text>
+          <circle cx="22" cy="136" r="6" fill={HON}></circle>
+          <text x="54" y="140" font-size="10" fill={FG} letter-spacing="1">Start point · Camp Hale</text>
+          <path d="M14 168 L22 154 L30 168Z" fill="#FBF7EF" stroke={FG}></path>
+          <text x="54" y="166" font-size="10" fill={FG} letter-spacing="1">Summit</text>
+          <circle cx="160" cy="162" r="4.5" fill="#FBF7EF" stroke={FG}></circle>
+          <text x="174" y="166" font-size="10" fill={FG} letter-spacing="1">Pass / ski hill</text>
+        </g>
       </g>
     </svg>
   </div>
-  <figcaption class="ds-cap">Landmark coordinates and elevations are real; the maneuver area and arrows are approximate. Sources: Camp Hale “D-Series” historical marker; U.S. Army; USGS summit data.</figcaption>
+  <figcaption class="ds-cap">Landmark coordinates and elevations are real; the maneuver area and arrows are approximate. Low of −30°F per U.S. Army; other accounts give −20° to −35°F. Sources: Camp Hale “D-Series” historical marker; U.S. Army; National WWII Museum; USGS summit data.</figcaption>
 </figure>
 
 <script>
