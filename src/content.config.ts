@@ -7,7 +7,7 @@ const frameworks = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/frameworks' }),
   schema: z.object({
     number: z.string(),                 // "001"
-    course: z.number(),                 // position in the season's menu: 1, 2, 3…
+    course: z.number(),                 // scenario number in the season: 1, 2, 3…
     title: z.string(),
     titleAccent: z.string().optional(), // the word shown in italic clay, e.g. "Doughnut"
     pairing: z.string(),                // one line for the menu: "x, paired with y"

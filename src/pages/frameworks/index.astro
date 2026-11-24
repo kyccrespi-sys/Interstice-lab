@@ -33,7 +33,7 @@ const all = (await getCollection('frameworks')).sort((a, b) => a.data.course - b
         const live = f.data.status === 'published';
         return (
           <article class="card item">
-            <p class="label muted">{f.data.number} · Course {toRoman(f.data.course)} · {live ? f.data.category : 'Forthcoming'}</p>
+            <p class="label muted">Scenario {String(f.data.course).padStart(2, '0')} · {live ? f.data.category : 'Forthcoming'}</p>
             <h2 class="h3">{live ? <a href={`/frameworks/${f.id}/`}>{f.data.title} {f.data.titleAccent}</a> : <>{f.data.title} {f.data.titleAccent}</>}</h2>
             <p class="small">{f.data.summary}</p>
             <div class="chips">{f.data.fields.map((x) => <span class="chip">{x}</span>)}</div>

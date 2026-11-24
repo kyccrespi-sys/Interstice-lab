@@ -52,7 +52,7 @@ const researchers = [...new Set(all.filter((f) => f.data.status === 'published')
   <section id="frameworks" class="wrap section stack-lg">
     <div class="split-head">
       <h2 class="h2">Featured framework</h2>
-      <p class="label muted">Course {toRoman(featured.data.course)} of the season</p>
+      <p class="label muted">Scenario {String(featured.data.course).padStart(2, '0')} of the season</p>
     </div>
     <article class="feature card">
       <div class="feature-main">
@@ -90,18 +90,18 @@ const researchers = [...new Set(all.filter((f) => f.data.status === 'published')
     <div class="season section">
       <div class="season-head">
         <p class="label">The Season · {site.season}</p>
-        <h2 class="season-title it">A synthesis in {all.length} courses</h2>
-        <p class="small">Read in order, each framework prepares the palate for the next. Every course names the researchers and writers whose work it grows from.</p>
+        <h2 class="season-title it">{(['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve'][all.length] ?? all.length)} scenarios for synthesis</h2>
+        <p class="small">Each framework is a scenario in the sense <a href="/curiosity/herman-kahn/">Herman Kahn</a> meant: not a prediction, but a plausible story of what happens when separate fields meet. Every one names the researchers and writers whose work it grows from.</p>
       </div>
       <ol class="menu">
         {all.map((f) => (
           <li class="menu-item">
-            <span class="menu-num it">{toRoman(f.data.course)}.</span>
+            <span class="menu-num it">{String(f.data.course).padStart(2, '0')}</span>
             <div class="menu-main">
               {f.data.status === 'published'
                 ? <a href={`/frameworks/${f.id}/`} class="menu-title">{f.data.title} {f.data.titleAccent}</a>
                 : <span class="menu-title">{f.data.title} {f.data.titleAccent}</span>}
-              <span class="menu-pair it">{f.data.pairing}</span>
+              <span class="menu-pair it">{f.data.question}</span>
             </div>
             <span class="label muted">{f.data.status === 'published' ? f.data.fields.slice(0, 2).join(' · ') : 'Forthcoming'}</span>
           </li>
@@ -109,9 +109,9 @@ const researchers = [...new Set(all.filter((f) => f.data.status === 'published')
       </ol>
       <div class="season-credits">
         <p class="label muted">With gratitude to the researchers this season</p>
-        <p class="credits it">{researchers.join(' · ')} · and the researchers behind the courses to come</p>
+        <p class="credits it">{researchers.join(' · ')} · and the researchers behind the scenarios to come</p>
       </div>
-      <a href={`/frameworks/${featured.id}/`} class="btn btn-honey">Begin the first course</a>
+      <a href={`/frameworks/${featured.id}/`} class="btn btn-honey">Explore the first scenario</a>
     </div>
   </section>
 
@@ -192,7 +192,9 @@ const researchers = [...new Set(all.filter((f) => f.data.status === 'published')
   .season-head { display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; max-width: 600px; }
   .season-title { margin: 0; font-size: clamp(40px, 4.6vw, 64px); line-height: 1.05; }
   .menu { list-style: none; margin: 0; padding: 0; width: 100%; }
-  .menu-item { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 24px; padding: 28px 0; border-top: 1px solid rgba(31,29,26,0.16); }
+  .menu-item { display: grid; grid-template-columns: 56px minmax(0, 1fr) minmax(0, 220px); align-items: baseline; gap: 10px 24px; padding: 28px 0; border-top: 1px solid rgba(31,29,26,0.16); }
+  .menu-item > .label { text-align: right; line-height: 1.6; }
+  @media (max-width: 720px) { .menu-item { grid-template-columns: 44px minmax(0, 1fr); } .menu-item > .label { grid-column: 2; text-align: left; } }
   .menu-item:last-child { border-bottom: 1px solid rgba(31,29,26,0.16); }
   .menu-num { flex: 0 0 56px; font-size: 22px; color: var(--clay); }
   .menu-main { flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }

@@ -24,7 +24,7 @@ const forthcoming = d.status === 'forthcoming';
   <div class="progress" aria-hidden="true"><span data-progress></span></div>
   <!-- TITLE -->
   <section class="narrow title-block">
-    <p class="label">Framework {d.number} · Course {toRoman(d.course)} of the {site.season} season</p>
+    <p class="label">Scenario {String(d.course).padStart(2, '0')} · {site.season} season</p>
     <h1 class="fw-title">{d.title} {d.titleAccent && <span class="it clay">{d.titleAccent}</span>}</h1>
     <p class="fw-dek">{d.dek}</p>
     <div class="chips">{d.fields.map((f) => <span class="chip">{f}</span>)}</div>
@@ -146,8 +146,8 @@ const forthcoming = d.status === 'forthcoming';
   )}
 
   {next && (
-    <nav class="wrap next" aria-label="Next course">
-      <a href={`/frameworks/${next.id}/`}>Next course: {next.data.title} {next.data.titleAccent} →</a>
+    <nav class="wrap next" aria-label="Next scenario">
+      <a href={`/frameworks/${next.id}/`}>Next scenario: {next.data.title} {next.data.titleAccent} →</a>
     </nav>
   )}
   <Subscribe />
