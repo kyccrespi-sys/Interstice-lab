@@ -1,0 +1,300 @@
+---
+// Framework 006 — Climate-Rated Performance.
+// An interactive "rated kit card": choose an activity, the feels-like temperature
+// and conditions, and get a Comfort / Limit / Caution rating plus fuel, warm-up,
+// effort and kit. All guidance text lives in the DATA block in the script below.
+---
+<section id="planner" class="band-white" aria-label="Climate-rated kit planner">
+  <div class="wrap section planner">
+    <div class="planner-head">
+      <p class="label">The planner</p>
+      <h2 class="h2">Pick your outing. <span class="it clay">Get your rating.</span></h2>
+    </div>
+
+    <aside class="rule card" aria-label="General rule">
+      <p class="label">General rule</p>
+      <p class="rule-text">Dress like it's <strong>15–20°F warmer</strong> than the thermometer reads.</p>
+      <p class="small">Your body heats up once you're moving, so dress for how you'll feel ten minutes in, not at the door. This rule comes from running; on a slow hike, dress closer to the real temperature and carry a layer.</p>
+      <p class="rule-src">Source: <a href="https://www.brooksrunning.com/en_us/blog/advice-tips/layering-up-for-winter-running.html" target="_blank" rel="noopener">Brooks Running, “How to layer up for winter running”</a></p>
+    </aside>
+
+    <div class="controls">
+      <fieldset>
+        <legend class="label muted">1 · Activity</legend>
+        <div class="seg" data-group="activity">
+          <button type="button" data-value="running" aria-pressed="true">Running</button>
+          <button type="button" data-value="hiking" aria-pressed="false">Hiking</button>
+          <button type="button" data-value="cycling" aria-pressed="false">Cycling</button>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend class="label muted">2 · Temperature <span class="opt">(air temperature; wind and rain are factored in below)</span></legend>
+        <div class="bands" data-group="band"></div>
+      </fieldset>
+      <fieldset>
+        <legend class="label muted">3 · Conditions <span class="opt">(optional)</span></legend>
+        <div class="seg seg-wrap" data-group="cond">
+          <button type="button" data-value="wind" aria-pressed="false">Windy</button>
+          <button type="button" data-value="wet" aria-pressed="false">Rain or snow</button>
+          <button type="button" data-value="sun" aria-pressed="false">Strong sun</button>
+          <button type="button" data-value="dark" aria-pressed="false">Dark</button>
+        </div>
+      </fieldset>
+    </div>
+
+    <article class="kit card" aria-live="polite">
+      <header class="kit-head">
+        <span class="tier" data-tier></span>
+        <div>
+          <p class="label muted" data-kit-label></p>
+          <p class="kit-summary" data-summary></p>
+        </div>
+      </header>
+      <div class="kit-grid">
+        <div class="kit-col"><p class="label">Fuel</p><ul data-list="fuel"></ul></div>
+        <div class="kit-col"><p class="label">Warm-up</p><ul data-list="warm"></ul></div>
+        <div class="kit-col"><p class="label">Effort</p><ul data-list="effort"></ul></div>
+        <div class="kit-col"><p class="label">Kit</p><ul data-list="kit"></ul></div>
+      </div>
+      <p class="kit-note">General guidance, not medical advice. Bodies differ: adjust for your fitness, health and how you feel, and check the forecast before you go.</p>
+    </article>
+
+    <div class="legend" aria-label="What the ratings mean">
+      <div class="leg"><span class="tier t-comfort">Comfort</span><span class="small">Ideal. Go as planned.</span></div>
+      <div class="leg"><span class="tier t-limit">Limit</span><span class="small">Doable with the right kit.</span></div>
+      <div class="leg"><span class="tier t-caution">Caution</span><span class="small">Shorten it, change plans or stay indoors. Frostbite and heat-illness territory.</span></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  type Tier = 'comfort' | 'limit' | 'caution';
+  type Band = { id: string; f: string; c: string; tier: Tier; cold: boolean; hot: boolean };
+
+  const BANDS: Band[] = [
+    { id: 'b0', f: 'Below 0°F', c: 'below −18°C', tier: 'caution', cold: true, hot: false },
+    { id: 'b1', f: '0–20°F', c: '−18 to −7°C', tier: 'limit', cold: true, hot: false },
+    { id: 'b2', f: '20–35°F', c: '−7 to 2°C', tier: 'comfort', cold: true, hot: false },
+    { id: 'b3', f: '35–50°F', c: '2 to 10°C', tier: 'comfort', cold: false, hot: false },
+    { id: 'b4', f: '50–65°F', c: '10 to 18°C', tier: 'comfort', cold: false, hot: false },
+    { id: 'b5', f: '65–80°F', c: '18 to 27°C', tier: 'comfort', cold: false, hot: false },
+    { id: 'b6', f: '80–90°F', c: '27 to 32°C', tier: 'limit', cold: false, hot: true },
+    { id: 'b7', f: '90°F and up', c: '32°C and up', tier: 'caution', cold: false, hot: true },
+  ];
+
+  // Shared by all activities, per band.
+  const FUEL: Record<string, string[]> = {
+    b0: ['Small carb snack 30–60 min before (toast with jam, a banana)', 'A warm drink is fine; still drink water, because cold dulls thirst'],
+    b1: ['Small carb snack 30–60 min before (toast with jam, a banana)', 'Warm tea or water beforehand; thirst is muted in the cold'],
+    b2: ['Light carb snack 30–60 min before, or a meal 1–4 hours before', 'A cup of water or tea beforehand'],
+    b3: ['Light carb snack 30–60 min before, or a meal 1–4 hours before', 'Water beforehand'],
+    b4: ['Light carb snack 30–60 min before, or a meal 1–4 hours before', 'Water beforehand'],
+    b5: ['Eat light; avoid heavy or fatty food in the hours before', 'About 2–3 cups of water in the 2–3 hours before'],
+    b6: ['Eat light, well ahead of time', '2–3 cups of water in the 2–3 hours before; over an hour out, add electrolytes'],
+    b7: ['Eat light, well ahead of time', 'Pre-hydrate and bring fluids with electrolytes, even for short outings'],
+  };
+
+  const WARM: Record<string, string[]> = {
+    b0: ['10–15 min of moving warm-up, indoors if you can: leg swings, walking lunges, high knees', 'Start slowly; save static stretching for after'],
+    b1: ['10–15 min moving warm-up: leg swings, lunges, arm circles', 'First minutes easy; save static stretching for after'],
+    b2: ['About 10 min moving warm-up, then ease in', 'Save static stretching for after'],
+    b3: ['5–10 min easy movement plus a few leg swings', 'Static stretching after, not before'],
+    b4: ['5–10 min easy movement plus a few drills', 'Static stretching after'],
+    b5: ['5 min easy, in the shade if possible', 'Static stretching after'],
+    b6: ['Keep it short: 5 min easy, in the shade', 'Cool down and stretch somewhere cool'],
+    b7: ['Minimal warm-up, indoors or in shade', 'Cool down somewhere cool'],
+  };
+
+  const BY_ACTIVITY: Record<string, { effort: Record<string, string[]>; kit: Record<string, string[]> }> = {
+    running: {
+      effort: {
+        b0: ['Shorten it, or move to a treadmill', 'Head out into the wind so it is at your back on the way home'],
+        b1: ['Shorter, easy effort; stay near home', 'Out into the wind first, home with it behind you'],
+        b2: ['Your normal run; first 10 min easy', 'Watch for ice'],
+        b3: ['Ideal running weather: any planned run'],
+        b4: ['Ideal: a good day for a longer or faster run'],
+        b5: ['Normal run; go easier as it warms', 'Morning or evening beats midday'],
+        b6: ['Run early or late; slow down and go by feel', 'Shorter than planned'],
+        b7: ['Move indoors or keep it very short and easy', 'Stop at any dizziness, nausea or chills'],
+      },
+      kit: {
+        b0: ['Thermal base + insulating mid + windproof jacket', 'Thermal tights, plus wind pants if windy', 'Hat over the ears, mittens, face and neck cover', 'Wool socks'],
+        b1: ['Thermal base + running jacket', 'Thermal tights', 'Hat, gloves, neck gaiter'],
+        b2: ['Long-sleeve thermal; light jacket if windy', 'Tights', 'Hat or headband, light gloves'],
+        b3: ['Long-sleeve tech shirt', 'Shorts or tights', 'Light gloves and headband optional'],
+        b4: ['T-shirt', 'Shorts'],
+        b5: ['Light tee or singlet, shorts', 'Cap and sunscreen'],
+        b6: ['Singlet and shorts in light colors', 'Cap or visor, sunglasses, sunscreen'],
+        b7: ['Lightest kit you own', 'Cap, sunscreen, and water with you'],
+      },
+    },
+    hiking: {
+      effort: {
+        b0: ['Postpone, or keep it short and close to the trailhead', 'Tell someone your route and turn-back time'],
+        b1: ['Shorter route; daylight is short', 'Set a turn-back time; tell someone your route'],
+        b2: ['Normal hike; plan for less daylight', 'Watch for ice on rock and roots'],
+        b3: ['Great hiking weather: any planned route'],
+        b4: ['Ideal: a good day for a long route'],
+        b5: ['Normal hike; start early', 'Take breaks in shade'],
+        b6: ['Start at dawn; avoid exposed midday stretches', 'Shorter route, more water'],
+        b7: ['Postpone, or a short shaded walk only', 'Stop at any dizziness, nausea or chills'],
+      },
+      kit: {
+        b0: ['Wicking base + fleece + insulated jacket + windproof shell (no cotton)', 'Insulated pants, warm boots', 'Hat, mittens, face cover', 'Spare dry layer'],
+        b1: ['Wicking base + fleece + insulated jacket + shell', 'Warm pants, boots, wool socks', 'Hat and gloves'],
+        b2: ['Wicking base + fleece; shell in the pack', 'Hiking pants, boots', 'Hat and light gloves'],
+        b3: ['Wicking base + light fleece', 'Pants or shorts, light shell in the pack'],
+        b4: ['Wicking tee; light layer in the pack', 'Shorts or light pants'],
+        b5: ['Light sun shirt', 'Sun hat, sunglasses, sunscreen', 'Extra water'],
+        b6: ['Light, loose sun shirt', 'Wide-brim hat, sunscreen', 'Plenty of water'],
+        b7: ['Lightest sun-protective layers', 'Wide-brim hat and more water than you think you need'],
+      },
+    },
+    cycling: {
+      effort: {
+        b0: ['Ride indoors on a trainer', 'Your speed makes its own wind chill'],
+        b1: ['Short ride, or ride indoors', 'Avoid fast descents; wind chill climbs with speed'],
+        b2: ['Shorter ride than usual', 'Watch for ice; take descents gently'],
+        b3: ['Good riding weather; start with a layer you can remove'],
+        b4: ['Ideal: a good day for a long ride'],
+        b5: ['Normal ride; morning or evening beats midday'],
+        b6: ['Ride early or late, easier pace', 'Two full bottles'],
+        b7: ['Ride indoors, or very short and easy', 'Stop at any dizziness, nausea or chills'],
+      },
+      kit: {
+        b0: ['Thermal base + windproof insulated jacket', 'Thermal bib tights', 'Skull cap under helmet, face cover', 'Lobster or insulated gloves, shoe covers'],
+        b1: ['Thermal base + windproof jacket', 'Thermal tights', 'Skull cap, full-finger winter gloves, shoe covers'],
+        b2: ['Long-sleeve thermal jersey + wind vest', 'Tights or knee warmers', 'Full-finger gloves, toe covers'],
+        b3: ['Jersey with arm warmers + wind vest', 'Shorts with knee warmers', 'Light full-finger gloves'],
+        b4: ['Short-sleeve jersey and shorts', 'Light vest for descents'],
+        b5: ['Light jersey and shorts', 'Sunscreen, sunglasses'],
+        b6: ['Lightest jersey, light socks', 'Sunscreen, sunglasses, two bottles'],
+        b7: ['Lightest kit', 'Sunscreen and extra fluids'],
+      },
+    },
+  };
+
+  const SUMMARY: Record<Tier, string> = {
+    comfort: 'Comfort. Go as planned.',
+    limit: 'Limit. Doable with the right kit.',
+    caution: 'Caution. Shorten it, change plans or stay indoors.',
+  };
+  const CAUTION_COLD = 'National Weather Service: at a wind chill near −19°F, exposed skin can freeze in about 30 minutes.';
+  const CAUTION_HOT = 'National Weather Service: at a heat index of 90–103°F, heat exhaustion and heat stroke are possible with prolonged activity.';
+
+  const order: Tier[] = ['comfort', 'limit', 'caution'];
+  const worse = (t: Tier): Tier => order[Math.min(order.indexOf(t) + 1, 2)];
+
+  const root = document.getElementById('planner');
+  if (root) {
+    const state = { activity: 'running', band: 'b3', cond: new Set<string>() };
+    const bandsEl = root.querySelector('[data-group="band"]')!;
+    BANDS.forEach((b) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.value = b.id;
+      btn.setAttribute('aria-pressed', String(b.id === state.band));
+      btn.innerHTML = `<span class="b-f"></span><span class="b-c"></span>`;
+      (btn.querySelector('.b-f') as HTMLElement).textContent = b.f;
+      (btn.querySelector('.b-c') as HTMLElement).textContent = b.c;
+      btn.classList.add(`t-${b.tier}-edge`);
+      bandsEl.appendChild(btn);
+    });
+
+    const fill = (key: string, items: string[]) => {
+      const ul = root.querySelector(`[data-list="${key}"]`)!;
+      ul.replaceChildren(...items.map((t) => { const li = document.createElement('li'); li.textContent = t; return li; }));
+    };
+
+    const render = () => {
+      const band = BANDS.find((b) => b.id === state.band)!;
+      const act = BY_ACTIVITY[state.activity];
+      let tier = band.tier;
+      // Wind or wet weather makes cold bands one step harsher; strong sun does the same for hot ones.
+      if (band.cold && (state.cond.has('wind') || state.cond.has('wet'))) tier = worse(tier);
+      if ((band.hot || band.id === 'b5') && state.cond.has('sun')) tier = worse(tier);
+
+      const kit = [...act.kit[band.id]];
+      const effort = [...act.effort[band.id]];
+      if (state.cond.has('wind')) kit.push(band.cold ? 'Windproof outer layer; cover ears and face' : 'Light wind layer you can stash');
+      if (state.cond.has('wet')) kit.push(band.cold ? 'Waterproof shell, brimmed cap; traction if icy' : 'Light rain shell, brimmed cap; no cotton');
+      if (state.cond.has('sun')) kit.push('Sunscreen, sunglasses, cap; direct sun can feel up to 15°F hotter');
+      if (state.cond.has('dark')) kit.push(state.activity === 'cycling' ? 'Front and rear lights, reflective details' : 'Headlamp and reflective layer');
+      if (tier === 'caution') effort.unshift(band.hot ? CAUTION_HOT : CAUTION_COLD);
+      if (state.activity === 'hiking' && !band.hot) fill('fuel', [...FUEL[band.id], 'Pack snacks for anything over an hour']);
+      else fill('fuel', FUEL[band.id]);
+
+      fill('warm', WARM[band.id]);
+      fill('effort', effort);
+      fill('kit', kit);
+
+      const tierEl = root.querySelector<HTMLElement>('[data-tier]')!;
+      tierEl.textContent = tier[0].toUpperCase() + tier.slice(1);
+      tierEl.className = `tier t-${tier}`;
+      root.querySelector('[data-summary]')!.textContent = SUMMARY[tier];
+      const actLabel = state.activity[0].toUpperCase() + state.activity.slice(1);
+      root.querySelector('[data-kit-label]')!.textContent = `${actLabel} · ${band.f}`;
+    };
+
+    root.querySelectorAll<HTMLElement>('[data-group]').forEach((group) => {
+      group.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest('button');
+        if (!btn) return;
+        const g = group.dataset.group!;
+        const v = btn.dataset.value!;
+        if (g === 'cond') {
+          state.cond.has(v) ? state.cond.delete(v) : state.cond.add(v);
+          btn.setAttribute('aria-pressed', String(state.cond.has(v)));
+        } else {
+          (state as any)[g] = v;
+          group.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        }
+        render();
+      });
+    });
+    render();
+  }
+</script>
+
+<style>
+  .planner { display: flex; flex-direction: column; gap: 40px; }
+  .planner-head { display: flex; flex-direction: column; gap: 16px; max-width: 760px; }
+  .rule { padding: 32px; display: flex; flex-direction: column; gap: 12px; border-color: var(--accent); background: var(--accent-tint); max-width: 860px; }
+  .rule-text { margin: 0; font-family: var(--serif); font-size: clamp(24px, 2.6vw, 34px); line-height: 1.25; color: var(--ink); }
+  .rule-text strong { font-weight: 400; color: var(--accent-ink); font-style: italic; }
+  .rule-src { margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; color: var(--muted-2); }
+
+  .controls { display: grid; gap: 28px; }
+  fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  legend { padding: 0; margin-bottom: 12px; }
+  .opt { text-transform: none; letter-spacing: 0.04em; }
+  .seg { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg button, .bands :global(button) { min-height: 48px; padding: 0 20px; border-radius: 999px; border: 1px solid rgba(35,32,26,0.22); background: var(--card); color: var(--ink); font-family: var(--sans); font-size: 16px; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+  .seg button[aria-pressed='true'], .bands :global(button[aria-pressed='true']) { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+  .bands { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .bands :global(button) { border-radius: 16px; padding: 10px 14px; min-height: 64px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; text-align: left; border-left-width: 4px; }
+  .bands :global(.t-comfort-edge) { border-left-color: #4F6B3A; }
+  .bands :global(.t-limit-edge) { border-left-color: var(--accent); }
+  .bands :global(.t-caution-edge) { border-left-color: var(--clay); }
+  .bands :global(.b-f) { font-size: 16px; font-weight: 400; }
+  .bands :global(.b-c) { font-family: var(--mono); font-size: 11px; opacity: 0.7; }
+  @media (max-width: 700px) { .bands { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  .kit { padding: 36px; display: flex; flex-direction: column; gap: 28px; border-radius: 28px; box-shadow: 0 24px 60px -30px rgba(138,90,18,0.35); }
+  .kit:hover { transform: none; }
+  .kit-head { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+  .kit-summary { margin: 4px 0 0; font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1.3; color: var(--ink); }
+  .kit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+  .kit-col { display: flex; flex-direction: column; gap: 10px; }
+  .kit-col ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 16px; line-height: 1.5; color: var(--ink-2); }
+  .kit-note { margin: 0; padding-top: 18px; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.5; color: var(--muted-2); }
+  @media (max-width: 640px) { .kit { padding: 24px; } }
+
+  .tier { display: inline-flex; align-items: center; min-height: 36px; padding: 0 16px; border-radius: 999px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .t-comfort { background: #E4E9D9; color: #2F4522; }
+  .t-limit { background: var(--accent-tint); color: var(--accent-ink); }
+  .t-caution { background: #F2DDD3; color: var(--clay-deep); }
+
+  .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .leg { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+</style>
