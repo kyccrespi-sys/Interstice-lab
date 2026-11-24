@@ -28,7 +28,7 @@
         </div>
       </fieldset>
       <fieldset>
-        <legend class="label muted">2 · Temperature <span class="opt">(air temperature; wind and rain are factored in below)</span></legend>
+        <legend class="label muted">2 · Temperature – Feels Like <span class="opt">(from your weather app; it already includes wind)</span></legend>
         <div class="bands" data-group="band"></div>
       </fieldset>
       <fieldset>
@@ -56,7 +56,7 @@
         <div class="kit-col"><p class="label">Effort</p><ul data-list="effort"></ul></div>
         <div class="kit-col"><p class="label">Kit</p><ul data-list="kit"></ul></div>
       </div>
-      <p class="kit-note">General guidance, not medical advice. Bodies differ: adjust for your fitness, health and how you feel, and check the forecast before you go.</p>
+      <p class="kit-note">General guidance, not medical advice. Bodies differ: adjust for your fitness, health and how you feel, and check the forecast's feels-like temperature before you go.</p>
     </article>
 
     <div class="legend" aria-label="What the ratings mean">
@@ -210,8 +210,9 @@
       const band = BANDS.find((b) => b.id === state.band)!;
       const act = BY_ACTIVITY[state.activity];
       let tier = band.tier;
-      // Wind or wet weather makes cold bands one step harsher; strong sun does the same for hot ones.
-      if (band.cold && (state.cond.has('wind') || state.cond.has('wet'))) tier = worse(tier);
+      // Feels-like already includes wind, so wind only changes the kit. Rain or snow makes cold bands
+      // one step harsher; strong sun does the same for hot ones (feels-like is measured in shade).
+      if (band.cold && state.cond.has('wet')) tier = worse(tier);
       if ((band.hot || band.id === 'b5') && state.cond.has('sun')) tier = worse(tier);
 
       const kit = [...act.kit[band.id]];
@@ -233,7 +234,7 @@
       tierEl.className = `tier t-${tier}`;
       root.querySelector('[data-summary]')!.textContent = SUMMARY[tier];
       const actLabel = state.activity[0].toUpperCase() + state.activity.slice(1);
-      root.querySelector('[data-kit-label]')!.textContent = `${actLabel} · ${band.f}`;
+      root.querySelector('[data-kit-label]')!.textContent = `${actLabel} · feels like ${band.f}`;
     };
 
     root.querySelectorAll<HTMLElement>('[data-group]').forEach((group) => {

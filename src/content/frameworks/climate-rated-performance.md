@@ -37,10 +37,10 @@ sources:
 
 Camping gear already tells you the temperatures it's built for. Sleeping bags are tested to an international standard and labelled with a Comfort temperature, a Limit and an Extreme. Outdoor activity has nothing like it, even though the same questions decide whether a run, hike or ride goes well: what to eat, how to warm up, how hard to go and what to wear.
 
-This framework borrows the camping model and applies it to the whole outing. Choose your activity and the temperature, and you get one of three ratings:
+This framework borrows the camping model and applies it to the whole outing. Choose your activity and the feels-like temperature, and you get one of three ratings:
 
 - **Comfort:** ideal. Go as planned.
 - **Limit:** doable with the right kit.
 - **Caution:** shorten it, change plans or stay indoors. This is frostbite and heat-illness territory.
 
-Wind or rain makes a cold day one step harsher, and strong sun does the same on a hot one. A note on hats: you don't lose most of your heat through your head. It's closer to the share of skin it makes up. A hat still matters in the cold, and taking it off is one of the easiest ways to shed heat once you've warmed up.
+Rain or snow makes a cold day one step harsher, and strong sun does the same on a hot one. A note on hats: you don't lose most of your heat through your head. It's closer to the share of skin it makes up. A hat still matters in the cold, and taking it off is one of the easiest ways to shed heat once you've warmed up.
