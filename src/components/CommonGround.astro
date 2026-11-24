@@ -1,5 +1,6 @@
 ---
 // Figures for 005 · Common Ground. Original, illustrative plan and schedules; not an architectural drawing.
+import { buildIso, iso, ISO, skylights } from './cg/isoBuilding';
 const zones = [
   { id: 'hall', n: 'The Nature Hall', who: 'Children · elders watch and join', x: 330, y: 150, w: 340, h: 270, c: '#E8A33D',
     t: 'An indoor play landscape built from natural materials: boulders, logs, sand and tree-trunk columns, under a ring of clerestory windows and skylights so children see the sky, clouds and weather while staying indoors. Low benches along the edges invite older adults to watch, cheer and join in.',
@@ -29,6 +30,9 @@ const zones = [
     t: 'Fall-risk screening, physical therapy and first aid for both ages.',
     e: 'Fall-prevention programs work best when set and progressed by trained staff.' },
 ];
+const isoSvg = buildIso();
+const zonePoly = (z: { x: number; y: number; w: number; h: number }) => [iso(z.x, z.y), iso(z.x + z.w, z.y), iso(z.x + z.w, z.y + z.h), iso(z.x, z.y + z.h)].map((p) => p.map((v) => v.toFixed(1)).join(',')).join(' ');
+const labelAt = (z: { x: number; y: number }) => iso(z.x + 6, z.y + 6, 0);
 ---
 <section class="cg" aria-labelledby="cg-h">
   <div class="wrap cg-in">
@@ -44,61 +48,35 @@ const zones = [
         <label class="sun-ctl"><span class="label muted">Time of day</span><input type="range" min="7" max="18" step="0.25" value="10" data-sun aria-label="Time of day" /><span class="sun-t" data-sunt>10:00</span></label>
       </div>
       <div class="plan-body">
-        <svg viewBox="0 0 1000 620" role="img" aria-label="Floor plan of the Common Ground building" font-family="IBM Plex Mono, monospace">
+        <svg viewBox="0 0 1200 820" role="img" aria-label="Cutaway drawing of the Common Ground building" font-family="IBM Plex Mono, monospace">
           <defs>
-            <pattern id="cgsand" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="2" cy="3" r=".9" fill="#C9A86A"></circle><circle cx="7" cy="8" r=".8" fill="#C9A86A"></circle></pattern>
-            <pattern id="cggrass" width="12" height="12" patternUnits="userSpaceOnUse"><path d="M2 10 l2 -5 M7 11 l1 -6 M10 9 l-1 -4" stroke="#6B8F4E" stroke-width=".8" opacity=".6"></path></pattern>
-            <linearGradient id="cgbeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE7A8" stop-opacity=".75"></stop><stop offset="1" stop-color="#FFE7A8" stop-opacity="0"></stop></linearGradient>
+            <filter id="cgblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.6"></feGaussianBlur></filter>
+            <radialGradient id="cgstone" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#E6E0D4"></stop><stop offset=".55" stop-color="#B8AE9E"></stop><stop offset="1" stop-color="#8C8274"></stop></radialGradient>
+            <radialGradient id="cgleaf0" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#B5D58C"></stop><stop offset=".6" stop-color="#6E9E4E"></stop><stop offset="1" stop-color="#46703A"></stop></radialGradient>
+            <radialGradient id="cgleaf1" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#A3C97C"></stop><stop offset=".6" stop-color="#5E8E44"></stop><stop offset="1" stop-color="#3E6432"></stop></radialGradient>
+            <linearGradient id="cgbark" x1="0" x2="1"><stop offset="0" stop-color="#5E4128"></stop><stop offset=".35" stop-color="#9C7448"></stop><stop offset=".7" stop-color="#7A5432"></stop><stop offset="1" stop-color="#4E3520"></stop></linearGradient>
+            <linearGradient id="cgpipe" x1="0" x2="1"><stop offset="0" stop-color="#C9C4BA"></stop><stop offset=".4" stop-color="#FBF9F4"></stop><stop offset="1" stop-color="#BDB7AC"></stop></linearGradient>
+            <linearGradient id="cgglass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D8EEF2"></stop><stop offset=".5" stop-color="#A9D3DC"></stop><stop offset="1" stop-color="#E8F5F7"></stop></linearGradient>
+            <linearGradient id="cgdoor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B98A55"></stop><stop offset="1" stop-color="#8A6238"></stop></linearGradient>
+            <linearGradient id="cgbeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF1C4" stop-opacity=".55"></stop><stop offset="1" stop-color="#FFE7A8" stop-opacity=".08"></stop></linearGradient>
+            <pattern id="cgsand" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#E8D3A6"></rect><circle cx="2" cy="3" r=".8" fill="#C9A86A"></circle><circle cx="6" cy="6.5" r=".7" fill="#B8955A"></circle></pattern>
+            <pattern id="cggrass" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#A9C48A"></rect><path d="M2 12 l1.5 -5 M6 13 l.8 -6 M10 12 l-1 -5 M12 6 l1 -4 M4 5 l-1 -3" stroke="#6B8F4E" stroke-width=".9" opacity=".7"></path></pattern>
           </defs>
-          <rect width="1000" height="620" fill="#F3ECDF"></rect>
-          <rect x="250" y="470" width="500" height="130" rx="10" fill="url(#cggrass)" stroke="#6B8F4E" stroke-opacity=".5"></rect>
-          <rect x="90" y="40" width="820" height="390" rx="6" fill="#FBF7EF" stroke="#23201A" stroke-width="2"></rect>
-          {zones.filter((z) => z.id !== 'yard').map((z) => (
-            <rect x={z.x} y={z.y} width={z.w} height={z.h} rx="4" fill={z.c} fill-opacity=".14" stroke="#23201A" stroke-opacity=".35"></rect>
-          ))}
-          <!-- Nature Hall details -->
-          <rect x="345" y="330" width="120" height="70" rx="30" fill="url(#cgsand)" stroke="#C9A86A" stroke-opacity=".6"></rect>
-          <path d="M520 360 q 20 -38 48 -30 q 30 -4 36 28 q -8 28 -42 26 q -38 4 -42 -24z" fill="#BFB6A6" stroke="#23201A" stroke-opacity=".5"></path>
-          <path d="M600 300 q 14 -22 32 -16 q 18 2 20 20 q -6 16 -26 14 q -24 0 -26 -18z" fill="#CFC6B6" stroke="#23201A" stroke-opacity=".5"></path>
-          <rect x="370" y="250" width="160" height="14" rx="7" fill="#A07A4E" stroke="#23201A" stroke-opacity=".5" transform="rotate(-12 450 257)"></rect>
-          <rect x="430" y="300" width="120" height="12" rx="6" fill="#A07A4E" stroke="#23201A" stroke-opacity=".5" transform="rotate(8 490 306)"></rect>
-          {[[400, 200], [600, 210], [500, 195]].map(([cx, cy]) => <g><circle cx={cx} cy={cy} r="16" fill="#8A6A44" stroke="#23201A" stroke-opacity=".5"></circle><circle cx={cx} cy={cy} r="9" fill="none" stroke="#23201A" stroke-opacity=".35"></circle><circle cx={cx} cy={cy} r="4" fill="none" stroke="#23201A" stroke-opacity=".3"></circle></g>)}
-          {[340, 660].map((x) => <rect x={x - 4} y="170" width="8" height="230" rx="3" fill="#A07A4E" fill-opacity=".5"></rect>)}
-          <!-- skylights -->
-          {[0, 1, 2, 3].map((i) => <rect x={360 + i * 80} y="146" width="60" height="8" fill="#A9D3DC" stroke="#3E7F8C" stroke-opacity=".6" data-sky></rect>)}
-          <g data-beams></g>
-          <!-- garden lab towers -->
-          {[0, 1, 2, 3, 4].map((i) => <g><rect x={700 + i * 38} y="190" width="14" height="80" rx="7" fill="#FBF7EF" stroke="#3E7F8C"></rect>{[0, 1, 2, 3].map((j) => <circle cx={707 + i * 38} cy={200 + j * 20} r="5" fill="#6B8F4E"></circle>)}</g>)}
-          <!-- classrooms: little tables and cots -->
-          {[[140, 230], [200, 230], [260, 230]].map(([cx, cy]) => <g><circle cx={cx} cy={cy} r="14" fill="#FBF7EF" stroke="#23201A" stroke-opacity=".4"></circle>{[0, 1, 2, 3].map((k) => <circle cx={cx + 20 * Math.cos(k * 1.57)} cy={cy + 20 * Math.sin(k * 1.57)} r="4" fill="#D8C58E"></circle>)}</g>)}
-          {[0, 1, 2, 3].map((i) => <rect x={130 + i * 44} y="272" width="34" height="16" rx="4" fill="#FBF7EF" stroke="#23201A" stroke-opacity=".35"></rect>)}
-          <!-- elder wing: armchairs and a table -->
-          {[[140, 360], [180, 360], [140, 395], [180, 395]].map(([x, y]) => <path d={`M${x - 11} ${y + 9} L${x - 11} ${y - 7} q 11 -8 22 0 L${x + 11} ${y + 9}Z`} fill="#FBF7EF" stroke="#8E7BA8" stroke-opacity=".7"></path>)}
-          <rect x="230" y="350" width="70" height="44" rx="6" fill="#FBF7EF" stroke="#23201A" stroke-opacity=".35"></rect>
-          <!-- gym -->
-          <rect x="700" y="340" width="70" height="8" rx="4" fill="#A07A4E"></rect><rect x="700" y="380" width="70" height="8" rx="4" fill="#A07A4E"></rect>
-          <text x="735" y="372" font-size="8" fill="#776F62" text-anchor="middle">RAILS</text>
-          {[800, 830, 860].map((x, i) => <rect x={x} y={392 - i * 8} width="22" height={8 + i * 8} fill="#CFC6B6" stroke="#23201A" stroke-opacity=".5"></rect>)}
-          <!-- yard elements -->
-          <rect x="290" y="500" width="130" height="12" rx="6" fill="#A07A4E" stroke="#23201A" stroke-opacity=".5"></rect>
-          <path d="M460 560 q 16 -30 40 -24 q 26 -2 30 22 q -6 22 -34 20 q -32 2 -36 -18z" fill="#BFB6A6" stroke="#23201A" stroke-opacity=".5"></path>
-          {[[580, 520], [640, 520], [700, 520]].map(([x, y]) => <rect x={x} y={y} width="44" height="26" rx="3" fill="#B98F5E" fill-opacity=".5" stroke="#6B8F4E"></rect>)}
-          {[[310, 560], [710, 575]].map(([cx, cy]) => <g><circle cx={cx} cy={cy} r="22" fill="#6B8F4E" fill-opacity=".35"></circle><circle cx={cx} cy={cy} r="5" fill="#8A6A44"></circle></g>)}
-          <path d="M270 590 C 400 540 600 600 740 560" fill="none" stroke="#CFC6B6" stroke-width="8" stroke-linecap="round" opacity=".8"></path>
-          <!-- door -->
-          <g data-doorgroup>
-            <rect x="430" y="424" width="140" height="12" fill="#8A5A12" data-doorrect></rect>
-            <text x="500" y="452" font-size="9" fill="#8A5A12" text-anchor="middle" letter-spacing="1.4" data-doorlabel>GARAGE DOOR · CLOSED</text>
-          </g>
-          <path d="M500 420 L500 500" stroke="#E8A33D" stroke-width="3" stroke-dasharray="6 6" class="flowpath" opacity="0" data-doorflow></path>
-          <!-- labels + hotspots -->
+          <rect width="1200" height="820" fill="#F3ECDF"></rect>
+          <g set:html={isoSvg}></g>
+          <path d="" fill="none" stroke="#E8A33D" stroke-width="4" stroke-dasharray="8 8" class="flowpath" opacity="0" data-doorflow></path>
           {zones.map((z) => (
             <g class="zone" data-zone={z.id} tabindex="0" role="button" aria-label={z.n}>
-              <rect x={z.x} y={z.y} width={z.w} height={z.h} rx="4" fill="transparent"></rect>
-              <text x={z.x + 10} y={z.y + 18} font-size="10" fill="#23201A" letter-spacing="1.2" font-weight="600">{z.n.toUpperCase()}</text>
+              <polygon points={zonePoly(z)} fill="transparent"></polygon>
             </g>
           ))}
-          <text x="910" y="30" font-size="10" fill="#776F62" text-anchor="end" letter-spacing="1.4">N ↑ · NOT TO SCALE</text>
+          {zones.map((z) => { const [lx, ly] = labelAt(z); return (
+            <g class="zlabel" pointer-events="none" transform={`translate(${lx.toFixed(1)} ${ly.toFixed(1)})`}>
+              <rect x="0" y="-11" width={z.n.length * 6.6 + 14} height="17" rx="8.5" fill="#FBF7EF" fill-opacity=".92" stroke="#23201A" stroke-opacity=".25"></rect>
+              <text x="7" y="1" font-size="9.5" fill="#23201A" letter-spacing="1">{z.n.toUpperCase()}</text>
+            </g>
+          ); })}
+          <text x="1180" y="806" font-size="10" fill="#776F62" text-anchor="end" letter-spacing="1.4">CUTAWAY · NOT TO SCALE · ORIGINAL ILLUSTRATION</text>
         </svg>
         <aside class="plan-card" aria-live="polite">
           <p class="label" data-who></p>
@@ -107,7 +85,7 @@ const zones = [
           <p class="plan-ev" data-e></p>
         </aside>
       </div>
-      <figcaption class="cap">Original, illustrative plan; not an architectural drawing. Evidence summaries draw on the sources listed below.</figcaption>
+      <figcaption class="cap">Original cutaway illustration; not an architectural drawing. Evidence summaries draw on the sources listed below.</figcaption>
     </figure>
 
     <div class="cg-head cg-gap">
@@ -140,7 +118,7 @@ const zones = [
   </div>
 </section>
 
-<script define:vars={{ zones }}>
+<script define:vars={{ zones, ISO, skylights }}>
   // ---------- Figure 1: plan ----------
   const plan = document.getElementById('cgplan');
   if (plan) {
@@ -156,13 +134,15 @@ const zones = [
       g.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); show(g.dataset.zone); } });
     });
     show('hall');
-    const btn = plan.querySelector('[data-door]'), rect = plan.querySelector('[data-doorrect]'), lab = plan.querySelector('[data-doorlabel]'), flow = plan.querySelector('[data-doorflow]');
+    const isoP = (x, y, z = 0) => [ISO.OX + (x - y) * 0.866 * ISO.S, ISO.OY + (x + y) * 0.5 * ISO.S - z * ISO.S];
+    const P = (a) => a.map((p) => p.map((v) => v.toFixed(1)).join(',')).join(' ');
+    const btn = plan.querySelector('[data-door]'), panel = plan.querySelector('[data-doorpanel]'), flow = plan.querySelector('[data-doorflow]');
+    const f0 = isoP(500, 400), f1 = isoP(500, 520);
+    flow.setAttribute('d', `M${f0[0]} ${f0[1]} L${f1[0]} ${f1[1]}`);
     let open = false;
     btn.addEventListener('click', () => {
       open = !open;
-      rect.style.transform = open ? 'translateY(-10px) scaleY(.2)' : '';
-      rect.style.opacity = open ? '.35' : '1';
-      lab.textContent = open ? 'GARAGE DOOR · OPEN' : 'GARAGE DOOR · CLOSED';
+      panel.classList.toggle('up', open);
       flow.setAttribute('opacity', open ? '1' : '0');
       btn.textContent = open ? 'Lower the garage door ↓' : 'Raise the garage door ↑';
       btn.setAttribute('aria-pressed', String(open));
@@ -171,13 +151,16 @@ const zones = [
     const sun = plan.querySelector('[data-sun]'), st = plan.querySelector('[data-sunt]'), beams = plan.querySelector('[data-beams]');
     const drawSun = () => {
       const h = Number(sun.value);
-      const k = Math.sin(((h - 6) / 13) * Math.PI);
-      const shift = (h - 12.5) * -14;
+      const k = Math.max(0.05, Math.sin(((h - 6) / 13) * Math.PI));
+      const dx = (h - 12.5) * -16, dy = 40 + (1 - k) * 50;
       let s = '';
-      for (let i = 0; i < 4; i++) {
-        const x = 360 + i * 80;
-        s += `<polygon points="${x},154 ${x + 60},154 ${x + 60 + shift},${330 + k * 60} ${x + shift},${330 + k * 60}" fill="url(#cgbeam)" opacity="${(0.25 + k * 0.6).toFixed(2)}"></polygon>`;
-      }
+      skylights.forEach((q) => {
+        const top = [isoP(q.x0, q.y0, 112), isoP(q.x1, q.y0, 112), isoP(q.x1, q.y1, 112), isoP(q.x0, q.y1, 112)];
+        const fl = [isoP(q.x0 + dx, q.y0 + dy), isoP(q.x1 + dx, q.y0 + dy), isoP(q.x1 + dx, Math.min(q.y1 + dy, 425)), isoP(q.x0 + dx, Math.min(q.y1 + dy, 425))];
+        s += `<polygon points="${P([top[0], top[1], fl[1], fl[0]])}" fill="url(#cgbeam)" opacity="${(0.12 + 0.22 * k).toFixed(2)}"></polygon>`;
+        s += `<polygon points="${P([top[3], top[2], fl[2], fl[3]])}" fill="url(#cgbeam)" opacity="${(0.08 + 0.14 * k).toFixed(2)}"></polygon>`;
+        s += `<polygon points="${P(fl)}" fill="#FFF3C9" opacity="${(0.15 + 0.3 * k).toFixed(2)}"></polygon>`;
+      });
       beams.innerHTML = s;
       const hh = Math.floor(h), mm = Math.round((h - hh) * 60);
       st.textContent = `${hh}:${String(mm).padStart(2, '0')}`;
@@ -260,13 +243,14 @@ const zones = [
   .sun-ctl { display: flex; align-items: center; gap: 12px; flex: 1 1 280px; max-width: 460px; }
   .sun-ctl input { flex: 1; accent-color: #E8A33D; }
   .sun-t { font-family: var(--mono); font-size: 13px; min-width: 44px; }
-  .plan-body { display: grid; grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); gap: 18px; align-items: start; }
+  .plan-body { display: grid; grid-template-columns: minmax(0, 2.4fr) minmax(240px, 1fr); gap: 18px; align-items: start; }
   .plan-body svg { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
   .plan :global(.zone) { cursor: pointer; outline: none; }
-  .plan :global(.zone rect) { transition: fill .2s; }
-  .plan :global(.zone:hover rect), .plan :global(.zone:focus-visible rect) { fill: rgba(232,163,61,.12); }
-  .plan :global(.zone.on rect) { fill: rgba(232,163,61,.18); stroke: #8A5A12; stroke-width: 2.5; }
-  .plan [data-doorrect] { transform-box: fill-box; transform-origin: center top; transition: transform .6s ease, opacity .6s; }
+  .plan :global(.zone polygon) { transition: fill .2s; }
+  .plan :global(.zone:hover polygon), .plan :global(.zone:focus-visible polygon) { fill: rgba(232,163,61,.10); }
+  .plan :global(.zone.on polygon) { fill: rgba(232,163,61,.14); stroke: #E8A33D; stroke-width: 3; stroke-dasharray: 8 5; }
+  .plan :global(.doorpanel) { transition: transform .8s cubic-bezier(.3,.7,.2,1), opacity .8s; }
+  .plan :global(.doorpanel.up) { transform: translateY(-62px); opacity: .35; }
   .plan :global(.flowpath) { animation: cgflow 1.2s linear infinite; transition: opacity .4s; }
   @keyframes cgflow { to { stroke-dashoffset: -24; } }
   .plan-card { --zc: #E8A33D; background: #F3ECDF; border: 1px solid var(--line); border-top: 4px solid var(--zc); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; position: sticky; top: 24px; }
@@ -294,5 +278,5 @@ const zones = [
   .g-both { border-top: 4px solid #6B8F4E; background: #EEF2E6; }
   .cap { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--muted-2); line-height: 1.6; }
   @media (max-width: 860px) { .plan-body { grid-template-columns: 1fr; } .plan-card { position: static; } }
-  @media (prefers-reduced-motion: reduce) { .plan :global(.flowpath) { animation: none; } .plan [data-doorrect] { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .plan :global(.flowpath) { animation: none; } .plan :global(.doorpanel) { transition: none; } }
 </style>
