@@ -5,6 +5,7 @@ import DoughnutFigure from '../../components/DoughnutFigure.astro';
 import ClimateTool from '../../components/ClimateTool.astro';
 import AlpineFarm from '../../components/AlpineFarm.astro';
 import ForestGrid from '../../components/ForestGrid.astro';
+import CommonGround from '../../components/CommonGround.astro';
 import Subscribe from '../../components/Subscribe.astro';
 import { site } from '../../data/site';
 import { inline, toRoman } from '../../data/inline';
@@ -97,6 +98,7 @@ const forthcoming = d.status === 'forthcoming';
       {d.figure === 'climate-rated' && <ClimateTool />}
       {d.figure === 'alpine-farm' && <AlpineFarm />}
       {d.figure === 'forest-grid' && <ForestGrid />}
+      {d.figure === 'common-ground' && <CommonGround />}
 
       {d.principles.length > 0 && (
         <section class="band">
