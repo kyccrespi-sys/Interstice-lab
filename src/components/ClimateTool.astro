@@ -38,6 +38,15 @@
           <button type="button" data-value="wet" aria-pressed="false">Rain or snow</button>
           <button type="button" data-value="sun" aria-pressed="false">Strong sun</button>
           <button type="button" data-value="dark" aria-pressed="false">Dark</button>
+          <button type="button" data-value="sweat" aria-pressed="false">I sweat heavily</button>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend class="label muted">4 · How long?</legend>
+        <div class="seg" data-group="duration">
+          <button type="button" data-value="short" aria-pressed="true">Under 1 hour</button>
+          <button type="button" data-value="mid" aria-pressed="false">1–2 hours</button>
+          <button type="button" data-value="long" aria-pressed="false">2+ hours</button>
         </div>
       </fieldset>
     </div>
@@ -91,8 +100,8 @@
     b3: ['Light carb snack 30–60 min before, or a meal 1–4 hours before', 'Water beforehand'],
     b4: ['Light carb snack 30–60 min before, or a meal 1–4 hours before', 'Water beforehand'],
     b5: ['Eat light; avoid heavy or fatty food in the hours before', 'About 2–3 cups of water in the 2–3 hours before'],
-    b6: ['Eat light, well ahead of time', '2–3 cups of water in the 2–3 hours before; over an hour out, add electrolytes'],
-    b7: ['Eat light, well ahead of time', 'Pre-hydrate and bring fluids with electrolytes, even for short outings'],
+    b6: ['Eat light, well ahead of time', '2–3 cups of water in the 2–3 hours before'],
+    b7: ['Eat light, well ahead of time', 'Pre-hydrate well; bring fluids even for short outings'],
   };
 
   const WARM: Record<string, string[]> = {
@@ -200,7 +209,7 @@
 
   const root = document.getElementById('planner');
   if (root) {
-    const state = { activity: 'running', band: 'b3', cond: new Set<string>() };
+    const state = { activity: 'running', band: 'b3', duration: 'short', cond: new Set<string>() };
     const bandsEl = root.querySelector('[data-group="band"]')!;
     BANDS.forEach((b) => {
       const btn = document.createElement('button');
@@ -227,6 +236,8 @@
       // one step harsher; strong sun does the same for hot ones (feels-like is measured in shade).
       if (band.cold && state.cond.has('wet')) tier = worse(tier);
       if ((band.hot || band.id === 'b5') && state.cond.has('sun')) tier = worse(tier);
+      // Long outings in the heat are harder on the body.
+      if (band.hot && state.duration === 'long') tier = worse(tier);
 
       const kit = [...act.kit[band.id]];
       const effort = [...act.effort[band.id]];
@@ -235,8 +246,21 @@
       if (state.cond.has('sun')) kit.push('Sun: UPF-rated light colors, cap, sunscreen, sunglasses; direct sun can feel up to 15°F hotter');
       if (state.cond.has('dark')) kit.push(state.activity === 'cycling' ? 'Dark: front and rear lights, reflective details' : 'Dark: headlamp and reflective layer');
       if (tier === 'caution') effort.unshift(band.hot ? CAUTION_HOT : CAUTION_COLD);
-      if (state.activity === 'hiking' && !band.hot) fill('fuel', [...FUEL[band.id], 'Pack snacks for anything over an hour']);
-      else fill('fuel', FUEL[band.id]);
+      // Fuel: before, then carbs during longer outings, then electrolytes.
+      const fuel = [...FUEL[band.id]];
+      if (state.duration !== 'short') fuel.push('During: 30–60 g of carbs per hour (about 1–2 bananas or gels, or a sports drink)');
+      const hotish = band.hot || band.id === 'b5';
+      const heavy = state.cond.has('sweat');
+      if (state.duration === 'long' || (heavy && hotish)) {
+        fuel.push('Electrolytes: take sodium every hour (electrolyte drink or salty snacks). Heavy sweaters can lose about 500–700 mg of sodium an hour');
+        fuel.push('Drink to thirst; don’t overdo plain water on long outings, which can dilute your blood sodium (hyponatremia)');
+      } else if (state.duration === 'mid' || hotish || heavy) {
+        fuel.push('Electrolytes: an electrolyte drink or mix during, about 0.5–1 L per hour, or water plus a salty snack');
+      } else {
+        fuel.push('Electrolytes: water is enough for most people under an hour in normal weather');
+      }
+      if (band.cold && state.duration !== 'short') fuel.push('You still sweat under layers in the cold, so keep drinking');
+      fill('fuel', fuel);
 
       fill('warm', WARM[band.id]);
       fill('effort', effort);
@@ -251,7 +275,8 @@
       tierEl.className = `tier t-${tier}`;
       root.querySelector('[data-summary]')!.textContent = SUMMARY[tier];
       const actLabel = state.activity[0].toUpperCase() + state.activity.slice(1);
-      root.querySelector('[data-kit-label]')!.textContent = `${actLabel} · feels like ${band.f}`;
+      const durLabel = { short: 'under 1 hour', mid: '1–2 hours', long: '2+ hours' }[state.duration];
+      root.querySelector('[data-kit-label]')!.textContent = `${actLabel} · feels like ${band.f} · ${durLabel}`;
     };
 
     root.querySelectorAll<HTMLElement>('[data-group]').forEach((group) => {

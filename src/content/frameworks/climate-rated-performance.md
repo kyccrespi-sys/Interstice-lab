@@ -28,6 +28,8 @@ sources:
   - "National Weather Service. *Wind Chill Chart* and frostbite times."
   - "National Weather Service. *Heat Index* danger classifications."
   - "Mayo Clinic. \"Eating and exercise: 5 tips to maximize your workouts.\" Meal timing before and after exercise, and the American College of Sports Medicine's pre-exercise hydration guidance."
+  - "American College of Sports Medicine. \"Exercise and Fluid Replacement\" position stand, 2007. Fluid and electrolyte needs vary widely between people."
+  - "American College of Sports Medicine. \"9 Facts About Hydration and Electrolytes.\" Sodium loss in heavy sweaters."
   - "Colorado State University Extension. \"Timing of Meals and Snacks for Athletes.\""
   - "Cleveland Clinic. \"Do You Really Lose Most of Your Body Heat Through Your Head?\""
 ---
