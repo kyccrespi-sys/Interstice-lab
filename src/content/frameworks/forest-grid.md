@@ -94,6 +94,7 @@ sources:
   - "Schneider, Eric D., and James J. Kay. \"Life as a Manifestation of the Second Law of Thermodynamics.\" *Mathematical and Computer Modelling* 19, 1994."
   - "Ulanowicz, Robert E., Sally J. Goerner, Bernard Lietaer and Rocio Gomez. \"Quantifying sustainability: Resilience, efficiency and the return of information theory.\" *Ecological Complexity* 6, 2009."
   - "U.S. Energy Information Administration. *Electric Power Annual*, Table 4.08.B, capacity factors, 2025."
+  - "U.S. Energy Information Administration. \"Electric power sector CO2 emissions drop as generation mix shifts from coal to natural gas.\" Today in Energy, June 9, 2021."
   - "U.S. Energy Information Administration. \"How much electricity is lost in electricity transmission and distribution in the United States?\" and \"What is the efficiency of different types of power plants?\" FAQs."
   - "World Nuclear Association. \"Cooling Power Plants.\""
   - "Reuters and Bloomberg reporting on EDF nuclear output cuts during French heat waves, 2022–2026."
@@ -150,7 +151,9 @@ Then come the deep-rooted, steady species. Geothermal draws on the earth's heat 
 
 Solar thermal plants, which concentrate sunlight to heat molten salt, are a hybrid: they store the sun's heat in tanks and can keep generating for hours after sunset. Batteries play the part of the fungal store, soaking up surplus and releasing it later, though for hours rather than weeks.
 
-No species is best. Each fails in a different way, which is exactly why they belong together.
+Finally there are the fossil species. Natural gas is today's fast invasive: it can be turned up or down within minutes, so it fills whatever gap the other sources leave, which is why grids lean on it so heavily. Coal is the buried remains of ancient forests, steady but slow to ramp. Both burn carbon that plants pulled from the air millions of years ago. In 2019, gas plants emitted about 976 pounds of CO₂ for each megawatt-hour of electricity and coal plants about 2,257, more than twice as much. They are also steam or combustion plants, so they pay the same heat toll as nuclear, and gas ties the whole grid to the price of a single fuel.
+
+No species is best. Each fails in a different way, which is exactly why they belong together. The forest grid's aim is to need the fossil species less and less: enough clean species, storage and links that gas becomes a rarely used reserve rather than the plant that fills every gap.
 
 ### VI · The physics
 

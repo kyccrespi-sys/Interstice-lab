@@ -9,6 +9,8 @@ const sources = [
   { id: 'nuclear', n: 'Nuclear', c: '#6E5A8A', cf: '91%', tree: 'Old-growth giant', weak: 'Hot rivers, outages' },
   { id: 'csp', n: 'Solar thermal', c: '#C77B2B', cf: '24%', tree: 'Sun that stores heat', weak: 'Cloudy weeks' },
   { id: 'store', n: 'Batteries', c: '#6B8F4E', cf: 'Stores', tree: 'Fungal store', weak: 'Hours, not weeks' },
+  { id: 'gas', n: 'Natural gas', c: '#7A7468', cf: 'On demand', tree: 'Fast invasive: fills any gap', weak: 'Carbon, fuel price swings' },
+  { id: 'coal', n: 'Coal', c: '#3A3631', cf: 'Steady', tree: 'Ancient buried forest', weak: 'Most carbon, slow to ramp' },
 ];
 ---
 <section class="fg" aria-labelledby="fg-h">
@@ -16,7 +18,7 @@ const sources = [
     <div class="fg-head">
       <p class="label">Figure 1 · Grow the mix</p>
       <h2 class="h2" id="fg-h">A monoculture grid <span class="it clay">versus a mixed forest.</span></h2>
-      <p class="body">Each energy source is a different species, with its own rhythm and its own weak spot. Pick which to plant. Every grid is sized to make the same total energy over two weeks; watch how often it falls short. Then send a heat wave through it.</p>
+      <p class="body">Each energy source is a different species, with its own rhythm and its own weak spot, from sun and wind to nuclear, gas and coal. Pick which to plant. Every grid is sized to make the same total energy over two weeks; watch how often it falls short. Then send a heat wave through it.</p>
     </div>
 
     <figure class="mix" id="fgmix">
@@ -24,8 +26,10 @@ const sources = [
         <div class="presets" role="group" aria-label="Presets">
           <button type="button" data-preset="solar">Monoculture · solar only</button>
           <button type="button" data-preset="nuclear">Monoculture · nuclear only</button>
+          <button type="button" data-preset="gas">Monoculture · gas only</button>
           <button type="button" data-preset="solar,wind,store">Solar + wind + batteries</button>
-          <button type="button" data-preset="solar,wind,hydro,geo,nuclear,csp,store">Mixed forest · all seven</button>
+          <button type="button" data-preset="gas,coal,nuclear,wind,solar,hydro">A typical grid today</button>
+          <button type="button" data-preset="solar,wind,hydro,geo,nuclear,csp,store">Mixed forest · seven clean sources</button>
         </div>
         <div class="srcs" role="group" aria-label="Energy sources">
           {sources.map((s) => (
@@ -61,9 +65,10 @@ const sources = [
         <div><span class="mo-n" data-met>—</span><span class="mo-l">Hours fully powered</span></div>
         <div><span class="mo-n" data-gap>—</span><span class="mo-l">Longest shortfall</span></div>
         <div><span class="mo-n" data-kinds>—</span><span class="mo-l">Kinds of source</span></div>
+        <div><span class="mo-n" data-co2>—</span><span class="mo-l">Lb of CO₂ per MWh</span></div>
       </div>
       <p class="mix-verdict" data-verdict aria-live="polite"></p>
-      <figcaption class="cap">Illustrative model with made-up weather. Percentages are U.S. average capacity factors for 2025 (EIA): how much a source actually produces compared with running flat out all year. Batteries store energy rather than make it. Real grids also use imports, demand response and fossil backup, which are left out here.</figcaption>
+      <figcaption class="cap">Illustrative model with made-up weather. Percentages are U.S. average capacity factors for 2025 (EIA): how much a source actually produces compared with running flat out all year. Gas and coal run when operators choose, so their output depends on fuel prices rather than weather. Carbon uses EIA averages for 2019: about 976 lb of CO₂ per MWh for gas and 2,257 for coal. Batteries store energy rather than make it. Imports and demand response are left out.</figcaption>
     </figure>
 
     <div class="fg-head fg-gap">
@@ -131,7 +136,8 @@ const sources = [
       const hydro = Array.from({ length: H }, (_, t) => (0.9 + 0.1 * Math.sin(t / 50)) * (hw(t) ? 0.5 : 1));
       const geo = Array.from({ length: H }, () => 1);
       const nuclear = Array.from({ length: H }, (_, t) => (hw(t) ? 0.6 : 1));
-      return { demand, raw: { solar, csp, wind, hydro, geo, nuclear } as Record<string, number[]> };
+      const coal = Array.from({ length: H }, (_, t) => (hw(t) ? 0.85 : 1));
+      return { demand, raw: { solar, csp, wind, hydro, geo, nuclear, coal } as Record<string, number[]> };
     };
     const normal = build(false), heatW = build(true);
     // size every source on the ordinary fortnight, so the heat wave is a true stress test
@@ -140,20 +146,28 @@ const sources = [
     Object.keys(normal.raw).forEach((k) => (scale[k] = 1 / mean(normal.raw[k])));
 
     const sim = (sel: string[], wx: typeof normal) => {
-      const gens = sel.filter((s) => s !== 'store');
-      const supply = new Array(H).fill(0);
-      gens.forEach((g) => { const k = ((1.1 * avgD) / gens.length) * scale[g]; wx.raw[g].forEach((v, t) => (supply[t] += v * k)); });
+      const slots = sel.filter((s) => s !== 'store');
+      const fixed = slots.filter((s) => s !== 'gas');
+      const hasGas = sel.includes('gas');
+      const supply = new Array(H).fill(0), coalOut = new Array(H).fill(0);
+      fixed.forEach((g) => { const k = ((1.1 * avgD) / slots.length) * scale[g]; wx.raw[g].forEach((v, t) => { supply[t] += v * k; if (g === 'coal') coalOut[t] = v * k; }); });
+      const gasCap = hasGas ? 1.6 * avgD * (slots.length === 1 ? 1 : 0.5) : 0; // gas is held as flexible reserve
       const delivered = new Array(H).fill(0);
       const cap = sel.includes('store') ? 10 * avgD : 0; let soc = cap * 0.5;
+      let gasE = 0, coalE = 0, total = 0;
       for (let t = 0; t < H; t++) {
         let s = supply[t];
         if (cap) {
           if (s > wx.demand[t]) { soc = Math.min(cap, soc + (s - wx.demand[t]) * 0.9); s = wx.demand[t]; }
           else { const give = Math.min(wx.demand[t] - s, soc); soc -= give; s += give; }
         }
+        if (hasGas && s < wx.demand[t]) { const g = Math.min(gasCap, wx.demand[t] - s); s += g; gasE += g; }
         delivered[t] = Math.min(s, wx.demand[t] * 1.6);
+        const used = Math.min(delivered[t], wx.demand[t]); total += used;
+        coalE += Math.min(coalOut[t], used);
       }
-      return delivered;
+      const co2 = total ? Math.round((gasE * 976 + coalE * 2257) / total) : 0;
+      return { delivered, co2 };
     };
 
     const X = (t: number) => 20 + (t / (H - 1)) * 860, Y = (v: number) => 280 - v * 125;
@@ -172,11 +186,11 @@ const sources = [
       q('[data-heatlabel]').textContent = wxMode === 'heat' ? 'HEAT WAVE + DROUGHT' : '';
       if (!gens.length) {
         q('[data-supply]').setAttribute('d', ''); q('[data-short]').setAttribute('d', '');
-        q('[data-met]').textContent = '0%'; q('[data-gap]').textContent = '—'; q('[data-kinds]').textContent = String(sel.length);
+        q('[data-met]').textContent = '0%'; q('[data-gap]').textContent = '—'; q('[data-kinds]').textContent = String(sel.length); q('[data-co2]').textContent = '—';
         q('[data-verdict]').textContent = 'Plant at least one source that makes energy. Batteries only store it.';
         return;
       }
-      const del = sim(sel, wx);
+      const res = sim(sel, wx), del = res.delivered;
       q('[data-supply]').setAttribute('d', pathOf(del));
       let met = 0, run0 = 0, gap = 0;
       for (let t = 0; t < H; t++) { const short = del[t] < wx.demand[t] * 0.98; if (!short) met++; run0 = short ? run0 + 1 : 0; gap = Math.max(gap, run0); }
@@ -185,17 +199,24 @@ const sources = [
       q('[data-met]').textContent = `${pct}%`;
       q('[data-gap]').textContent = gap ? `${gap} hrs` : 'None';
       q('[data-kinds]').textContent = String(sel.length);
+      q('[data-co2]').textContent = res.co2 ? res.co2.toLocaleString() : '≈0';
       const only = sel.length === 1 ? sel[0] : '';
       let v: string;
-      if (only === 'nuclear') v = wxMode === 'heat'
+      const fossil = sel.includes('gas') || sel.includes('coal');
+      if (only === 'gas') v = `Gas fills every gap, which is why today’s grids lean on it. But it is a monoculture of a different kind: one fuel, one price, and about ${res.co2.toLocaleString()} lb of CO₂ for every megawatt-hour.`;
+      else if (only === 'coal') v = `Coal runs steady but cannot follow the evening peak, and it is the most carbon-heavy species on the list: about ${res.co2.toLocaleString()} lb of CO₂ per megawatt-hour.`;
+      else if (only === 'nuclear') v = wxMode === 'heat'
         ? 'The old-growth giant stumbles. Hot, low rivers force reactors to cut output just as air conditioners push demand up. A single species, however steady, shares one weak spot.'
         : 'Steady as old growth: a flat line around the clock. But it cannot follow the evening peak on its own, and every plant shares the same weak spots. Try the heat wave.';
+      else if (pct >= 97 && fossil) v = 'Reliable, because gas or coal covers the gaps: when sun, wind or water dip, a fuel plant is turned up. It works, but the fossil species are doing the covering.';
+      else if (pct >= 97 && !sel.includes('store')) v = 'Reliable: the steady species carry the load around the clock. Add storage or variable sources and see how the mix changes.';
       else if (pct >= 97) v = wxMode === 'heat'
         ? 'A mixed forest bends instead of breaking. Hydro and nuclear sag, but strong sun, solar thermal, geothermal and storage carry the load.'
         : 'A mixed forest: when one source dips, another is up, and storage carries the rest. Different kinds of source, failing at different times, did the work.';
       else if (pct >= 75) v = 'Better. Sources that peak at different times cover more of each other’s gaps, but long calm, cloudy or hot spells still get through.';
       else if (sel.length > 1) v = 'Some help: the sources cover a few of each other’s gaps. But with too little steady output or storage, their bad hours still line up.';
       else v = 'A monoculture: plenty of energy on average, but it all arrives and disappears at once. When its one weakness hits, the town goes dark.';
+      if (fossil && only !== 'gas' && only !== 'coal') v += ` The fossil share costs about ${res.co2.toLocaleString()} lb of CO₂ per megawatt-hour delivered.`;
       q('[data-verdict]').textContent = v;
     };
     boxes.forEach((b) => b.addEventListener('change', () => { mix.querySelectorAll('[data-preset]').forEach((p) => p.setAttribute('aria-pressed', 'false')); run(); }));
