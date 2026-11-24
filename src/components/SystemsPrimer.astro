@@ -1,0 +1,178 @@
+---
+// A short primer on systems thinking for the Frameworks page. Text is original; the definition is Donella Meadows'.
+const parts = [
+  { n: 'Elements', t: 'The things you can point to: players, cells, trees, banks, people.' },
+  { n: 'Interconnections', t: 'The relationships that tie them together: passes, signals, money, nutrients, rules.' },
+  { n: 'Purpose', t: 'What the whole is doing. Often the hardest part to see, and the one that matters most.' },
+];
+const glossary = [
+  { n: 'Stock', t: 'Something that builds up or drains over time: water in a reservoir, money in an account, carbon in the air, trust in a team.' },
+  { n: 'Flow', t: 'The rate at which a stock fills or empties: rainfall and runoff, income and spending, emissions and absorption.' },
+  { n: 'Feedback loop', t: 'When a stock’s level changes its own flows. Reinforcing loops amplify; balancing loops push back toward a target.' },
+  { n: 'Delay', t: 'The gap between an action and its effect. Delays are why well-meant fixes overshoot.' },
+  { n: 'Emergence', t: 'Behavior of the whole that no single part has: a traffic jam, a market bubble, a flock turning together.' },
+  { n: 'Boundary', t: 'Where you choose to draw the edge of the system. Draw it too tight and the cause of the problem sits outside it.' },
+  { n: 'Leverage point', t: 'A place where a small shift changes a lot. Meadows ranked them: tweaking numbers is weakest, changing goals and mindsets is strongest.' },
+];
+const uses = [
+  { href: '/frameworks/viable-doughnut/', n: '002 · The Viable Doughnut', t: 'The whole framework: an economy that regulates itself between a social floor and an ecological ceiling.' },
+  { href: '/frameworks/climate-rated-performance/', n: '001 · Climate-Rated Performance', t: 'Your body as a balancing loop, holding its core temperature while weather, effort and sweat push against it.' },
+  { href: '/frameworks/thin-air-deep-roots/', n: '007 · Thin Air, Deep Roots', t: 'A closed nutrient loop: water and nutrients recirculate instead of flowing through once and out.' },
+];
+---
+<section class="sp" id="systems-thinking" aria-labelledby="sp-h">
+  <div class="sp-intro">
+    <p class="label">Start here · A primer</p>
+    <h2 class="h2" id="sp-h">What is <span class="it clay">systems thinking?</span></h2>
+    <p class="body">Systems thinking is a way of looking at a problem as a whole, made of parts that affect each other, instead of as a chain of single causes. It asks how things are connected, what builds up over time, and which loops keep a pattern going. Every framework on this site uses it.</p>
+    <blockquote class="sp-def">
+      <p>“An interconnected set of elements that is coherently organized in a way that achieves something.”</p>
+      <cite>Donella Meadows, <em>Thinking in Systems</em> (2008), defining a system</cite>
+    </blockquote>
+  </div>
+
+  <div class="sp-parts">
+    {parts.map((p, i) => <article class="sp-part"><span class="sp-n">0{i + 1}</span><h3 class="h3">{p.n}</h3><p class="small">{p.t}</p></article>)}
+  </div>
+  <p class="small sp-eg">A football team is a system. Swap every player and it is still the same team; change the rules, or its goal, and it plays a different game. That is why systems thinkers look past the parts to the connections and the purpose.</p>
+
+  <figure class="sp-sim" id="spsim">
+    <div class="sim-top">
+      <p class="label">See it move · One stock, three behaviors</p>
+      <div class="sim-tabs" role="tablist">
+        <button type="button" role="tab" data-mode="r" aria-selected="true">Reinforcing loop</button>
+        <button type="button" role="tab" data-mode="b" aria-selected="false">Balancing loop</button>
+        <button type="button" role="tab" data-mode="d" aria-selected="false">Loop with a delay</button>
+      </div>
+    </div>
+    <div class="sim-body">
+      <svg viewBox="0 0 520 260" class="sim-loop" aria-hidden="true" font-family="IBM Plex Mono, monospace">
+        <rect width="520" height="260" fill="#F3ECDF"></rect>
+        <path d="M30 130 L170 130" stroke="#3E7F8C" stroke-width="10" stroke-opacity=".35"></path>
+        <path d="M30 130 L170 130" stroke="#3E7F8C" stroke-width="2" stroke-dasharray="6 6" class="sim-flow"></path>
+        <polygon points="170,122 184,130 170,138" fill="#3E7F8C"></polygon>
+        <text x="40" y="116" font-size="10" fill="#3E7F8C" letter-spacing="1.4" data-flow>INFLOW</text>
+        <rect x="190" y="70" width="140" height="120" rx="4" fill="#FBF7EF" stroke="#23201A"></rect>
+        <rect x="191" y="189" width="138" height="0" fill="#E8A33D" fill-opacity=".55" data-fill></rect>
+        <text x="260" y="62" font-size="10" fill="#23201A" letter-spacing="1.6" text-anchor="middle" data-stock>STOCK</text>
+        <path d="M330 130 L470 130" stroke="#A8432C" stroke-width="10" stroke-opacity=".25" data-outw></path>
+        <path d="M330 130 L470 130" stroke="#A8432C" stroke-width="2" stroke-dasharray="6 6" class="sim-flow" data-out></path>
+        <polygon points="470,122 484,130 470,138" fill="#A8432C" data-outa></polygon>
+        <text x="350" y="116" font-size="10" fill="#A8432C" letter-spacing="1.4" data-outl>OUTFLOW</text>
+        <path d="M260 196 C 260 250 100 250 100 140" fill="none" stroke="#8A5A12" stroke-width="1.6" stroke-dasharray="3 4" marker-end="url(#spar)"></path>
+        <defs><marker id="spar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#8A5A12"></path></marker></defs>
+        <circle cx="180" cy="236" r="15" fill="#FBF7EF" stroke="#8A5A12"></circle>
+        <text x="180" y="241" font-size="14" fill="#8A5A12" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" data-sign>R</text>
+        <text x="208" y="240" font-size="9.5" fill="#8A5A12" letter-spacing="1.2" data-loopl>MORE STOCK → MORE INFLOW</text>
+      </svg>
+      <svg viewBox="0 0 520 260" class="sim-chart" role="img" aria-label="How the stock changes over time" font-family="IBM Plex Mono, monospace">
+        <rect width="520" height="260" fill="#FBF7EF"></rect>
+        <path d="M50 30 L50 220 L500 220" fill="none" stroke="#23201A" stroke-opacity=".5"></path>
+        <path d="M50 110 L500 110" stroke="#A8432C" stroke-dasharray="4 4" stroke-opacity=".7" data-goal></path>
+        <text x="496" y="102" font-size="9" fill="#A8432C" text-anchor="end" letter-spacing="1.2" data-goall>TARGET</text>
+        <text x="50" y="240" font-size="9" fill="#776F62" letter-spacing="1.2">TIME →</text>
+        <text x="40" y="34" font-size="9" fill="#776F62" letter-spacing="1.2" text-anchor="end" transform="rotate(-90 40 34)">STOCK →</text>
+        <path d="" fill="none" stroke="#E8A33D" stroke-width="3" stroke-linecap="round" data-line pathLength="100"></path>
+      </svg>
+    </div>
+    <div class="sim-text" aria-live="polite">
+      <h3 class="h3" data-h>Reinforcing loop: growth feeds growth</h3>
+      <p class="small" data-p>The more there is, the faster it grows. Interest on savings, viral sharing and population growth all work this way. Left alone, it curves upward ever more steeply until something outside the loop stops it.</p>
+    </div>
+  </figure>
+
+  <div class="sp-gl">
+    <p class="label">The toolkit, in plain words</p>
+    <dl>{glossary.map((g) => <div class="gl-row"><dt>{g.n}</dt><dd>{g.t}</dd></div>)}</dl>
+  </div>
+
+  <div class="sp-uses">
+    <p class="label">Where you’ll see it here</p>
+    <div class="uses">{uses.map((u) => <a class="use" href={u.href}><span class="label muted">{u.n}</span><span class="small">{u.t}</span><span class="link-arrow">Read →</span></a>)}</div>
+  </div>
+</section>
+
+<script>
+  const root = document.getElementById('spsim');
+  if (root) {
+    const q = (s: string) => root.querySelector(s) as SVGElement & HTMLElement;
+    const line = q('[data-line]'), fill = q('[data-fill]'), goal = q('[data-goal]'), goall = q('[data-goall]');
+    const sign = q('[data-sign]'), loopl = q('[data-loopl]'), h = q('[data-h]'), p = q('[data-p]');
+    const outEls = ['[data-outw]', '[data-out]', '[data-outa]', '[data-outl]'].map(q);
+    const copy: Record<string, [string, string, string, string]> = {
+      r: ['R', 'MORE STOCK → MORE INFLOW', 'Reinforcing loop: growth feeds growth', 'The more there is, the faster it grows. Interest on savings, viral sharing and population growth all work this way. Left alone, it curves upward ever more steeply until something outside the loop stops it.'],
+      b: ['B', 'GAP TO TARGET → INFLOW', 'Balancing loop: closing the gap', 'The farther the stock is from a target, the harder the loop pushes it back. A thermostat, a body holding 37°C, or filling a glass to the brim. It levels off smoothly at the goal.'],
+      d: ['B', 'OLD INFORMATION → INFLOW', 'Balancing loop with a delay: overshoot', 'The same balancing loop, but it reacts to old information, like adjusting a shower that is slow to change temperature. It overshoots, corrects too far, and swings before it settles. Delays are behind many boom-and-bust cycles.'],
+    };
+    const sim = (m: string) => {
+      const n = 90, out: number[] = []; let s = m === 'r' ? 0.04 : 0.05; const hist: number[] = [];
+      for (let t = 0; t < n; t++) {
+        out.push(s); hist.push(s);
+        if (m === 'r') s += 0.045 * s;
+        else if (m === 'b') s += 0.08 * (0.6 - s);
+        else { const seen = hist[Math.max(0, t - 9)]; s += 0.09 * (0.6 - seen); }
+      }
+      return out;
+    };
+    let raf = 0;
+    const run = (m: string) => {
+      const [sg, ll, hh, pp] = copy[m];
+      sign.textContent = sg; loopl.textContent = ll; h.textContent = hh; p.textContent = pp;
+      const showGoal = m !== 'r';
+      goal.style.opacity = goall.style.opacity = showGoal ? '1' : '0';
+      outEls.forEach((e) => (e.style.opacity = m === 'r' ? '0.25' : '1'));
+      const data = sim(m), max = 1;
+      const pts = data.map((v, i) => `${(50 + (i / (data.length - 1)) * 450).toFixed(1)} ${(220 - Math.min(v, max) / max * 190 * (m === 'r' ? 1 : 0.9)).toFixed(1)}`);
+      line.setAttribute('d', 'M' + pts.join(' L'));
+      root.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
+      cancelAnimationFrame(raf);
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const t0 = performance.now(), dur = reduce ? 0 : 2200;
+      const tick = (now: number) => {
+        const k = dur ? Math.min(1, (now - t0) / dur) : 1;
+        line.style.strokeDasharray = '100'; line.style.strokeDashoffset = String(100 - k * 100);
+        const v = data[Math.min(data.length - 1, Math.floor(k * (data.length - 1)))];
+        const hgt = Math.min(1, v) * 118; fill.setAttribute('y', String(189 - hgt)); fill.setAttribute('height', String(hgt));
+        if (k < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    };
+    root.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((b) => b.addEventListener('click', () => run(b.dataset.mode!)));
+    run('r');
+  }
+</script>
+
+<style>
+  .sp { display: flex; flex-direction: column; gap: 28px; background: #F3ECDF; border: 1px solid var(--line); border-radius: 28px; padding: clamp(24px, 4vw, 56px); }
+  .sp-intro { display: flex; flex-direction: column; gap: 18px; max-width: 820px; }
+  .sp-def { margin: 4px 0 0; padding: 20px 24px; background: #FBF7EF; border-left: 4px solid var(--accent); border-radius: 6px; display: flex; flex-direction: column; gap: 8px; }
+  .sp-def p { margin: 0; font-family: var(--serif); font-style: italic; font-size: clamp(20px, 2.2vw, 26px); line-height: 1.35; color: var(--ink); }
+  .sp-def cite { font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); }
+  .sp-parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 16px; }
+  .sp-part { background: #FBF7EF; border: 1px solid var(--line); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 8px; }
+  .sp-part .h3 { margin: 0; }
+  .sp-n { font-family: var(--mono); font-size: 11px; color: var(--clay); letter-spacing: .1em; }
+  .sp-eg { margin: -8px 0 0; font-style: italic; max-width: 820px; }
+  .sp-sim { margin: 0; background: #FBF7EF; border: 1px solid var(--line); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+  .sim-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+  .sim-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sim-tabs button { border: 1px solid rgba(35,32,26,.25); background: transparent; border-radius: 999px; padding: 8px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; color: var(--ink); }
+  .sim-tabs button[aria-selected='true'] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+  .sim-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 16px; }
+  .sim-body svg { width: 100%; height: auto; display: block; border-radius: 8px; border: 1px solid var(--line); }
+  .sim-body :global(.sim-flow) { animation: spflow 1.2s linear infinite; }
+  .sim-body [data-goal], .sim-body [data-goall], .sim-body [data-outw], .sim-body [data-out], .sim-body [data-outa], .sim-body [data-outl] { transition: opacity .3s; }
+  @keyframes spflow { to { stroke-dashoffset: -12; } }
+  .sim-text { display: flex; flex-direction: column; gap: 6px; }
+  .sim-text .h3 { margin: 0; }
+  .sp-gl dl { margin: 12px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 0 32px; }
+  .gl-row { display: grid; grid-template-columns: 120px 1fr; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .gl-row dt { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); padding-top: 3px; }
+  .gl-row dd { margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+  .uses { margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 16px; }
+  .use { background: #FBF7EF; border: 1px solid var(--line); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: var(--ink); transition: transform .2s, box-shadow .2s; }
+  .use:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -18px rgba(138,90,18,.45); color: var(--ink); }
+  .use .link-arrow { color: var(--accent-ink); margin-top: auto; }
+  @media (max-width: 640px) { .gl-row { grid-template-columns: 1fr; gap: 4px; } }
+  @media (prefers-reduced-motion: reduce) { .sim-body :global(.sim-flow) { animation: none; } .use { transition: none; } }
+</style>
