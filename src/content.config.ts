@@ -21,7 +21,7 @@ const frameworks = defineCollection({
     readingTime: z.string().optional(),
     status: z.enum(['published', 'forthcoming']).default('published'),
     featured: z.boolean().default(false),
-    figure: z.enum(['viable-doughnut', 'climate-rated', 'alpine-farm']).optional(),
+    figure: z.enum(['viable-doughnut', 'climate-rated', 'alpine-farm', 'forest-grid']).optional(),
     lineage: z.array(z.object({ year: z.string(), field: z.string(), work: z.string(), by: z.string() })).default([]),
     threads: z
       .object({ columns: z.array(z.string()), rows: z.array(z.object({ name: z.string(), cells: z.array(z.string()) })) })

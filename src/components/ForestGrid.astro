@@ -1,0 +1,261 @@
+---
+// Figures for 004 · The Forest Grid. Both are original, illustrative models, not forecasts.
+const sources = [
+  { id: 'solar', n: 'Solar', c: '#E8A33D', tree: 'Fast-growing pioneer' },
+  { id: 'wind', n: 'Wind', c: '#3E7F8C', tree: 'Tall canopy tree' },
+  { id: 'hydro', n: 'Hydro', c: '#5B7FA6', tree: 'Deep-rooted riverside tree' },
+  { id: 'geo', n: 'Geothermal', c: '#A8432C', tree: 'Slow, steady old-growth' },
+  { id: 'store', n: 'Batteries', c: '#6B8F4E', tree: 'Fungal store: holds and releases' },
+];
+---
+<section class="fg" aria-labelledby="fg-h">
+  <div class="wrap fg-in">
+    <div class="fg-head">
+      <p class="label">Figure 1 · Grow the mix</p>
+      <h2 class="h2" id="fg-h">A monoculture grid <span class="it clay">versus a mixed forest.</span></h2>
+      <p class="body">Pick which sources to plant. Each grid is sized to produce the same total energy over two weeks of changeable weather. Watch how often it falls short of what the town needs.</p>
+    </div>
+
+    <figure class="mix" id="fgmix">
+      <div class="mix-ctl">
+        <div class="presets" role="group" aria-label="Presets">
+          <button type="button" data-preset="solar">Monoculture · solar only</button>
+          <button type="button" data-preset="solar,wind">Two species · solar + wind</button>
+          <button type="button" data-preset="solar,wind,hydro,geo,store">Mixed forest · all five</button>
+        </div>
+        <div class="srcs" role="group" aria-label="Energy sources">
+          {sources.map((s) => (
+            <label class="src" style={`--c:${s.c}`}>
+              <input type="checkbox" value={s.id} />
+              <span class="src-dot"></span>
+              <span class="src-n">{s.n}</span>
+              <span class="src-t">{s.tree}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div class="mix-chart">
+        <svg viewBox="0 0 900 300" role="img" aria-label="Two weeks of supply against demand" font-family="IBM Plex Mono, monospace">
+          <rect width="900" height="300" fill="#FBF7EF"></rect>
+          <g data-days></g>
+          <path d="" fill="#A8432C" fill-opacity=".22" data-short></path>
+          <path d="" fill="none" stroke="#23201A" stroke-width="1.4" stroke-dasharray="4 3" data-demand></path>
+          <path d="" fill="none" stroke="#E8A33D" stroke-width="2.2" data-supply></path>
+          <text x="20" y="22" font-size="10" fill="#23201A" letter-spacing="1.4">— — DEMAND</text>
+          <text x="130" y="22" font-size="10" fill="#8A5A12" letter-spacing="1.4">━ SUPPLY</text>
+          <text x="226" y="22" font-size="10" fill="#A8432C" letter-spacing="1.4">▇ SHORTFALL</text>
+        </svg>
+      </div>
+      <div class="mix-out">
+        <div><span class="mo-n" data-met>—</span><span class="mo-l">Hours fully powered</span></div>
+        <div><span class="mo-n" data-gap>—</span><span class="mo-l">Longest blackout risk</span></div>
+        <div><span class="mo-n" data-kinds>—</span><span class="mo-l">Kinds of source</span></div>
+      </div>
+      <p class="mix-verdict" data-verdict aria-live="polite"></p>
+      <figcaption class="cap">Illustrative model with made-up weather: sunny and cloudy days, calm spells and windy fronts. It shows the principle, not the performance of any real grid.</figcaption>
+    </figure>
+
+    <div class="fg-head fg-gap">
+      <p class="label">Figure 2 · Weather the storm</p>
+      <h2 class="h2">One trunk line, <span class="it clay">or a networked understory?</span></h2>
+      <p class="body">Send a storm through each grid. In a hub-and-spoke grid, one broken line can darken everything downstream. In a networked grid, neighborhoods can cut loose, run on their own sources and share with each other.</p>
+    </div>
+
+    <figure class="net" id="fgnet">
+      <div class="net-ctl">
+        <div class="net-tabs" role="tablist">
+          <button type="button" role="tab" data-net="hub" aria-selected="true">Hub and spoke</button>
+          <button type="button" role="tab" data-net="mesh" aria-selected="false">Networked microgrids</button>
+        </div>
+        <button type="button" class="storm" data-storm>Send a storm ⚡</button>
+      </div>
+      <svg viewBox="0 0 900 420" role="img" aria-label="Grid network diagram" font-family="IBM Plex Mono, monospace">
+        <rect width="900" height="420" fill="#F3ECDF"></rect>
+        <g data-layer></g>
+        <g class="bolt" data-bolt opacity="0"><path d="M0 -40 L-14 0 L0 0 L-10 36 L18 -8 L4 -8 L14 -40Z" fill="#E8A33D" stroke="#8A5A12"></path></g>
+      </svg>
+      <p class="net-read" data-netread aria-live="polite">Press “Send a storm” to break the main line.</p>
+      <figcaption class="cap">Schematic. Networked microgrids are being designed and tested today, for example in Adjuntas, Puerto Rico; this drawing is original and simplified.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<script>
+  // ---------- Figure 2: energy mix ----------
+  const mix = document.getElementById('fgmix');
+  if (mix) {
+    const H = 14 * 24;
+    let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const cloud = Array.from({ length: 14 }, () => 0.15 + rnd() * 0.85);
+    cloud[4] = 0.12; cloud[5] = 0.18; cloud[10] = 0.1;
+    let w = 0.5; const windRaw: number[] = [];
+    for (let t = 0; t < H; t++) { w += (rnd() - 0.5) * 0.18 + (0.5 - w) * 0.02; if (t > 140 && t < 200) w -= 0.012; w = Math.max(0, Math.min(1.2, w)); windRaw.push(w); }
+    const demand = Array.from({ length: H }, (_, t) => { const h = t % 24; return 0.75 + 0.25 * Math.exp(-((h - 8) ** 2) / 6) + 0.4 * Math.exp(-((h - 19) ** 2) / 8); });
+    const solarRaw = Array.from({ length: H }, (_, t) => { const h = t % 24; return Math.max(0, Math.sin(((h - 6) / 12) * Math.PI)) * cloud[Math.floor(t / 24)]; });
+    const hydroRaw = Array.from({ length: H }, (_, t) => 0.9 + 0.1 * Math.sin(t / 50));
+    const geoRaw = Array.from({ length: H }, () => 1);
+    const mean = (a: number[]) => a.reduce((x, y) => x + y, 0) / a.length;
+    const avgD = mean(demand);
+    const raw: Record<string, number[]> = { solar: solarRaw, wind: windRaw, hydro: hydroRaw, geo: geoRaw };
+
+    const sim = (sel: string[]) => {
+      const gens = sel.filter((s) => s !== 'store');
+      const supply = new Array(H).fill(0);
+      gens.forEach((g) => { const k = (1.1 * avgD) / gens.length / mean(raw[g]); raw[g].forEach((v, t) => (supply[t] += v * k)); });
+      const delivered = new Array(H).fill(0);
+      const cap = sel.includes('store') ? 10 * avgD : 0; let soc = cap * 0.5;
+      for (let t = 0; t < H; t++) {
+        let s = supply[t];
+        if (cap) {
+          if (s > demand[t]) { soc = Math.min(cap, soc + (s - demand[t]) * 0.9); s = demand[t]; }
+          else { const need = demand[t] - s, give = Math.min(need, soc); soc -= give; s += give; }
+        }
+        delivered[t] = Math.min(s, demand[t] * 1.6);
+      }
+      return delivered;
+    };
+
+    const X = (t: number) => 20 + (t / (H - 1)) * 860, Y = (v: number) => 280 - v * 140;
+    const days = mix.querySelector('[data-days]')!;
+    days.innerHTML = Array.from({ length: 14 }, (_, d) => `<rect x="${X(d * 24)}" y="34" width="${860 / 14}" height="246" fill="${d % 2 ? '#F3ECDF' : '#FBF7EF'}"></rect><text x="${X(d * 24) + 4}" y="292" font-size="8" fill="#776F62">D${d + 1}</text>`).join('');
+    const pathOf = (a: number[]) => 'M' + a.map((v, t) => `${X(t).toFixed(1)} ${Y(v).toFixed(1)}`).join(' L');
+    mix.querySelector('[data-demand]')!.setAttribute('d', pathOf(demand));
+
+    const boxes = Array.from(mix.querySelectorAll<HTMLInputElement>('.src input'));
+    const run = () => {
+      const sel = boxes.filter((b) => b.checked).map((b) => b.value);
+      const supEl = mix.querySelector('[data-supply]')!, shortEl = mix.querySelector('[data-short]')!;
+      const gens = sel.filter((s) => s !== 'store');
+      if (!gens.length) {
+        supEl.setAttribute('d', ''); shortEl.setAttribute('d', '');
+        mix.querySelector('[data-met]')!.textContent = '0%'; mix.querySelector('[data-gap]')!.textContent = '—'; mix.querySelector('[data-kinds]')!.textContent = String(sel.length);
+        mix.querySelector('[data-verdict]')!.textContent = 'Plant at least one source that makes energy. Batteries only store it.';
+        return;
+      }
+      const del = sim(sel);
+      supEl.setAttribute('d', pathOf(del));
+      let d = ''; let met = 0, run0 = 0, gap = 0;
+      for (let t = 0; t < H; t++) {
+        const short = del[t] < demand[t] * 0.98;
+        if (!short) met++;
+        run0 = short ? run0 + 1 : 0; gap = Math.max(gap, run0);
+      }
+      d = 'M' + demand.map((v, t) => `${X(t).toFixed(1)} ${Y(v).toFixed(1)}`).join(' L') + ' L' + del.map((v, t) => [t, Math.min(v, demand[t])] as const).reverse().map(([t, v]) => `${X(t).toFixed(1)} ${Y(v).toFixed(1)}`).join(' L') + 'Z';
+      shortEl.setAttribute('d', d);
+      const pct = Math.round((met / H) * 100);
+      mix.querySelector('[data-met]')!.textContent = `${pct}%`;
+      mix.querySelector('[data-gap]')!.textContent = gap ? `${gap} hrs` : 'None';
+      mix.querySelector('[data-kinds]')!.textContent = String(sel.length);
+      const v = pct >= 97 ? 'A mixed forest: when one source dips, another is up, and storage carries the rest. Different kinds of source, failing at different times, did the work.'
+        : pct >= 75 ? 'Better. Sources that peak at different times cover more of each other’s gaps, but long calm, cloudy spells still get through.'
+        : sel.length > 1 ? 'Two kinds help a little: wind covers some nights and cloudy days. But with no steady source and nothing stored, the gaps still line up too often.'
+        : 'A monoculture: plenty of energy on average, but it all arrives and disappears at once. Nights and cloudy days go dark.';
+      mix.querySelector('[data-verdict]')!.textContent = v;
+    };
+    boxes.forEach((b) => b.addEventListener('change', run));
+    mix.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach((p) => p.addEventListener('click', () => {
+      const s = p.dataset.preset!.split(','); boxes.forEach((b) => (b.checked = s.includes(b.value)));
+      mix.querySelectorAll('[data-preset]').forEach((q) => q.setAttribute('aria-pressed', String(q === p)));
+      run();
+    }));
+    (mix.querySelector('[data-preset="solar"]') as HTMLButtonElement).click();
+  }
+
+  // ---------- Figure 3: storm ----------
+  const net = document.getElementById('fgnet');
+  if (net) {
+    const layer = net.querySelector('[data-layer]')!, bolt = net.querySelector<SVGGElement>('[data-bolt]')!, read = net.querySelector('[data-netread]')!;
+    let mode = 'hub', stormed = false;
+    const plant = { x: 120, y: 210 };
+    const towns = [
+      { x: 470, y: 90 }, { x: 620, y: 70 }, { x: 760, y: 120 },
+      { x: 500, y: 330 }, { x: 650, y: 350 }, { x: 790, y: 300 },
+    ];
+    const sub = { x: 360, y: 210 };
+    const house = (x: number, y: number, on: boolean, src: boolean) => `
+      <g transform="translate(${x} ${y})">
+        <circle r="34" fill="${on ? '#E8A33D' : '#23201A'}" fill-opacity="${on ? 0.18 : 0.08}"></circle>
+        <path d="M-14 6 L-14 -6 L0 -18 L14 -6 L14 6Z" fill="${on ? '#FBF7EF' : '#CFC6B6'}" stroke="#23201A"></path>
+        <rect x="-4" y="-3" width="8" height="9" fill="${on ? '#E8A33D' : '#8F877A'}"></rect>
+        ${src ? `<circle cx="20" cy="-16" r="7" fill="#E8A33D" stroke="#8A5A12"></circle><path d="M20 -26 L20 -28 M28 -16 L30 -16 M12 -16 L10 -16" stroke="#8A5A12"></path><rect x="-30" y="10" width="12" height="7" fill="#6B8F4E" stroke="#23201A" stroke-width=".6"></rect>` : ''}
+      </g>`;
+    const line = (a: { x: number; y: number }, b: { x: number; y: number }, ok: boolean, cls = '') => `<path d="M${a.x} ${a.y} L${b.x} ${b.y}" stroke="${ok ? '#8A5A12' : '#A8432C'}" stroke-width="${ok ? 2 : 2}" ${ok ? 'stroke-dasharray="7 6" class="nf ' + cls + '"' : 'stroke-dasharray="2 6" opacity=".6"'}></path>`;
+    const draw = () => {
+      let s = '';
+      if (mode === 'hub') {
+        const trunkOk = !stormed;
+        s += line(plant, sub, trunkOk);
+        towns.forEach((t) => (s += line(sub, t, trunkOk)));
+        s += `<g transform="translate(${plant.x} ${plant.y})"><rect x="-34" y="-30" width="68" height="60" rx="4" fill="#FBF7EF" stroke="#23201A"></rect><path d="M-16 -30 L-16 -52 L-6 -52 L-6 -30 M6 -30 L6 -46 L16 -46 L16 -30" fill="#CFC6B6" stroke="#23201A"></path><text y="48" font-size="10" fill="#23201A" text-anchor="middle" letter-spacing="1.4">BIG PLANT</text></g>`;
+        s += `<g transform="translate(${sub.x} ${sub.y})"><rect x="-14" y="-14" width="28" height="28" fill="#FBF7EF" stroke="#23201A"></rect><text y="32" font-size="9" fill="#776F62" text-anchor="middle" letter-spacing="1.2">SUBSTATION</text></g>`;
+        towns.forEach((t) => (s += house(t.x, t.y, trunkOk, false)));
+        if (stormed) s += `<text x="${(plant.x + sub.x) / 2}" y="${plant.y + 30}" font-size="11" fill="#A8432C" text-anchor="middle" letter-spacing="1.4">LINE DOWN</text>`;
+      } else {
+        const ring = [0, 1, 2, 5, 4, 3, 0];
+        for (let i = 0; i < ring.length - 1; i++) s += line(towns[ring[i]], towns[ring[i + 1]], true, 'share');
+        s += line(towns[0], towns[3], true, 'share');
+        s += line(towns[2], towns[5], true, 'share');
+        s += line(plant, sub, !stormed); s += line(sub, towns[0], !stormed); s += line(sub, towns[3], !stormed);
+        s += `<g transform="translate(${plant.x} ${plant.y})"><rect x="-34" y="-30" width="68" height="60" rx="4" fill="#FBF7EF" stroke="#23201A"></rect><path d="M-16 -30 L-16 -52 L-6 -52 L-6 -30 M6 -30 L6 -46 L16 -46 L16 -30" fill="#CFC6B6" stroke="#23201A"></path><text y="48" font-size="10" fill="#23201A" text-anchor="middle" letter-spacing="1.4">BIG PLANT</text></g>`;
+        s += `<g transform="translate(${sub.x} ${sub.y})"><rect x="-14" y="-14" width="28" height="28" fill="#FBF7EF" stroke="#23201A"></rect><text y="32" font-size="9" fill="#776F62" text-anchor="middle" letter-spacing="1.2">SUBSTATION</text></g>`;
+        towns.forEach((t) => (s += house(t.x, t.y, true, true)));
+        s += `<text x="630" y="214" font-size="10" fill="#6B8F4E" text-anchor="middle" letter-spacing="1.4">NEIGHBORS SHARE</text>`;
+        if (stormed) s += `<text x="${(plant.x + sub.x) / 2}" y="${plant.y + 30}" font-size="11" fill="#A8432C" text-anchor="middle" letter-spacing="1.4">LINE DOWN · ISLANDED</text>`;
+      }
+      layer.innerHTML = s;
+      read.textContent = !stormed ? 'Press “Send a storm” to break the main line.'
+        : mode === 'hub' ? 'Every neighborhood goes dark. One broken trunk line cuts off all six, like a forest of a single species hit by its one pest.'
+        : 'The main line is down, but the neighborhoods island themselves, run on local solar and batteries, and trade power along the ring. The lights stay on.';
+    };
+    net.querySelectorAll<HTMLButtonElement>('[data-net]').forEach((b) => b.addEventListener('click', () => {
+      mode = b.dataset.net!; stormed = false;
+      net.querySelectorAll('[data-net]').forEach((q) => q.setAttribute('aria-selected', String(q === b)));
+      net.querySelector('[data-storm]')!.textContent = 'Send a storm ⚡';
+      draw();
+    }));
+    net.querySelector('[data-storm]')!.addEventListener('click', (e) => {
+      stormed = !stormed;
+      (e.currentTarget as HTMLElement).textContent = stormed ? 'Repair the line' : 'Send a storm ⚡';
+      bolt.setAttribute('transform', `translate(${(plant.x + sub.x) / 2} ${plant.y - 60})`);
+      bolt.setAttribute('opacity', stormed ? '1' : '0');
+      draw();
+    });
+    draw();
+  }
+</script>
+
+<style>
+  .fg { background: #F3ECDF; border-block: 1px solid var(--line); }
+  .fg-in { padding-block: 88px; display: flex; flex-direction: column; gap: 28px; }
+  .fg-head { display: flex; flex-direction: column; gap: 14px; max-width: 780px; }
+  .fg-gap { margin-top: 56px; }
+  .mix, .net { margin: 0; background: #FBF7EF; border: 1px solid var(--line); border-radius: 20px; padding: clamp(16px, 3vw, 28px); display: flex; flex-direction: column; gap: 18px; }
+  .presets, .net-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .presets button, .net-tabs button, .storm { border: 1px solid rgba(35,32,26,.25); background: transparent; border-radius: 999px; padding: 9px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; color: var(--ink); }
+  .presets button[aria-pressed='true'], .net-tabs button[aria-selected='true'] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+  .storm { background: var(--accent); border-color: var(--accent); }
+  .storm:hover { filter: brightness(.95); }
+  .mix-ctl { display: flex; flex-direction: column; gap: 14px; }
+  .srcs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr)); gap: 10px; }
+  .src { position: relative; display: grid; grid-template-columns: 18px 1fr; column-gap: 10px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; cursor: pointer; background: #F3ECDF; transition: border-color .2s, background .2s; }
+  .src input { position: absolute; opacity: 0; pointer-events: none; }
+  .src-dot { grid-row: 1 / 3; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--c); background: transparent; transition: background .2s; }
+  .src-n { font-size: 16px; color: var(--ink); }
+  .src-t { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; color: var(--muted-2); }
+  .src:has(input:checked) { background: #FBF7EF; border-color: var(--c); box-shadow: 0 8px 20px -14px rgba(35,32,26,.5); }
+  .src:has(input:checked) .src-dot { background: var(--c); }
+  .src:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .mix-chart svg, .net svg { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
+  .mix-out { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 0; border-top: 1px solid var(--line); }
+  .mix-out div { padding: 14px 12px 0 0; display: flex; flex-direction: column; gap: 4px; }
+  .mo-n { font-size: 34px; font-weight: 300; color: var(--ink); }
+  .mo-l { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-2); }
+  .mix-verdict { margin: 0; font-family: var(--serif); font-size: 21px; line-height: 1.45; color: var(--ink); border-left: 3px solid var(--accent); padding-left: 16px; }
+  .net-ctl { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+  .net-read { margin: 0; font-family: var(--serif); font-size: 20px; line-height: 1.45; color: var(--ink); }
+  .net :global(.nf) { animation: nflow 1.4s linear infinite; }
+  .net :global(.share) { stroke: #6B8F4E; }
+  @keyframes nflow { to { stroke-dashoffset: -26; } }
+  .cap { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--muted-2); line-height: 1.6; }
+  @media (prefers-reduced-motion: reduce) { .net :global(.nf) { animation: none; } .src, .src-dot { transition: none; } }
+</style>
