@@ -1,0 +1,149 @@
+---
+// Where they fought: Kiska (1943) and the push through northern Italy (1945).
+// Projection: simple lat/long box over northern Italy. Positions approximate; coastlines omitted.
+const BG = '#12110E', FG = '#EDE6DA', HON = '#E8A33D', COOL = '#8FC1CB', WARM = '#D9826B', DIM = '#8F877A';
+const LON0 = 9.2, LON1 = 12.6, LAT0 = 43.4, LAT1 = 46.2;
+const X0 = 300, Y0 = 40, W = 640, H = 560;
+const px = (lon: number) => X0 + ((lon - LON0) / (LON1 - LON0)) * W;
+const py = (lat: number) => Y0 + ((LAT1 - lat) / (LAT1 - LAT0)) * H;
+const P = (lat: number, lon: number) => [px(lon), py(lat)] as const;
+
+const po = [[45.08, 9.3], [45.05, 9.9], [45.1, 10.4], [45.04, 10.93], [45.0, 11.4], [44.97, 11.9], [44.95, 12.5]];
+const poD = 'M' + po.map(([a, o]) => `${px(o).toFixed(1)} ${py(a).toFixed(1)}`).join(' L');
+const garda = [[45.88, 10.84], [45.8, 10.8], [45.7, 10.73], [45.6, 10.63], [45.52, 10.53], [45.46, 10.6], [45.44, 10.72], [45.5, 10.8], [45.6, 10.74], [45.72, 10.8], [45.86, 10.88]];
+const gardaD = 'M' + garda.map(([a, o]) => `${px(o).toFixed(1)} ${py(a).toFixed(1)}`).join(' L') + 'Z';
+const apennines = [[44.55, 9.3], [44.35, 9.9], [44.2, 10.5], [44.15, 10.9], [44.05, 11.4], [43.9, 11.9], [43.75, 12.4]];
+const apD = 'M' + apennines.map(([a, o]) => `${px(o).toFixed(1)} ${py(a).toFixed(1)}`).join(' L');
+const cities = [
+  { n: 'Florence', ...{ lat: 43.77, lon: 11.25 } },
+  { n: 'Bologna', lat: 44.49, lon: 11.34 },
+  { n: 'Modena', lat: 44.65, lon: 10.93 },
+  { n: 'Mantua', lat: 45.16, lon: 10.79 },
+  { n: 'Verona', lat: 45.44, lon: 10.99 },
+];
+
+const stops = [
+  { id: 'kiska', date: 'Aug 15, 1943', title: 'Kiska, Aleutian Islands', lat: 0, lon: 0, text: 'Before the division existed, its first regiment, the 87th, landed on Kiska in the Aleutians, Alaska. The Japanese had already evacuated the island; the casualties came from friendly fire and the cold.' },
+  { id: 'naples', date: 'Dec 1944 – Jan 1945', title: 'Arrival in Italy', lat: 43.42, lon: 11.0, text: 'The regiments crossed the Atlantic and landed at Naples, then moved north to the front in the Apennine Mountains, west of Bologna.' },
+  { id: 'riva', date: 'Feb 18–19, 1945', title: 'Riva Ridge', lat: 44.18, lon: 10.86, text: 'In darkness and silence, climbers of the 86th scaled cliffs of around 1,500 feet on routes they had scouted and rigged in advance, and surprised the German positions at dawn.' },
+  { id: 'belvedere', date: 'Feb 19–25, 1945', title: 'Mount Belvedere', lat: 44.21, lon: 10.97, text: 'With Riva Ridge held, the division took Belvedere, Gorgolesco and della Torraccia in about five days, alongside Brazilian troops, breaking a line that had held for months.' },
+  { id: 'march', date: 'March 1945', title: 'Castel d’Aiano', lat: 44.3, lon: 11.0, text: 'A March offensive pushed the line north and set up the staging areas for the final campaign.' },
+  { id: 'spring', date: 'Apr 14–20, 1945', title: 'Into the Po Valley', lat: 44.62, lon: 11.08, text: 'The spring offensive began on April 14. The division broke out of the mountains and reached the Po Valley on April 20, at the cost of its heaviest casualties of the war.' },
+  { id: 'po', date: 'Apr 23, 1945', title: 'Crossing the Po', lat: 45.04, lon: 10.93, text: 'The 10th was the first American division to cross the Po River, under fire, in assault boats.' },
+  { id: 'garda', date: 'Apr 27–30, 1945', title: 'Lake Garda', lat: 45.55, lon: 10.62, text: 'Troops reached the south end of Lake Garda, cutting off the German escape route to the Brenner Pass, then fought north along the shore. On April 30, 25 men drowned when their amphibious DUKW sank.' },
+  { id: 'end', date: 'May 2, 1945', title: 'Riva and Torbole · surrender', lat: 45.88, lon: 10.86, text: 'German forces in Italy surrendered on May 2, 1945. In 114 days of combat the division lost more than 950 killed and nearly 4,000 wounded.' },
+];
+const route = stops.slice(1).map((s) => P(s.lat, s.lon));
+const routeD = 'M' + route.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L');
+---
+<figure id="warmap" class="wm" aria-label="Map: the 87th at Kiska in 1943 and the 10th Mountain Division's route through northern Italy in 1945">
+  <div class="wm-stage">
+    <svg viewBox="0 0 1000 625" role="img" aria-label="Route of the 10th Mountain Division from the Apennines to Lake Garda, 1945, with an inset of Kiska" font-family="IBM Plex Mono, monospace">
+      <defs><radialGradient id="wmglow"><stop offset="0" stop-color={HON} stop-opacity=".55"></stop><stop offset="1" stop-color={HON} stop-opacity="0"></stop></radialGradient></defs>
+      <rect width="1000" height="625" fill={BG}></rect>
+      {Array.from({ length: 41 }, (_, i) => <path d={`M${i * 25} 0 L${i * 25} 625`} stroke={FG} stroke-opacity="0.035" stroke-width="0.5"></path>)}
+      {Array.from({ length: 26 }, (_, i) => <path d={`M0 ${i * 25} L1000 ${i * 25}`} stroke={FG} stroke-opacity="0.035" stroke-width="0.5"></path>)}
+      <rect x={X0} y={Y0} width={W} height={H} fill="none" stroke={FG} stroke-opacity="0.2"></rect>
+      {[10, 11, 12].map((l) => <g><path d={`M${px(l)} ${Y0} L${px(l)} ${Y0 + H}`} stroke={FG} stroke-opacity="0.08" stroke-dasharray="2 4"></path><text x={px(l)} y={Y0 + H + 16} font-size="8" fill={DIM} text-anchor="middle">{l}°E</text></g>)}
+      {[44, 45, 46].map((l) => <g><path d={`M${X0} ${py(l)} L${X0 + W} ${py(l)}`} stroke={FG} stroke-opacity="0.08" stroke-dasharray="2 4"></path><text x={X0 + W + 8} y={py(l) + 3} font-size="8" fill={DIM}>{l}°N</text></g>)}
+      <path d={apD} fill="none" stroke={FG} stroke-opacity="0.18" stroke-width="22" stroke-linecap="round"></path>
+      <text x={px(9.5)} y={py(44.62)} font-size="9" fill={DIM} letter-spacing="2">NORTHERN APENNINES</text>
+      <path d={poD} fill="none" stroke={COOL} stroke-width="1.4" class="wm-flow"></path>
+      <text x={px(11.6)} y={py(45.08)} font-size="9" fill={COOL} letter-spacing="2">PO RIVER</text>
+      <path d={gardaD} fill={COOL} fill-opacity="0.12" stroke={COOL} stroke-width="1"></path>
+      <text x={px(10.25)} y={py(45.75)} font-size="9" fill={COOL} letter-spacing="2" text-anchor="end">LAKE GARDA</text>
+      <path d={`M${px(10.86)} ${py(45.9)} L${px(11.5)} ${Y0 + 4}`} stroke={FG} stroke-opacity="0.35" stroke-dasharray="3 5"></path>
+      <text x={px(11.55)} y={Y0 + 18} font-size="8" fill={DIM} letter-spacing="1.5">↑ BRENNER PASS</text>
+      {cities.map((c) => <g><rect x={px(c.lon) - 2.5} y={py(c.lat) - 2.5} width="5" height="5" fill="none" stroke={FG} stroke-opacity="0.7"></rect><text x={px(c.lon) + 8} y={py(c.lat) + 3} font-size="8.5" fill={FG} fill-opacity="0.65" letter-spacing="1.5">{c.n.toUpperCase()}</text></g>)}
+      <path d={`M${px(11.0)} ${Y0 + H} L${route[0][0]} ${route[0][1]}`} stroke={HON} stroke-opacity="0.5" stroke-dasharray="3 5"></path>
+      <text x={px(11.05)} y={Y0 + H - 6} font-size="8" fill={HON} letter-spacing="1.5">↑ FROM NAPLES</text>
+      <path d={routeD} fill="none" stroke={HON} stroke-opacity="0.18" stroke-width="1.2"></path>
+      <path d={routeD} fill="none" stroke={HON} stroke-width="2" pathLength="100" class="wm-route" data-route></path>
+      {stops.slice(1).map((s, i) => (
+        <g class="wm-stop" data-stop={i + 1} transform={`translate(${P(s.lat, s.lon)[0].toFixed(1)} ${P(s.lat, s.lon)[1].toFixed(1)})`}>
+          <circle r="16" fill="url(#wmglow)" class="wm-halo"></circle>
+          <circle r="5" fill={BG} stroke={HON} stroke-width="1.2"></circle>
+        </g>
+      ))}
+      <!-- Kiska inset -->
+      <rect x="40" y="40" width="220" height="150" fill={BG} stroke={FG} stroke-opacity="0.3"></rect>
+      <text x="52" y="60" font-size="8.5" fill={FG} fill-opacity="0.75" letter-spacing="1.6">INSET · ALEUTIAN ISLANDS</text>
+      {[[70, 140], [92, 132], [118, 128], [150, 120], [176, 116], [198, 112], [222, 110]].map(([x, y], i) => <ellipse cx={x} cy={y} rx={8 - (i % 3)} ry="3" fill="none" stroke={FG} stroke-opacity="0.6"></ellipse>)}
+      <g class="wm-stop" data-stop="0" transform="translate(92 132)"><circle r="16" fill="url(#wmglow)" class="wm-halo"></circle><circle r="5" fill={BG} stroke={HON} stroke-width="1.2"></circle></g>
+      <text x="92" y="160" font-size="8" fill={HON} text-anchor="middle" letter-spacing="1.2">KISKA</text>
+      <text x="198" y="100" font-size="8" fill={DIM} text-anchor="middle" letter-spacing="1.2">ADAK</text>
+      <text x="52" y="180" font-size="7.5" fill={DIM} letter-spacing="1.2">87TH REGIMENT · AUG 1943</text>
+      <text x="40" y="604" font-size="8" fill={DIM} letter-spacing="1.5">SCHEMATIC · POSITIONS APPROXIMATE · COASTLINES OMITTED</text>
+    </svg>
+  </div>
+  <div class="wm-panel">
+    <div class="wm-steps" role="tablist" aria-label="Campaign stops">
+      {stops.map((s, i) => <button type="button" role="tab" data-go={i} aria-selected={i === 0 ? 'true' : 'false'}>{String(i + 1).padStart(2, '0')}</button>)}
+    </div>
+    {stops.map((s, i) => (
+      <div class="wm-text" data-text={i} hidden={i !== 0}>
+        <p class="label">{s.date}</p>
+        <h4 class="wm-title">{s.title}</h4>
+        <p class="small">{s.text}</p>
+      </div>
+    ))}
+    <div class="wm-nav">
+      <button type="button" class="btn btn-line" data-prev aria-label="Previous stop">←</button>
+      <button type="button" class="btn btn-ink" data-next>Next stop →</button>
+    </div>
+  </div>
+</figure>
+
+<script>
+  const root = document.getElementById('warmap');
+  if (root) {
+    const n = 9;
+    let cur = 0;
+    const steps = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-go]'));
+    const texts = Array.from(root.querySelectorAll<HTMLElement>('[data-text]'));
+    const stopsEl = Array.from(root.querySelectorAll<SVGGElement>('[data-stop]'));
+    const route = root.querySelector<SVGPathElement>('[data-route]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const show = (i: number) => {
+      cur = i;
+      steps.forEach((s) => s.setAttribute('aria-selected', String(Number(s.dataset.go) === i)));
+      texts.forEach((t) => (t.hidden = Number(t.dataset.text) !== i));
+      stopsEl.forEach((g) => {
+        const k = Number(g.dataset.stop);
+        g.classList.toggle('active', k === i);
+        g.classList.toggle('past', k < i);
+      });
+      const frac = i <= 1 ? 0 : (i - 1) / (n - 2);
+      route.style.strokeDashoffset = String(100 - frac * 100);
+      next.textContent = i < n - 1 ? 'Next stop →' : 'Start over ↺';
+    };
+    steps.forEach((s) => s.addEventListener('click', () => show(Number(s.dataset.go))));
+    next.addEventListener('click', () => show(cur < n - 1 ? cur + 1 : 0));
+    prev.addEventListener('click', () => show(cur > 0 ? cur - 1 : n - 1));
+    show(0);
+  }
+</script>
+
+<style>
+  .wm { margin: 0; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+  .wm-stage { flex: 1 1 600px; min-width: 0; aspect-ratio: 1000 / 625; border-radius: 6px; overflow: hidden; background: #12110E; box-shadow: 0 30px 80px -40px rgba(18,17,14,.7); }
+  .wm-stage svg { width: 100%; height: 100%; display: block; }
+  .wm-stage :global(.wm-route) { stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 1.1s cubic-bezier(.2,.7,.2,1); }
+  .wm-stage :global(.wm-flow) { stroke-dasharray: 10 8; animation: wmflow 4s linear infinite; }
+  .wm-stage :global(.wm-halo) { opacity: 0; transition: opacity .4s ease; }
+  .wm-stage :global(.wm-stop.past .wm-halo) { opacity: .25; }
+  .wm-stage :global(.wm-stop.active .wm-halo) { opacity: 1; animation: wmpulse 2s ease-in-out infinite; }
+  .wm-stage :global(.wm-stop.active circle:last-child) { fill: #E8A33D; }
+  @keyframes wmflow { to { stroke-dashoffset: -24; } }
+  @keyframes wmpulse { 50% { opacity: .5; } }
+  @media (prefers-reduced-motion: reduce) { .wm-stage :global(*) { animation: none !important; transition: none !important; } }
+  .wm-panel { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+  .wm-steps { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 4px; }
+  .wm-steps button { min-height: 44px; border-radius: 10px; border: 1px solid rgba(35,32,26,0.2); background: var(--card); font-family: var(--mono); font-size: 12px; cursor: pointer; color: var(--ink); }
+  .wm-steps button[aria-selected='true'] { background: var(--ink); color: var(--ground); }
+  .wm-text { display: flex; flex-direction: column; gap: 10px; min-height: 180px; }
+  .wm-text[hidden] { display: none; }
+  .wm-title { margin: 0; font-weight: 300; font-size: 28px; line-height: 1.15; }
+  .wm-nav { display: flex; gap: 8px; }
+</style>

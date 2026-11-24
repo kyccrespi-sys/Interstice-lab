@@ -1,0 +1,242 @@
+---
+import Base from '../../layouts/Base.astro';
+import CampHaleMap from '../../components/tenth/CampHaleMap.astro';
+import WarMap from '../../components/tenth/WarMap.astro';
+import Subscribe from '../../components/Subscribe.astro';
+
+const tabs = [
+  { id: 'why', label: 'Why', sub: 'The idea' },
+  { id: 'what', label: 'What', sub: 'The history' },
+  { id: 'who', label: 'Who', sub: 'The people' },
+  { id: 'how', label: 'How', sub: 'The training' },
+  { id: 'where', label: 'Where', sub: 'The maps' },
+  { id: 'legacy', label: 'Inventors', sub: 'The legacy' },
+];
+
+const timeline = [
+  { d: '1939–40', t: 'Finland’s ski troops hold off the Soviet invasion in the Winter War. Charles “Minnie” Dole, founder of the National Ski Patrol, takes note.' },
+  { d: '1940', t: 'Dole writes to President Roosevelt, offering the National Ski Patrol to recruit skiers for an American mountain unit.' },
+  { d: 'Nov 15, 1941', t: 'The 1st Battalion, 87th Mountain Infantry is activated at Fort Lewis, Washington, and trains on Mount Rainier.' },
+  { d: '1942', t: 'Builders raise Camp Hale at 9,200 feet in Colorado. The first mountain troops arrive late in the year.' },
+  { d: 'Aug 15, 1943', t: 'The 87th lands on Kiska in the Aleutians. The enemy has already gone.' },
+  { d: '1944', t: 'The division survives the D-Series maneuvers, moves to Texas in June, and is renamed the 10th Mountain Division in November.' },
+  { d: 'Feb 18, 1945', t: 'The night climb of Riva Ridge, then Mount Belvedere. The front opens.' },
+  { d: 'May 2, 1945', t: 'After 114 days of combat, German forces in Italy surrender.' },
+  { d: '1946 →', t: 'Veterans return to the mountains and build the American ski and outdoor industry.' },
+];
+
+const people = [
+  { n: 'Charles “Minnie” Dole', r: 'The advocate', t: 'A Connecticut insurance man and founder of the National Ski Patrol who spent nearly two years lobbying the Army for mountain troops. His patrol became the unit’s official recruiter.' },
+  { n: 'The volunteers', r: 'The recruits', t: 'College ski racers, mountaineers, forest rangers, trappers, cowboys and mule packers. Many joined because they already knew snow; the Army reasoned it was easier to make soldiers of skiers than skiers of soldiers.' },
+  { n: 'European instructors', r: 'The teachers', t: 'Austrian, Swiss and Norwegian skiers and climbers taught technique. A Norwegian-speaking battalion of about 1,000 men also trained at Camp Hale.' },
+  { n: 'Gen. George P. Hays', r: 'The commander', t: 'Took command in November 1944 and planned the night assault on Riva Ridge that opened the way to Mount Belvedere.' },
+  { n: 'Paul Petzoldt', r: 'The climber', t: 'One of America’s best-known mountaineers before the war, he joined in his mid-thirties to teach soldiers to survive in the mountains.' },
+  { n: 'David Brower', r: 'The rock climber', t: 'A Sierra Club climber who helped bring modern belaying techniques to the troops, and later served as the Sierra Club’s first executive director.' },
+];
+
+const inventors = [
+  { n: 'Bill Bowerman', unit: '87th Mountain Infantry', made: 'Co-founded Nike', t: 'Organized supplies and the mules that carried them, and earned the Silver Star. As a coach he co-founded Blue Ribbon Sports, which became Nike, and designed the Cortez and the Waffle Trainer, famously starting with a waffle iron.', tag: 'Footwear' },
+  { n: 'Gerry Cunningham', unit: '10th Mountain', made: 'Founded Gerry Mountain Sports (1946)', t: 'Frustrated by poor wartime gear, he started a mail-order company for lightweight mountain equipment. He is credited with an early zippered rucksack, the triangular carabiner, the spring-loaded cord lock (1951) and the Gerry Kiddie Carrier (1949).', tag: 'Outdoor gear' },
+  { n: 'Monty Atwater', unit: 'Winter-warfare instructor', made: 'Father of U.S. avalanche work', t: 'Became Alta’s first snow ranger in 1946, built the first avalanche research center in the Western Hemisphere, first used military artillery for avalanche control in 1949, and later co-developed the Avalauncher.', tag: 'Safety science' },
+  { n: 'Pete Seibert', unit: '86th Mountain Infantry', made: 'Co-founded Vail (1962)', t: 'Badly wounded in Italy and told he might never ski again, he co-founded Vail with Earl Eaton, about 20 miles from Camp Hale, and named a run after Riva Ridge.', tag: 'Ski resorts' },
+  { n: 'Larry Jump', unit: '10th Mountain', made: 'Founded Arapahoe Basin (1946)', t: 'Opened Arapahoe Basin with fellow veterans, the first ski area started by a 10th Mountain man.', tag: 'Ski resorts' },
+  { n: 'Friedl Pfeifer', unit: 'Ski instructor', made: 'Helped build Aspen', t: 'The Austrian-born instructor helped Walter Paepcke open Aspen Mountain in December 1946 and ran its ski school.', tag: 'Ski resorts' },
+  { n: 'Paul Petzoldt', unit: '10th Mountain', made: 'Founded NOLS (1965)', t: 'Helped bring Outward Bound to the United States, then founded the National Outdoor Leadership School in Lander, Wyoming.', tag: 'Outdoor education' },
+  { n: 'David Brower', unit: '86th Mountain Infantry', made: 'Sierra Club’s first executive director', t: 'Turned an outing club into a national environmental force and was central to passing the 1964 Wilderness Act.', tag: 'Conservation' },
+];
+
+const kit = ['Stretchy, strong nylon climbing rope', 'The lugged rubber boot sole', 'Gasoline camp stoves', 'Dehydrated trail food', 'Double goose-down sleeping bags', 'The M29 Weasel, a forerunner of the snowcat'];
+---
+<Base title="The 10th Mountain Division" description="Curiosity Corner: the ski troops of Camp Hale, from the Winter War to Riva Ridge to the founding of the American ski industry.">
+  <section class="hero-dark">
+    <div class="wrap hero-in">
+      <p class="label hon">Curiosity Corner · No. 01</p>
+      <h1 class="t-title">The Ski Troopers <span class="it">of Camp Hale</span></h1>
+      <p class="t-dek">How a few thousand skiers and climbers trained at 9,200 feet, broke a German line in the Italian mountains, and came home to build the American ski industry.</p>
+      <div class="stats">
+        <div><span class="n">9,200 ft</span><span class="l">Camp Hale</span></div>
+        <div><span class="n">~15,000</span><span class="l">Soldiers at peak</span></div>
+        <div><span class="n">114</span><span class="l">Days in combat</span></div>
+        <div><span class="n">62</span><span class="l">Ski areas run by veterans</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap art">
+    <nav class="rail" aria-label="Article sections">
+      <p class="label muted rail-head">In this story</p>
+      {tabs.map((t, i) => (
+        <a href={`#${t.id}`} class="rail-tab" data-tab={t.id} aria-current={i === 0 ? 'true' : undefined}>
+          <span class="rail-n">0{i + 1}</span>
+          <span class="rail-l">{t.label}</span>
+          <span class="rail-s">{t.sub}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="panels">
+      <!-- WHY -->
+      <section class="panel" id="why" data-panel="why">
+        <p class="label">01 · Why</p>
+        <h2 class="h2">A war in the snow, <span class="it clay">and no army ready for it.</span></h2>
+        <p class="body">In the winter of 1939, Finland's small army stopped a Soviet invasion by moving fast on skis through forests the tanks could not cross. In the United States, almost no soldiers could ski or climb. Charles “Minnie” Dole, who had founded the National Ski Patrol in 1938, saw the gap.</p>
+        <p class="body">He wrote to President Roosevelt and offered his patrol to recruit skiers. After roughly two years of letters and meetings, the War Department agreed. On November 15, 1941, a few weeks before Pearl Harbor, the Army activated its first mountain unit at Fort Lewis, Washington.</p>
+        <blockquote class="pull">It made more sense, Dole argued, to turn skiers into soldiers than soldiers into skiers.</blockquote>
+      </section>
+
+      <!-- WHAT -->
+      <section class="panel" id="what" data-panel="what" hidden>
+        <p class="label">02 · What</p>
+        <h2 class="h2">From one battalion <span class="it clay">to a division.</span></h2>
+        <p class="body">What began as a single battalion testing gear on Mount Rainier became the 10th Light Division (Alpine), and in November 1944 the 10th Mountain Division: three mountain infantry regiments, the 85th, 86th and 87th, with artillery, engineers, medics and thousands of mules. It was the Army's first and only mountain infantry division of the war.</p>
+        <ol class="timeline">
+          {timeline.map((e) => <li><span class="tl-d">{e.d}</span><span class="tl-t">{e.t}</span></li>)}
+        </ol>
+      </section>
+
+      <!-- WHO -->
+      <section class="panel" id="who" data-panel="who" hidden>
+        <p class="label">03 · Who</p>
+        <h2 class="h2">Skiers, climbers, <span class="it clay">cowboys and coaches.</span></h2>
+        <p class="body">The National Ski Patrol was hired as the unit's official recruiter, so the 10th filled with people who already loved the mountains. Alongside them served people who would later run companies, coach Olympians and lead the environmental movement.</p>
+        <div class="people">
+          {people.map((p) => <article class="card person"><p class="label muted">{p.r}</p><h3 class="h3">{p.n}</h3><p class="small">{p.t}</p></article>)}
+        </div>
+      </section>
+
+      <!-- HOW -->
+      <section class="panel" id="how" data-panel="how" hidden>
+        <p class="label">04 · How</p>
+        <h2 class="h2">What it felt like <span class="it clay">to train at 9,200 feet.</span></h2>
+        <p class="small note">A composite day, reconstructed from published histories and accounts of Camp Hale. It is a retelling, not a quotation.</p>
+        <ol class="day">
+          <li><span class="day-t">Arrival</span><p>You step off the train at the Pando siding into thin air and a gray haze. Coal furnaces and engines fill the valley with smoke, and within days you have the cough everyone has: the Pando Hack. Many men come from sea level; the altitude alone flattens some of them.</p></li>
+          <li><span class="day-t">Morning</span><p>Ski training, six days a week, under some of the best instructors in the country. You learn to turn, to climb on skins, to move in formation on snow, and to carry a rucksack that can weigh up to 90 pounds.</p></li>
+          <li><span class="day-t">Afternoon</span><p>Rock climbing on the cliffs around the valley: knots, belays, rappels and pitons. Mule packers lash artillery onto animals that will carry it where trucks cannot go.</p></li>
+          <li><span class="day-t">Night</span><p>On bivouacs you dig in at temperatures that can fall to 30 below zero. You stand guard, sleep in the snow and wake to more of it.</p></li>
+          <li><span class="day-t">The test</span><p>In early 1944 the whole division marches out for the D-Series: weeks of mock battle in subzero cold between Tennessee Pass and Resolution Mountain. About 12,000 men set out with full packs and mules; 8,673 finish.</p></li>
+          <li><span class="day-t">Down time</span><p>A variety show called <em>Hale and Hearty</em>, dances, a harvest carnival, and skiing on the hill the troops built themselves.</p></li>
+        </ol>
+      </section>
+
+      <!-- WHERE -->
+      <section class="panel" id="where" data-panel="where" hidden>
+        <p class="label">05 · Where</p>
+        <h2 class="h2">Where they trained</h2>
+        <p class="body">Zoom from Colorado into the valley, then into the camp itself.</p>
+        <CampHaleMap />
+        <h2 class="h2 gap-top">Where they fought</h2>
+        <p class="body">Step through the campaign, from the Aleutians in 1943 to the last fighting on Lake Garda in May 1945.</p>
+        <WarMap />
+      </section>
+
+      <!-- LEGACY -->
+      <section class="panel" id="legacy" data-panel="legacy" hidden>
+        <p class="label">06 · The inventors</p>
+        <h2 class="h2">What they built <span class="it clay">when they came home.</span></h2>
+        <p class="body">Veterans of the 10th managed or ran the ski schools of some 62 ski areas, and about 2,000 became ski instructors. Others started companies, invented gear and founded the institutions of American outdoor life.</p>
+        <div class="inventors">
+          {inventors.map((p) => (
+            <article class="card inv">
+              <div class="inv-top"><span class="chip">{p.tag}</span><span class="label muted">{p.unit}</span></div>
+              <h3 class="h3">{p.n}</h3>
+              <p class="inv-made it">{p.made}</p>
+              <p class="small">{p.t}</p>
+            </article>
+          ))}
+        </div>
+        <div class="card kit">
+          <p class="label">Gear that grew out of their experiments</p>
+          <p class="small">The Army spent heavily developing equipment for the mountain troops. Historians credit those trials with advancing gear we now take for granted:</p>
+          <ul>{kit.map((k) => <li>{k}</li>)}</ul>
+        </div>
+      </section>
+
+      <section class="sources">
+        <p class="label">Sources</p>
+        <ol>
+          <li>National WWII Museum. “‘Climb to Glory’: The 10th Mountain Division’s Ski and Mountain Troops.”</li>
+          <li>HistoryLink.org. “First U.S. Army mountain ski unit is created at Fort Lewis, 1941.”</li>
+          <li>U.S. Forest Service. Camp Hale–Continental Divide National Monument fact sheet.</li>
+          <li>Camp Hale Historical Marker, “D-Series,” Historical Marker Database.</li>
+          <li>Colorado Department of Education. “Camp Hale and the Tenth Mountain Division.”</li>
+          <li>Denver Public Library, 10th Mountain Division Resource Center.</li>
+          <li>Peter Shelton. “The legacy of the 10th Mountain men.” <em>High Country News</em>, 2008.</li>
+          <li>U.S. Army. “Climb to Glory” and Lake Garda commemoration articles.</li>
+          <li>Ski & Snowboard Hall of Fame; Alta Historical Society (Monty Atwater); NOLS (Paul Petzoldt); Gerry company history; University of Oregon (Bill Bowerman).</li>
+        </ol>
+        <p class="small">All illustrations are original. Maps are schematic, and the camp layout is a reconstruction.</p>
+      </section>
+    </div>
+  </div>
+  <Subscribe />
+</Base>
+
+<script>
+  const tabs = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-tab]'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-panel]'));
+  const show = (id: string, scroll = false) => {
+    if (!panels.some((p) => p.dataset.panel === id)) id = 'why';
+    panels.forEach((p) => (p.hidden = p.dataset.panel !== id));
+    tabs.forEach((t) => (t.dataset.tab === id ? t.setAttribute('aria-current', 'true') : t.removeAttribute('aria-current')));
+    if (scroll) document.querySelector('.art')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  tabs.forEach((t) => t.addEventListener('click', (e) => { e.preventDefault(); history.replaceState(null, '', `#${t.dataset.tab}`); show(t.dataset.tab!, true); }));
+  show(location.hash.slice(1) || 'why');
+</script>
+
+<style>
+  .hero-dark { background: #12110E; color: #EDE6DA; }
+  .hero-in { padding-block: 104px 88px; display: flex; flex-direction: column; gap: 28px; }
+  .hon { color: #E8A33D; }
+  .t-title { margin: 0; font-weight: 300; font-size: clamp(48px, 7vw, 104px); line-height: .96; letter-spacing: -0.03em; }
+  .t-title .it { color: #E8A33D; }
+  .t-dek { margin: 0; max-width: 760px; font-family: var(--serif); font-weight: 300; font-size: clamp(21px, 2.2vw, 28px); line-height: 1.4; color: #CFC6B6; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; border-top: 1px solid rgba(237,230,218,.15); margin-top: 16px; }
+  .stats div { padding: 20px 0; display: flex; flex-direction: column; gap: 4px; }
+  .stats .n { font-size: 36px; font-weight: 300; color: #EDE6DA; }
+  .stats .l { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #8F877A; }
+
+  .art { display: flex; flex-wrap: wrap; gap: 56px; padding-block: 72px 96px; align-items: flex-start; }
+  .rail { flex: 0 0 210px; position: sticky; top: 24px; display: flex; flex-direction: column; gap: 4px; }
+  .rail-head { margin-bottom: 8px; }
+  .rail-tab { display: grid; grid-template-columns: 28px 1fr; grid-template-rows: auto auto; column-gap: 8px; padding: 12px 14px; border-radius: 14px; text-decoration: none; color: var(--ink); border: 1px solid transparent; }
+  .rail-tab:hover { background: var(--ground-2); color: var(--ink); }
+  .rail-tab[aria-current='true'] { background: var(--ink); color: var(--ground); }
+  .rail-n { grid-row: 1 / 3; font-family: var(--mono); font-size: 11px; opacity: .6; padding-top: 4px; }
+  .rail-l { font-size: 18px; font-weight: 400; }
+  .rail-s { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; opacity: .65; }
+  @media (max-width: 900px) {
+    .rail { flex-basis: 100%; flex-direction: row; overflow-x: auto; top: 0; z-index: 5; background: var(--ground); padding: 8px 0; gap: 6px; }
+    .rail-head { display: none; }
+    .rail-tab { flex: 0 0 auto; display: flex; flex-direction: column; gap: 0; border-color: var(--line); padding: 8px 14px; }
+    .rail-n, .rail-s { display: none; }
+    .rail-l { font-size: 15px; }
+  }
+  .panels { flex: 1 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 56px; }
+  .panel { display: flex; flex-direction: column; gap: 22px; }
+  .panel[hidden] { display: none; }
+  .gap-top { margin-top: 40px; }
+  .pull { margin: 12px 0 0; padding-left: 24px; border-left: 2px solid var(--accent); font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1.35; }
+  .timeline { list-style: none; margin: 8px 0 0; padding: 0; border-left: 1px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 22px 24px; display: flex; flex-direction: column; gap: 4px; }
+  .timeline li::before { content: ''; position: absolute; left: -5px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .tl-d { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); }
+  .tl-t { font-size: 17px; line-height: 1.6; color: var(--ink-2); }
+  .people, .inventors { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .person, .inv { padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .inv-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+  .inv-made { margin: 0; font-size: 19px; color: var(--clay); }
+  .kit { padding: 28px; display: flex; flex-direction: column; gap: 12px; background: #12110E; border-color: #12110E; color: #EDE6DA; }
+  .kit .label { color: #E8A33D; }
+  .kit .small { color: #CFC6B6; }
+  .kit ul { margin: 0; padding-left: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 24px; font-size: 16px; line-height: 1.6; }
+  .note { font-style: italic; }
+  .day { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+  .day li { display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid var(--line); }
+  .day p { margin: 0; font-family: var(--serif); font-size: 21px; line-height: 1.55; color: var(--ink); }
+  .day-t { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); padding-top: 6px; }
+  @media (max-width: 640px) { .day li { grid-template-columns: 1fr; gap: 6px; } .day p { font-size: 19px; } }
+  .sources { border-top: 1px solid var(--line); padding-top: 32px; display: flex; flex-direction: column; gap: 14px; }
+  .sources ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-family: var(--serif); font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+</style>

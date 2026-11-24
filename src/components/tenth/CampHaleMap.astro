@@ -1,0 +1,194 @@
+---
+// Where they trained: three zoom levels — Colorado → the Camp Hale valley → the camp.
+// Positions on levels 2 and 3 are schematic, reconstructed from published descriptions.
+const BG = '#12110E', FG = '#EDE6DA', HON = '#E8A33D', COOL = '#8FC1CB', WARM = '#D9826B', DIM = '#8F877A';
+
+// Level 1 projection: Colorado is a lat/long rectangle (37–41°N, 102.05–109.05°W).
+const X0 = 110, Y0 = 50, W = 780, H = 520;
+const px = (lon: number) => X0 + ((lon + 109.05) / 7) * W;
+const py = (lat: number) => Y0 + ((41 - lat) / 4) * H;
+const divide = [[41, -106.86], [40.5, -106.7], [40.25, -105.8], [39.9, -105.75], [39.6, -105.95], [39.4, -106.18], [39.1, -106.45], [38.7, -106.3], [38.3, -106.35], [37.9, -106.9], [37.5, -106.95], [37.0, -106.5]];
+const divideD = 'M' + divide.map(([la, lo]) => `${px(lo).toFixed(1)} ${py(la).toFixed(1)}`).join(' L');
+const places = [
+  { n: 'Denver', lat: 39.74, lon: -104.99, a: 'start' },
+  { n: 'Camp Carson', lat: 38.74, lon: -104.79, a: 'start' },
+  { n: 'Leadville', lat: 39.25, lon: -106.29, a: 'start' },
+  { n: 'Vail', lat: 39.64, lon: -106.37, a: 'end' },
+  { n: 'Aspen', lat: 39.19, lon: -106.82, a: 'end' },
+  { n: 'Arapahoe Basin', lat: 39.64, lon: -105.87, a: 'start' },
+];
+const hale = { x: px(-106.31), y: py(39.42) };
+
+// Level 2: schematic valley, north up. Valley runs roughly north–south.
+const ridges = Array.from({ length: 9 }, (_, i) => i);
+// Level 3: barracks grid.
+const rows = Array.from({ length: 6 }, (_, i) => i);
+const cols = Array.from({ length: 22 }, (_, i) => i);
+---
+<figure id="halemap" class="hm" aria-label="Map: Colorado, the Camp Hale valley and the camp">
+  <nav class="hm-scales" aria-label="Zoom level">
+    <button type="button" data-go="1" aria-pressed="true"><span>1 : 3,000,000</span>Colorado</button>
+    <button type="button" data-go="2" aria-pressed="false"><span>Schematic</span>The valley</button>
+    <button type="button" data-go="3" aria-pressed="false"><span>Schematic</span>The camp</button>
+  </nav>
+  <div class="hm-stage">
+    <!-- LEVEL 1 · COLORADO -->
+    <svg viewBox="0 0 1000 625" class="hm-lvl on" data-level="1" role="img" aria-label="Map of Colorado showing Camp Hale near Leadville on the Continental Divide" font-family="IBM Plex Mono, monospace">
+      <rect width="1000" height="625" fill={BG}></rect>
+      {Array.from({ length: 41 }, (_, i) => <path d={`M${i * 25} 0 L${i * 25} 625`} stroke={FG} stroke-opacity="0.035" stroke-width="0.5"></path>)}
+      {Array.from({ length: 26 }, (_, i) => <path d={`M0 ${i * 25} L1000 ${i * 25}`} stroke={FG} stroke-opacity="0.035" stroke-width="0.5"></path>)}
+      <rect x={X0} y={Y0} width={W} height={H} fill="none" stroke={FG} stroke-opacity="0.8" stroke-width="1"></rect>
+      {[1, 2, 3, 4, 5, 6].map((i) => <path d={`M${X0 + (W / 7) * i} ${Y0} L${X0 + (W / 7) * i} ${Y0 + H}`} stroke={FG} stroke-opacity="0.08" stroke-dasharray="2 4"></path>)}
+      {[1, 2, 3].map((i) => <path d={`M${X0} ${Y0 + (H / 4) * i} L${X0 + W} ${Y0 + (H / 4) * i}`} stroke={FG} stroke-opacity="0.08" stroke-dasharray="2 4"></path>)}
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <text x={X0 + (W / 7) * i} y={Y0 + H + 18} font-size="8" fill={DIM} text-anchor="middle">{109 - i}°W</text>)}
+      {[41, 40, 39, 38, 37].map((l, i) => <text x={X0 - 10} y={Y0 + (H / 4) * i + 3} font-size="8" fill={DIM} text-anchor="end">{l}°N</text>)}
+      <path d={divideD} fill="none" stroke={HON} stroke-width="1.2" stroke-dasharray="6 4" class="flow-slow"></path>
+      <text x={px(-106.95)} y={py(40.75)} font-size="9" fill={HON} letter-spacing="2" text-anchor="end">CONTINENTAL DIVIDE (APPROX.)</text>
+      {places.map((p) => (
+        <g>
+          <circle cx={px(p.lon)} cy={py(p.lat)} r="3" fill="none" stroke={FG} stroke-opacity="0.8"></circle>
+          <text x={px(p.lon) + (p.a === 'start' ? 9 : -9)} y={py(p.lat) + 3} font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5" text-anchor={p.a}>{p.n.toUpperCase()}</text>
+        </g>
+      ))}
+      <g class="hm-target">
+        <circle cx={hale.x} cy={hale.y} r="24" fill="none" stroke={HON} stroke-width="0.9"></circle>
+        <path d={`M${hale.x - 34} ${hale.y} L${hale.x + 34} ${hale.y} M${hale.x} ${hale.y - 34} L${hale.x} ${hale.y + 34}`} stroke={HON} stroke-width="0.7"></path>
+        <circle cx={hale.x} cy={hale.y} r="3.5" fill={HON}></circle>
+      </g>
+      <path d={`M${hale.x + 18} ${hale.y - 18} L${hale.x + 90} ${hale.y - 92}`} stroke={FG} stroke-opacity="0.4" stroke-width="0.6"></path>
+      <text x={hale.x + 96} y={hale.y - 96} font-size="10" fill={HON} letter-spacing="2">CAMP HALE · 9,200 FT</text>
+      <text x={hale.x + 96} y={hale.y - 82} font-size="8" fill={DIM} letter-spacing="1.5">PANDO, EAGLE RIVER VALLEY · 1942–1945</text>
+      <text x="930" y="40" font-size="10" fill={FG} fill-opacity="0.7" text-anchor="end" letter-spacing="2">N ↑</text>
+      <text x={X0} y={Y0 + H + 40} font-size="8" fill={DIM} letter-spacing="1.5">COLORADO · STATE BOUNDARY 37–41°N, 102°03′–109°03′W · DIVIDE APPROXIMATE</text>
+    </svg>
+
+    <!-- LEVEL 2 · THE VALLEY (schematic) -->
+    <svg viewBox="0 0 1000 625" class="hm-lvl" data-level="2" role="img" aria-label="Schematic of the valley around Camp Hale: Eagle River, railroad, Cooper Hill ski area, Tennessee Pass, Homestake Peak and Resolution Creek" font-family="IBM Plex Mono, monospace">
+      <rect width="1000" height="625" fill={BG}></rect>
+      {ridges.map((i) => <path d={`M${80 + i * 18} 40 C ${120 + i * 14} 200, ${60 + i * 16} 420, ${110 + i * 12} 600`} fill="none" stroke={FG} stroke-opacity={0.08 + i * 0.03} stroke-width="0.7"></path>)}
+      {ridges.map((i) => <path d={`M${920 - i * 18} 40 C ${880 - i * 14} 220, ${940 - i * 16} 400, ${890 - i * 12} 600`} fill="none" stroke={FG} stroke-opacity={0.08 + i * 0.03} stroke-width="0.7"></path>)}
+      <path d="M380 30 C 400 160, 420 300, 470 420 S 520 560, 540 610 L 620 610 C 600 540, 560 420, 540 300 S 500 120, 480 30Z" fill={FG} fill-opacity="0.03" stroke={FG} stroke-opacity="0.25" stroke-width="0.7"></path>
+      <text x="400" y="54" font-size="9" fill={DIM} letter-spacing="2">EAGLE PARK · VALLEY FLOOR</text>
+      <path d="M430 30 C 450 180, 470 300, 505 420 S 560 560, 575 610" fill="none" stroke={COOL} stroke-width="1.4" class="flow-slow"></path>
+      <text x="520" y="250" font-size="9" fill={COOL} letter-spacing="2">EAGLE RIVER</text>
+      <path d="M470 30 C 480 170, 500 290, 535 400 S 590 540, 610 610" fill="none" stroke={FG} stroke-opacity="0.75" stroke-width="1" stroke-dasharray="1 0"></path>
+      {Array.from({ length: 26 }, (_, i) => i).map((i) => { const t = i / 25; const x = 470 + t * 140 + Math.sin(t * 3) * 8; const y = 30 + t * 580; return <path d={`M${x - 5} ${y} L${x + 5} ${y}`} stroke={FG} stroke-opacity="0.6" stroke-width="0.8"></path>; })}
+      <text x="560" y="150" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="2">DENVER &amp; RIO GRANDE WESTERN</text>
+      <g class="hm-target"><rect x="440" y="300" width="120" height="150" fill="none" stroke={HON} stroke-width="1"></rect></g>
+      <text x="440" y="292" font-size="10" fill={HON} letter-spacing="2">CAMP HALE</text>
+      <circle cx="560" cy="470" r="4" fill={FG}></circle><text x="572" y="474" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5">PANDO</text>
+      <path d="M640 560 L700 500" stroke={HON} stroke-width="1.4"></path>
+      <circle cx="700" cy="500" r="3" fill={HON}></circle>
+      <text x="712" y="498" font-size="9" fill={HON} letter-spacing="1.5">COOPER HILL · T-BAR</text>
+      <text x="712" y="512" font-size="8" fill={DIM} letter-spacing="1.2">BUILT BY THE TROOPS · NOW SKI COOPER</text>
+      <path d="M560 600 L 600 580" stroke={FG} stroke-opacity="0.6"></path>
+      <text x="530" y="596" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5" text-anchor="end">TENNESSEE PASS ↓ LEADVILLE</text>
+      <path d="M215 330 l 14 -26 l 14 26z" fill="none" stroke={FG} stroke-opacity="0.8"></path>
+      <text x="229" y="350" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5" text-anchor="middle">HOMESTAKE PEAK</text>
+      <path d="M760 220 l 14 -26 l 14 26z" fill="none" stroke={FG} stroke-opacity="0.8"></path>
+      <text x="774" y="240" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5" text-anchor="middle">RESOLUTION CREEK</text>
+      <path d="M240 360 C 300 420, 380 440, 440 420 M560 360 C 640 330, 700 280, 760 240" fill="none" stroke={WARM} stroke-width="1" stroke-dasharray="4 5" class="flow"></path>
+      <text x="260" y="450" font-size="8" fill={WARM} letter-spacing="1.5">D-SERIES MANEUVERS · 1944</text>
+      <text x="930" y="40" font-size="10" fill={FG} fill-opacity="0.7" text-anchor="end" letter-spacing="2">N ↑</text>
+      <text x="40" y="604" font-size="8" fill={DIM} letter-spacing="1.5">SCHEMATIC · NOT TO SCALE · POSITIONS APPROXIMATE</text>
+    </svg>
+
+    <!-- LEVEL 3 · THE CAMP (illustrative) -->
+    <svg viewBox="0 0 1000 625" class="hm-lvl" data-level="3" role="img" aria-label="Illustrative layout of Camp Hale: rows of barracks, the rail siding, the straightened river, stables, hospital and the coal-smoke haze" font-family="IBM Plex Mono, monospace">
+      <rect width="1000" height="625" fill={BG}></rect>
+      <path d="M40 120 L960 120 M40 520 L960 520" stroke={FG} stroke-opacity="0.15" stroke-dasharray="2 4"></path>
+      <path d="M40 545 L960 545" stroke={COOL} stroke-width="1.6" class="flow-slow"></path>
+      <text x="40" y="566" font-size="9" fill={COOL} letter-spacing="2">EAGLE RIVER · CHANNELED STRAIGHT TO BUILD THE CAMP</text>
+      <path d="M40 100 L960 100" stroke={FG} stroke-opacity="0.8"></path>
+      {Array.from({ length: 47 }, (_, i) => <path d={`M${40 + i * 20} 96 L${40 + i * 20} 104`} stroke={FG} stroke-opacity="0.7"></path>)}
+      <text x="40" y="86" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="2">RAIL SIDING · COAL TRAINS</text>
+      {[140, 260, 420, 640, 820].map((x, i) => <path d={`M${x} 96 C ${x - 30} ${60 - i * 4}, ${x + 40} ${40}, ${x + 10} ${10}`} fill="none" stroke={DIM} stroke-opacity="0.5" stroke-width="1" class="smoke"></path>)}
+      <rect x="40" y="130" width="920" height="380" fill={DIM} fill-opacity="0.06" class="haze"></rect>
+      <text x="960" y="146" font-size="9" fill={DIM} letter-spacing="2" text-anchor="end">COAL-SMOKE HAZE · “THE PANDO HACK”</text>
+      {rows.map((r) => cols.map((c) => <rect x={150 + c * 30} y={180 + r * 46} width="22" height="30" fill="none" stroke={FG} stroke-opacity="0.65" stroke-width="0.7"></rect>))}
+      <text x="150" y="172" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="2">BARRACKS · MORE THAN 1,000 BUILDINGS IN ALL</text>
+      <rect x="60" y="180" width="70" height="90" fill="none" stroke={HON} stroke-opacity="0.9"></rect><text x="95" y="290" font-size="8" fill={HON} text-anchor="middle" letter-spacing="1">HQ</text>
+      <rect x="60" y="320" width="70" height="120" fill="none" stroke={FG} stroke-opacity="0.8"></rect><path d="M95 360 L95 400 M75 380 L115 380" stroke={WARM}></path><text x="95" y="456" font-size="8" fill={FG} fill-opacity="0.75" text-anchor="middle" letter-spacing="1">HOSPITAL</text>
+      <rect x="830" y="180" width="110" height="130" fill="none" stroke={FG} stroke-opacity="0.8"></rect>
+      {Array.from({ length: 6 }, (_, i) => <path d={`M${840 + i * 17} 190 L${840 + i * 17} 300`} stroke={FG} stroke-opacity="0.25"></path>)}
+      <text x="885" y="326" font-size="8" fill={FG} fill-opacity="0.75" text-anchor="middle" letter-spacing="1">STABLES · MULES</text>
+      <rect x="830" y="350" width="110" height="80" fill="none" stroke={FG} stroke-opacity="0.8"></rect><text x="885" y="446" font-size="8" fill={FG} fill-opacity="0.75" text-anchor="middle" letter-spacing="1">FIELD HOUSE</text>
+      <text x="40" y="604" font-size="8" fill={DIM} letter-spacing="1.5">ILLUSTRATIVE LAYOUT · RECONSTRUCTED FROM DESCRIPTIONS, NOT A SURVEY PLAN</text>
+    </svg>
+
+    <p class="hm-cap" data-cap>Colorado · Camp Hale</p>
+  </div>
+  <div class="hm-text">
+    <div data-text="1">
+      <p class="label">Level 1 · Colorado</p>
+      <p class="small">The Army chose a valley floor at 9,200 feet near Leadville, high on the Continental Divide. A railroad already stopped at the Pando siding, and the Tennessee Pass area reliably got heavy snow.</p>
+    </div>
+    <div data-text="2" hidden>
+      <p class="label">Level 2 · The valley</p>
+      <p class="small">The camp filled Eagle Park, a long, flat meadow. Troops built their own ski area, Cooper Hill, with what was then the world's longest T-bar. In 1944 the whole division marched out for weeks of subzero mock battles between Tennessee Pass and Resolution Mountain.</p>
+    </div>
+    <div data-text="3" hidden>
+      <p class="label">Level 3 · The camp</p>
+      <p class="small">Builders flattened about three miles of valley and channeled the river into a straight ditch. More than a thousand buildings went up: barracks, a hospital, stables, a field house. Coal furnaces and trains filled the valley with smoke, and the cough it caused got a name: the Pando Hack.</p>
+    </div>
+    <button type="button" class="btn btn-ink hm-zoom" data-zoom>Zoom in ⊕</button>
+  </div>
+</figure>
+
+<script>
+  const root = document.getElementById('halemap');
+  if (root) {
+    const lv = Array.from(root.querySelectorAll<SVGSVGElement>('.hm-lvl'));
+    const tx = Array.from(root.querySelectorAll<HTMLElement>('[data-text]'));
+    const bt = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-go]'));
+    const zoom = root.querySelector<HTMLButtonElement>('[data-zoom]')!;
+    const cap = root.querySelector<HTMLElement>('[data-cap]')!;
+    const caps = ['Colorado · Camp Hale', 'The valley · Eagle Park', 'The camp · illustrative'];
+    const origins = ['50% 50%', '57% 40%', '50% 60%'];
+    let cur = 1;
+    const go = (n: number) => {
+      if (n === cur) return;
+      const inward = n > cur;
+      const from = lv[cur - 1], to = lv[n - 1];
+      from.style.transformOrigin = inward ? origins[cur] ?? '50% 50%' : '50% 50%';
+      if (cur === 1 && inward) from.style.transformOrigin = '50% 52%';
+      from.classList.remove('on'); from.classList.add(inward ? 'out-in' : 'out-out');
+      to.classList.remove('out-in', 'out-out'); to.classList.add(inward ? 'from-small' : 'from-big');
+      requestAnimationFrame(() => requestAnimationFrame(() => { to.classList.remove('from-small', 'from-big'); to.classList.add('on'); }));
+      cur = n;
+      tx.forEach((t) => (t.hidden = Number(t.dataset.text) !== n));
+      bt.forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.go) === n)));
+      cap.textContent = caps[n - 1];
+      zoom.textContent = n < 3 ? 'Zoom in ⊕' : 'Back out ⊖';
+    };
+    bt.forEach((b) => b.addEventListener('click', () => go(Number(b.dataset.go))));
+    zoom.addEventListener('click', () => go(cur < 3 ? cur + 1 : 1));
+  }
+</script>
+
+<style>
+  .hm { margin: 0; display: flex; flex-direction: column; gap: 16px; }
+  .hm-scales { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .hm-scales button { min-height: 56px; border-radius: 14px; border: 1px solid rgba(35,32,26,0.2); background: var(--card); color: var(--ink); font-family: var(--sans); font-size: 16px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 8px 14px; text-align: left; }
+  .hm-scales button span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; opacity: .7; }
+  .hm-scales button[aria-pressed='true'] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+  .hm-stage { position: relative; aspect-ratio: 1000 / 625; border-radius: 6px; overflow: hidden; background: #12110E; box-shadow: 0 30px 80px -40px rgba(18,17,14,.7); }
+  .hm-lvl { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .7s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+  .hm-lvl.on { opacity: 1; transform: scale(1); }
+  .hm-lvl.out-in { opacity: 0; transform: scale(3); }
+  .hm-lvl.out-out { opacity: 0; transform: scale(.35); }
+  .hm-lvl.from-small { opacity: 0; transform: scale(.35); transition: none; }
+  .hm-lvl.from-big { opacity: 0; transform: scale(3); transition: none; }
+  .hm-cap { position: absolute; left: 18px; top: 14px; margin: 0; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #E8A33D; }
+  .hm-stage :global(.hm-target) { animation: hmglow 3s ease-in-out infinite; }
+  .hm-stage :global(.flow) { animation: hmflow 1.6s linear infinite; }
+  .hm-stage :global(.flow-slow) { stroke-dasharray: 10 8; animation: hmflow 4s linear infinite; }
+  .hm-stage :global(.smoke) { stroke-dasharray: 3 5; animation: hmflow 3s linear infinite; }
+  .hm-stage :global(.haze) { animation: hmglow 6s ease-in-out infinite; }
+  @keyframes hmglow { 50% { opacity: .5; } }
+  @keyframes hmflow { to { stroke-dashoffset: -24; } }
+  @media (prefers-reduced-motion: reduce) { .hm-lvl { transform: none !important; transition: opacity .3s ease; } .hm-stage :global(*) { animation: none !important; } }
+  .hm-text { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .hm-text > div { flex: 1 1 380px; display: flex; flex-direction: column; gap: 8px; }
+  .hm-text > div[hidden] { display: none; }
+</style>
