@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import DoughnutFigure from '../../components/DoughnutFigure.astro';
 import ClimateTool from '../../components/ClimateTool.astro';
+import AlpineFarm from '../../components/AlpineFarm.astro';
 import Subscribe from '../../components/Subscribe.astro';
 import { site } from '../../data/site';
 import { inline, toRoman } from '../../data/inline';
@@ -93,6 +94,7 @@ const forthcoming = d.status === 'forthcoming';
 
       {d.figure === 'viable-doughnut' && <DoughnutFigure />}
       {d.figure === 'climate-rated' && <ClimateTool />}
+      {d.figure === 'alpine-farm' && <AlpineFarm />}
 
       {d.principles.length > 0 && (
         <section class="band">
