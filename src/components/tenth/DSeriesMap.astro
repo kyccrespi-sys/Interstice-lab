@@ -1,0 +1,113 @@
+---
+// The D-Series maneuvers, March 24 – Easter Sunday (April 9), 1944.
+// Real coordinates for the landmarks; the movement arrows show the general direction, not exact routes.
+const BG = '#12110E', FG = '#EDE6DA', HON = '#E8A33D', COOL = '#8FC1CB', WARM = '#D9826B', DIM = '#8F877A';
+const LON0 = -106.46, LON1 = -106.22, LAT0 = 39.33, LAT1 = 39.52;
+const K = Math.cos((39.38 * Math.PI) / 180);
+const X0 = 70, Y0 = 40;
+const SCALE = 545 / (LAT1 - LAT0);
+const px = (lon: number) => X0 + (lon - LON0) * K * SCALE;
+const py = (lat: number) => Y0 + (LAT1 - lat) * SCALE;
+const W = (LON1 - LON0) * K * SCALE, H = (LAT1 - LAT0) * SCALE;
+
+const pts = [
+  { n: 'Camp Hale', lat: 39.42, lon: -106.32, el: '9,200 ft', role: 'start', dx: -14, a: 'end', dy: 0 },
+  { n: 'Tennessee Pass', lat: 39.362, lon: -106.311, el: '10,424 ft', role: 'pass', dx: -8, a: 'end', dy: 20 },
+  { n: 'Cooper Hill', lat: 39.36, lon: -106.3, el: '≈11,700 ft', role: 'hill', dx: 10, a: 'start', dy: 4 },
+  { n: 'Homestake Peak', lat: 39.3675, lon: -106.4148, el: '13,209 ft', role: 'peak', dx: -20, a: 'start', dy: 0 },
+  { n: 'Resolution Mountain', lat: 39.4899, lon: -106.2946, el: '11,905 ft', role: 'peak', dx: -14, a: 'end', dy: 0 },
+];
+const river = [[39.52, -106.37], [39.5, -106.355], [39.47, -106.34], [39.44, -106.325], [39.41, -106.318], [39.385, -106.314], [39.362, -106.311]];
+const riverD = 'M' + river.map(([a, o]) => `${px(o).toFixed(1)} ${py(a).toFixed(1)}`).join(' L');
+const area = [[39.345, -106.43], [39.38, -106.44], [39.45, -106.36], [39.5, -106.31], [39.5, -106.27], [39.46, -106.26], [39.38, -106.28], [39.34, -106.29]];
+const areaD = 'M' + area.map(([a, o]) => `${px(o).toFixed(1)} ${py(a).toFixed(1)}`).join(' L') + 'Z';
+const P = (lat: number, lon: number) => `${px(lon).toFixed(1)} ${py(lat).toFixed(1)}`;
+const moveOut = `M${P(39.415, -106.318)} C ${P(39.395, -106.305)} ${P(39.375, -106.305)} ${P(39.364, -106.309)}`;
+const moveWest = `M${P(39.364, -106.32)} C ${P(39.36, -106.35)} ${P(39.365, -106.38)} ${P(39.37, -106.405)}`;
+const moveNorth = `M${P(39.37, -106.3)} C ${P(39.41, -106.285)} ${P(39.45, -106.285)} ${P(39.483, -106.293)}`;
+const latTicks = [39.25, 39.3, 39.35, 39.4, 39.45, 39.5];
+const lonTicks = [-106.45, -106.4, -106.35, -106.3, -106.25];
+---
+<figure id="dseries" class="ds" aria-label="Map of the D-Series maneuvers around Camp Hale, March to April 1944">
+  <div class="ds-stage">
+    <svg viewBox="0 0 1000 625" role="img" aria-label="The D-Series maneuver area between Tennessee Pass and Resolution Mountain, with landmark coordinates" font-family="IBM Plex Mono, monospace">
+      <defs>
+        <radialGradient id="dsglow"><stop offset="0" stop-color={HON} stop-opacity=".5"></stop><stop offset="1" stop-color={HON} stop-opacity="0"></stop></radialGradient>
+        <pattern id="dshatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 0 L0 8" stroke={WARM} stroke-opacity="0.22" stroke-width="1"></path></pattern>
+        <marker id="dsarrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill={HON}></path></marker>
+      </defs>
+      <rect width="1000" height="625" fill={BG}></rect>
+      <rect x={X0} y={Y0} width={W} height={H} fill="none" stroke={FG} stroke-opacity="0.35"></rect>
+      {latTicks.map((l) => <g><path d={`M${X0} ${py(l)} L${X0 + W} ${py(l)}`} stroke={FG} stroke-opacity="0.07" stroke-dasharray="2 4"></path><text x={X0 - 8} y={py(l) + 3} font-size="8.5" fill={DIM} text-anchor="end">{l.toFixed(2)}°N</text></g>)}
+      {lonTicks.map((l) => <g><path d={`M${px(l)} ${Y0} L${px(l)} ${Y0 + H}`} stroke={FG} stroke-opacity="0.07" stroke-dasharray="2 4"></path><text x={px(l)} y={Y0 + H + 16} font-size="8.5" fill={DIM} text-anchor="middle">{Math.abs(l).toFixed(2)}°W</text></g>)}
+      <path d={areaD} fill="url(#dshatch)" stroke={WARM} stroke-opacity="0.8" stroke-width="1" stroke-dasharray="5 4"></path>
+      <text x={px(-106.43)} y={py(39.395)} font-size="9" fill={WARM} letter-spacing="2">MANEUVER AREA (APPROX.)</text>
+      <path d={riverD} fill="none" stroke={COOL} stroke-width="1.3" class="ds-flow"></path>
+      <text x={px(-106.37) - 8} y={py(39.51)} font-size="8.5" fill={COOL} letter-spacing="1.6" text-anchor="end">EAGLE RIVER ↑ RED CLIFF</text>
+      <text x={px(-106.2925)} y={Y0 + H - 8} font-size="8.5" fill={DIM} letter-spacing="1.6" text-anchor="middle">↓ LEADVILLE · 7.7 MI</text>
+      <path d={moveOut} fill="none" stroke={HON} stroke-width="2" marker-end="url(#dsarrow)" pathLength="100" class="ds-move" style="--d:0s"></path>
+      <path d={moveWest} fill="none" stroke={HON} stroke-width="2" marker-end="url(#dsarrow)" pathLength="100" class="ds-move" style="--d:1.2s"></path>
+      <path d={moveNorth} fill="none" stroke={HON} stroke-width="2" marker-end="url(#dsarrow)" pathLength="100" class="ds-move" style="--d:2.4s"></path>
+      {pts.map((p) => {
+        const x = px(p.lon), y = py(p.lat);
+        return (
+          <g>
+            {p.role === 'start' && <circle cx={x} cy={y} r="30" fill="url(#dsglow)"></circle>}
+            {p.role === 'peak' ? <path d={`M${x - 8} ${y + 6} L${x} ${y - 8} L${x + 8} ${y + 6}Z`} fill={BG} stroke={FG} stroke-opacity="0.9"></path>
+              : p.role === 'town' ? <rect x={x - 3} y={y - 3} width="6" height="6" fill="none" stroke={FG} stroke-opacity="0.7"></rect>
+              : <circle cx={x} cy={y} r={p.role === 'start' ? 5 : 3.5} fill={p.role === 'start' ? HON : BG} stroke={p.role === 'start' ? HON : FG} stroke-opacity="0.9"></circle>}
+            <text x={x + p.dx} y={y + p.dy - (p.role === 'peak' ? 14 : 4)} font-size="9.5" fill={p.role === 'start' ? HON : FG} fill-opacity="0.9" letter-spacing="1.5" text-anchor={p.a}>{p.n.toUpperCase()}</text>
+            <text x={x + p.dx} y={y + p.dy + (p.role === 'peak' ? 20 : 9)} font-size="8" fill={DIM} letter-spacing="1" text-anchor={p.a}>{p.lat.toFixed(4)}°N {Math.abs(p.lon).toFixed(4)}°W · {p.el}</text>
+          </g>
+        );
+      })}
+      <text x={X0 + W} y="30" font-size="10" fill={FG} fill-opacity="0.7" text-anchor="end" letter-spacing="2">N ↑</text>
+      <g transform={`translate(${X0 + W + 50} 60)`}>
+        <text font-size="9" fill={HON} letter-spacing="2">D-SERIES · 1944</text>
+        <text y="22" font-size="8.5" fill={DIM} letter-spacing="1.4">MAR 24 · OUT OF CAMP,</text>
+        <text y="36" font-size="8.5" fill={DIM} letter-spacing="1.4">UP THE TENNESSEE PASS ROAD</text>
+        <text y="58" font-size="8.5" fill={DIM} letter-spacing="1.4">WEEK 1 · TENNESSEE PASS,</text>
+        <text y="72" font-size="8.5" fill={DIM} letter-spacing="1.4">ABOVE 10,000 FT</text>
+        <text y="94" font-size="8.5" fill={DIM} letter-spacing="1.4">THEN · MOCK BATTLES TOWARD</text>
+        <text y="108" font-size="8.5" fill={DIM} letter-spacing="1.4">HOMESTAKE AND RESOLUTION</text>
+        <text y="130" font-size="8.5" fill={DIM} letter-spacing="1.4">APR 9 · EASTER SUNDAY · ENDS</text>
+        <path d="M0 150 L250 150" stroke={FG} stroke-opacity="0.2"></path>
+        <text y="178" font-size="26" fill={FG} font-family="Inter Tight, sans-serif" font-weight="300">~12,000</text>
+        <text y="194" font-size="8" fill={DIM} letter-spacing="1.4">SOLDIERS MARCHED OUT</text>
+        <text y="232" font-size="26" fill={HON} font-family="Inter Tight, sans-serif" font-weight="300">8,673</text>
+        <text y="248" font-size="8" fill={DIM} letter-spacing="1.4">COMPLETED THE EXERCISE</text>
+        <text y="286" font-size="26" fill={FG} font-family="Inter Tight, sans-serif" font-weight="300">~3 weeks</text>
+        <text y="302" font-size="8" fill={DIM} letter-spacing="1.4">OF SUBZERO TEMPERATURES</text>
+        <path d="M0 330 L24 330" stroke={HON} stroke-width="2" marker-end="url(#dsarrow)"></path>
+        <text x="34" y="333" font-size="8" fill={DIM} letter-spacing="1.2">GENERAL DIRECTION, NOT EXACT ROUTE</text>
+        <rect y="346" width="24" height="12" fill="url(#dshatch)" stroke={WARM} stroke-dasharray="3 3"></rect>
+        <text x="34" y="356" font-size="8" fill={DIM} letter-spacing="1.2">MANEUVER AREA, APPROXIMATE</text>
+      </g>
+    </svg>
+  </div>
+  <figcaption class="ds-cap">Landmark coordinates and elevations are real; the maneuver area and arrows are approximate. Sources: Camp Hale “D-Series” historical marker; U.S. Army; USGS summit data.</figcaption>
+</figure>
+
+<script>
+  const fig = document.getElementById('dseries');
+  if (fig) {
+    const io = new IntersectionObserver((es) => {
+      if (es.some((e) => e.isIntersecting)) { fig.classList.add('play'); io.disconnect(); }
+    }, { threshold: 0.4 });
+    io.observe(fig);
+  }
+</script>
+
+<style>
+  .ds { margin: 8px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .ds-stage { aspect-ratio: 1000 / 625; border-radius: 6px; overflow: hidden; background: #12110E; box-shadow: 0 30px 80px -40px rgba(18,17,14,.7); }
+  .ds-stage svg { width: 100%; height: 100%; display: block; }
+  .ds-cap { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted-2); line-height: 1.5; }
+  .ds :global(.ds-move) { stroke-dasharray: 100; stroke-dashoffset: 100; }
+  .ds.play :global(.ds-move) { animation: dsdraw 1.4s cubic-bezier(.3,.6,.2,1) forwards; animation-delay: var(--d); }
+  .ds :global(.ds-flow) { stroke-dasharray: 10 8; animation: dsflow 4s linear infinite; }
+  @media (max-width: 720px) { .ds-stage { aspect-ratio: auto; overflow-x: auto; } .ds-stage svg { width: 820px; height: auto; } .ds-cap::before { content: 'Swipe to see the whole map · '; color: var(--accent-ink); } }
+  @keyframes dsdraw { to { stroke-dashoffset: 0; } }
+  @keyframes dsflow { to { stroke-dashoffset: -24; } }
+  @media (prefers-reduced-motion: reduce) { .ds :global(.ds-move) { stroke-dashoffset: 0; animation: none !important; } .ds :global(.ds-flow) { animation: none; } }
+</style>
