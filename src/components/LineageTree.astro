@@ -1,0 +1,87 @@
+---
+// Timeline tree: each source branches in at its year and merges into one trunk that ends at the framework.
+interface Item { year: string; field: string; work: string; by: string }
+interface Props { items: Item[]; title: string; endYear?: number }
+const { items, title, endYear = 2026 } = Astro.props;
+
+const W = 1200, ROW = 84, PAD = 46, AXIS = 44;
+const yr = (s: string) => parseInt(s, 10) || endYear;
+const sorted = items.map((it, i) => ({ ...it, n: yr(it.year), i })).sort((a, b) => a.n - b.n || a.i - b.i);
+const n = sorted.length;
+const minY = sorted[0].n, span = Math.max(1, endYear - minY);
+// blend linear time with rank so clustered years still get room
+const X0 = 40, X1 = W - 300;
+const xOf = (k: number, year: number) => X0 + (X1 - X0) * (0.45 * ((year - minY) / span) + 0.55 * (n > 1 ? k / (n - 1) : 0));
+// alternate above / below the trunk; later items sit nearer the trunk
+const top = sorted.filter((_, k) => k % 2 === 0), bot = sorted.filter((_, k) => k % 2 === 1);
+const H = PAD * 2 + (top.length + bot.length) * ROW + AXIS;
+const trunkY = PAD + top.length * ROW + ROW * 0.0;
+const nodes = sorted.map((it, k) => {
+  const above = k % 2 === 0;
+  const side = above ? top : bot;
+  const idx = side.indexOf(it);                 // 0 = earliest on that side
+  const lvl = side.length - idx;                // earliest is farthest from trunk
+  const y = above ? trunkY - lvl * ROW + ROW * 0.25 : trunkY + lvl * ROW - ROW * 0.25;
+  const x = xOf(k, it.n);
+  const mx = x + 34, bend = above ? trunkY - 30 : trunkY + 30;
+  const path = `M${x.toFixed(1)} ${y.toFixed(1)} L${x.toFixed(1)} ${bend.toFixed(1)} Q ${x.toFixed(1)} ${trunkY.toFixed(1)} ${mx.toFixed(1)} ${trunkY.toFixed(1)}`;
+  return { ...it, k, x, y, above, path, mx };
+});
+const trunkStart = Math.min(...nodes.map((d) => d.mx));
+const endX = W - 250;
+const field = (s: string) => s.replace(/\s*·\s*where it emerges/i, '');
+const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(2)}%`;
+---
+<figure class="ltree" aria-label={`Timeline of ${n} sources that lead to ${title}`}>
+  <div class="lt-scroll">
+    <div class="lt-stage" style={`aspect-ratio:${W}/${H}`}>
+      <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true" font-family="IBM Plex Mono, monospace">
+        <line x1={trunkStart} y1={trunkY} x2={endX} y2={trunkY} stroke="#1F1D1A" stroke-width="2.4"></line>
+        {nodes.map((d) => <path d={d.path} fill="none" stroke="#1F1D1A" stroke-width="1.2" class="lt-branch" style={`--d:${(d.k * 0.12).toFixed(2)}s`}></path>)}
+        {nodes.map((d) => <g><circle cx={d.x} cy={d.y} r="5.5" fill="#F6F4EF" stroke="#1F1D1A" stroke-width="1.4"></circle><circle cx={d.mx} cy={trunkY} r="2.4" fill="#1F1D1A"></circle></g>)}
+        <circle cx={endX} cy={trunkY} r="11" fill="#C99242" stroke="#1F1D1A" stroke-width="1.4"></circle>
+        <circle cx={endX} cy={trunkY} r="20" fill="none" stroke="#C99242" stroke-width="1" stroke-dasharray="3 3" class="lt-pulse"></circle>
+        <!-- time axis -->
+        <line x1={X0} y1={H - AXIS + 8} x2={endX} y2={H - AXIS + 8} stroke="#1F1D1A" stroke-opacity=".35"></line>
+        {nodes.map((d) => <g><line x1={d.x} y1={H - AXIS + 3} x2={d.x} y2={H - AXIS + 13} stroke="#1F1D1A" stroke-opacity=".6"></line><line x1={d.x} y1={d.above ? trunkY + 4 : d.y + 6} x2={d.x} y2={H - AXIS + 3} stroke="#1F1D1A" stroke-opacity=".14" stroke-dasharray="2 4"></line><text x={d.x} y={H - AXIS + 28} font-size="11" text-anchor="middle" fill="#59534A">{d.year}</text></g>)}
+        <line x1={endX} y1={H - AXIS + 3} x2={endX} y2={H - AXIS + 13} stroke="#C99242" stroke-width="1.5"></line>
+        <text x={endX} y={H - AXIS + 28} font-size="11" text-anchor="middle" fill="#7A5A2E">{endYear}</text>
+      </svg>
+      {nodes.map((d) => (
+        <div class={`lt-label ${d.above ? 'up' : 'down'}`} style={`left:${pct(d.x + 14, W)};top:${pct(d.y, H)}`}>
+          <span class="lt-field">{field(d.field)}</span>
+          <span class="lt-work"><span class="lt-year">{d.year}</span> {d.work}</span>
+          <span class="lt-by">{d.by}</span>
+        </div>
+      ))}
+      <div class="lt-end" style={`left:${pct(endX + 30, W)};top:${pct(trunkY, H)}`}>
+        <span class="lt-field">Where the branches meet</span>
+        <span class="lt-endt">{title}</span>
+      </div>
+    </div>
+  </div>
+  <figcaption class="lt-cap">Each source branches in at its year and joins the trunk; spacing blends real time with order so close years stay readable.</figcaption>
+</figure>
+
+<style>
+  .ltree { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .lt-scroll { overflow-x: auto; }
+  .lt-stage { position: relative; min-width: 980px; }
+  .lt-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .lt-label { position: absolute; transform: translateY(-50%); width: 21%; display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; background: rgba(246,244,239,.92); border-left: 2px solid var(--accent); }
+  .lt-field { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); }
+  .lt-work { font-size: 15px; line-height: 1.28; color: var(--ink); }
+  .lt-year { font-family: var(--display); font-style: italic; font-size: 19px; color: var(--clay); margin-right: 2px; }
+  .lt-by { font-family: var(--serif); font-style: italic; font-size: 14.5px; line-height: 1.3; color: var(--muted); }
+  .lt-end { position: absolute; transform: translateY(-50%); display: flex; flex-direction: column; gap: 2px; max-width: 19%; }
+  .lt-endt { font-family: var(--display); font-size: 26px; line-height: 1.05; color: var(--ink); }
+  .lt-cap { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--muted-2); }
+  .lt-branch { stroke-dasharray: 400; stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .js .reveal:not(.in) .lt-branch { stroke-dashoffset: 400; }
+    .lt-branch { transition: stroke-dashoffset 1.2s cubic-bezier(.3,.6,.2,1); transition-delay: var(--d); }
+    .lt-pulse { transform-box: fill-box; transform-origin: center; animation: ltpulse 2.8s ease-out infinite; }
+  }
+  @keyframes ltpulse { 0% { transform: scale(.7); opacity: .9; } 100% { transform: scale(1.5); opacity: 0; } }
+  @media (max-width: 720px) { .lt-cap::before { content: 'Swipe to see the whole tree · '; color: var(--accent-ink); } }
+</style>

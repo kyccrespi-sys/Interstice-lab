@@ -6,6 +6,7 @@ import ClimateTool from '../../components/ClimateTool.astro';
 import AlpineFarm from '../../components/AlpineFarm.astro';
 import ForestGrid from '../../components/ForestGrid.astro';
 import CommonGround from '../../components/CommonGround.astro';
+import LineageTree from '../../components/LineageTree.astro';
 import Subscribe from '../../components/Subscribe.astro';
 import { site } from '../../data/site';
 import { inline, toRoman } from '../../data/inline';
@@ -38,16 +39,7 @@ const forthcoming = d.status === 'forthcoming';
         <section class="band" aria-label="Lineage">
           <div class="wrap lineage">
             <p class="label">The lineage · {d.lineage.length} roots, one trunk</p>
-            <ol class="lineage-grid">
-              {d.lineage.map((l, i) => (
-                <li class={`card lineage-card ${i === d.lineage.length - 1 ? 'last' : ''}`}>
-                  <span class="lin-year it">{l.year}</span>
-                  <span class="label muted">{l.field}</span>
-                  <span class="lin-work">{l.work}</span>
-                  <span class="lin-by it">{l.by}</span>
-                </li>
-              ))}
-            </ol>
+            <div class="reveal"><LineageTree items={d.lineage} title={`${d.title} ${d.titleAccent ?? ''}`.trim()} /></div>
           </div>
         </section>
       )}

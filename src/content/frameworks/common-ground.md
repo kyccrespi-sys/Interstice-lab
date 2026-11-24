@@ -29,8 +29,8 @@ lineage:
   - { year: "1984", field: "Environmental psychology", work: "View through a window may influence recovery from surgery", by: "Roger Ulrich · Science" }
   - { year: "1991", field: "Elder care", work: "A child care center inside a nursing home", by: "Providence Mount St. Vincent, Seattle" }
   - { year: "2015", field: "Child health", work: "Time outdoors and nearsightedness: a randomized trial", by: "Mingguang He et al. · JAMA" }
+  - { year: "2018", field: "Business & policy", work: "All In Together: shared sites for young and old", by: "Generations United & The Eisner Foundation" }
   - { year: "2019", field: "Geriatrics", work: "Exercise for preventing falls", by: "Cathie Sherrington et al. · Cochrane" }
-  - { year: "2018", field: "Business & policy · where it emerges", work: "All In Together: shared sites for young and old", by: "Generations United & The Eisner Foundation" }
 
 threads:
   columns: ["Nature & design", "Movement science", "Intergenerational care", "Common Ground"]
