@@ -32,7 +32,7 @@
         <div class="bands" data-group="band"></div>
       </fieldset>
       <fieldset>
-        <legend class="label muted">3 · Conditions <span class="opt">(optional)</span></legend>
+        <legend class="label muted">3 · Conditions</legend>
         <div class="seg seg-wrap" data-group="cond">
           <button type="button" data-value="wind" aria-pressed="false">Windy</button>
           <button type="button" data-value="wet" aria-pressed="false">Rain or snow</button>
@@ -40,9 +40,7 @@
           <button type="button" data-value="dark" aria-pressed="false">Dark</button>
           <button type="button" data-value="sweat" aria-pressed="false">I sweat heavily</button>
         </div>
-      </fieldset>
-      <fieldset>
-        <legend class="label muted">4 · How long?</legend>
+        <p class="sub-label">How long?</p>
         <div class="seg" data-group="duration">
           <button type="button" data-value="short" aria-pressed="true">Under 1 hour</button>
           <button type="button" data-value="mid" aria-pressed="false">1–2 hours</button>
@@ -68,6 +66,15 @@
       </div>
       <p class="kit-note">General guidance, not medical advice. Bodies differ: adjust for your fitness, health and how you feel, and check the forecast's feels-like temperature before you go.</p>
     </article>
+
+    <section class="products" aria-labelledby="products-title">
+      <div class="products-head">
+        <p class="label muted" id="products-title">4 · Featured products</p>
+        <p class="small" data-products-note></p>
+      </div>
+      <div class="product-grid" data-products></div>
+      <p class="kit-note">New and notable gear from 2026, chosen for the conditions above. Not sponsored, and we don't earn from links. Details come from brand announcements and published coverage; check current availability and fit before buying.</p>
+    </section>
 
     <div class="legend" aria-label="What the ratings mean">
       <div class="leg"><span class="tier t-comfort">Comfort</span><span class="small">Ideal. Go as planned.</span></div>
@@ -204,6 +211,22 @@
   const CAUTION_COLD = 'National Weather Service: at a wind chill near −19°F, exposed skin can freeze in about 30 minutes.';
   const CAUTION_HOT = 'National Weather Service: at a heat index of 90–103°F, heat exhaustion and heat stroke are possible with prolonged activity.';
 
+  // Featured products. tags: activities it suits; when: cold | mild | hot | wet | any.
+  type Product = { name: string; brand: string; what: string; why: string; acts: string[]; when: string[]; url: string; src: string };
+  const PRODUCTS: Product[] = [
+    { name: 'Hydration Biosensor', brand: 'Nix', what: 'A small reusable pod on a single-use sweat patch that reads fluid and electrolyte losses live and syncs with your phone or Garmin.', why: 'Turns the electrolyte guess into your own numbers.', acts: ['running', 'hiking', 'cycling'], when: ['hot', 'any-long'], url: 'https://nixbiosensors.com/pages/product', src: 'Nix Biosensors' },
+    { name: 'Gx Sweat Patch', brand: 'Gatorade × Epicore Biosystems', what: 'A single-use patch you wear for one workout, then scan with the Gx app for a personal sweat and sodium profile.', why: 'A low-cost way to learn if you are a heavy or salty sweater.', acts: ['running', 'hiking', 'cycling'], when: ['hot', 'mild'], url: 'https://recovery-reviews.com/blog/emerging-tech-sweat-sensors/', src: 'Recovery Reviews' },
+    { name: 'Supertrainer 1', brand: 'Avelo', what: 'A running shoe with a built-in sensor that measures impact and stride metrics.', why: 'Form data from every run, in any weather.', acts: ['running'], when: ['any'], url: 'https://run.outsideonline.com/gear/road-shoes/new-2026-running-shoes/', src: 'Outside Run' },
+    { name: 'Cloudmonster 3 Hyper', brand: 'On', what: 'Uses On’s LightSpray process, where the upper is sprayed on rather than cut and sewn, for less waste.', why: 'A glimpse of lower-waste performance shoes.', acts: ['running'], when: ['mild', 'hot'], url: 'https://www.t3.com/active/running/running-shoes-top-3-0326', src: 'T3' },
+    { name: 'Ridge HIPE ACE 3L Hiking Jacket', brand: 'Peak Performance', what: 'A light three-layer shell on a new polypropylene membrane, rated 20,000 mm waterproof and 20,000 g/m² breathable.', why: 'Built for fast, sweaty hiking in the rain.', acts: ['hiking', 'running'], when: ['wet', 'mild', 'cold'], url: 'https://www.outdoorsportswire.com/peak-performance-introduces-the-ridge-hipe-ace-3l-hiking-jacket/', src: 'Outdoor Sportswire' },
+    { name: 'Alpha SL Jacket', brand: 'Arc’teryx', what: 'New for spring 2026; described as the lightest GORE-TEX Pro shell available.', why: 'Storm protection that packs small.', acts: ['hiking'], when: ['wet', 'cold'], url: 'https://www.adventurealan.com/best-lightweight-rain-jacket/', src: 'Adventure Alan' },
+    { name: 'Microlight range (AW26)', brand: 'Rab', what: 'The updated insulation range uses hydrophobic down and recycled fabrics.', why: 'Down that copes better with damp cold.', acts: ['hiking'], when: ['cold'], url: 'https://www.livefortheoutdoors.com/hiking/jackets/rab-microlight-jacket-collection/', src: 'Live for the Outdoors' },
+    { name: 'Winterloft Hooded Jacket', brand: 'Smartwool', what: 'A puffy filled with 80% recycled 700-fill down and 20% recycled merino.', why: 'Down warmth plus merino’s comfort when damp.', acts: ['hiking'], when: ['cold'], url: 'https://gearjunkie.com/gear-news/outdoor-market-alliance-summer-2026', src: 'GearJunkie' },
+    { name: 'Perfetto 4', brand: 'Castelli', what: 'Built on a heavier version of Polartec’s PFAS-free Aircore fabric: breathable, windproof and water repellent.', why: 'One jacket for cold, changeable rides.', acts: ['cycling'], when: ['cold', 'wet', 'mild'], url: 'https://www.bikeradar.com/news/2026-castelli-perfetto-4-gabba-pro', src: 'BikeRadar' },
+    { name: 'Flux HydroShift Waterproof Packable Jacket', brand: 'Madison', what: 'Drops the usual face fabric and puts a hydrophobic membrane on the outside, so rain beads off instead of soaking in.', why: 'Stays light in steady rain.', acts: ['cycling'], when: ['wet'], url: 'https://cyclingindustry.news/madison-launches-new-aw26-cycling-apparel-range/', src: 'Cycling Industry News' },
+    { name: 'Vampire Hooded Jacket', brand: 'Q36.5', what: 'A winter race jacket with a breathable “UF Hybrid Shell” back panel, a high thermal collar and a hood that fits under a helmet.', why: 'Sheds heat on climbs, holds it on descents.', acts: ['cycling'], when: ['cold'], url: 'https://www.3bikes.fr/en/2026/11/06/q36-5-presents-the-new-vampire-hooded-jacket/', src: '3Bikes' },
+  ];
+
   const order: Tier[] = ['comfort', 'limit', 'caution'];
   const worse = (t: Tier): Tier => order[Math.min(order.indexOf(t) + 1, 2)];
 
@@ -270,6 +293,30 @@
       if (state.activity === 'hiking') rec.push('Feet up for a bit; check for blisters');
       fill('recovery', rec);
 
+      // Featured products for this activity and climate.
+      const climate = band.cold ? 'cold' : band.hot || band.id === 'b5' ? 'hot' : 'mild';
+      const wanted = new Set([climate, 'any']);
+      if (state.cond.has('wet')) wanted.add('wet');
+      if (state.duration !== 'short') wanted.add('any-long');
+      const picks = PRODUCTS
+        .filter((p) => p.acts.includes(state.activity) && p.when.some((w) => wanted.has(w)))
+        .sort((a, b) => Number(b.when.includes('wet') && state.cond.has('wet')) - Number(a.when.includes('wet') && state.cond.has('wet')))
+        .slice(0, 4);
+      const grid = root.querySelector('[data-products]')!;
+      grid.replaceChildren(...picks.map((p) => {
+        const card = document.createElement('article');
+        card.className = 'product';
+        const make = (tag: string, cls: string, text: string) => { const el = document.createElement(tag); el.className = cls; el.textContent = text; return el; };
+        const link = document.createElement('a');
+        link.href = p.url; link.target = '_blank'; link.rel = 'noopener';
+        link.className = 'p-link';
+        link.textContent = `Read more · ${p.src} ↗`;
+        card.append(make('p', 'p-brand', p.brand), make('h3', 'p-name', p.name), make('p', 'p-what', p.what), make('p', 'p-why', p.why), link);
+        return card;
+      }));
+      const noteEl = root.querySelector('[data-products-note]')!;
+      noteEl.textContent = picks.length ? `For ${state.activity} in ${climate === 'mild' ? 'mild' : climate} weather${state.cond.has('wet') ? ' and rain' : ''}.` : 'No featured products for this combination yet.';
+
       const tierEl = root.querySelector<HTMLElement>('[data-tier]')!;
       tierEl.textContent = tier[0].toUpperCase() + tier.slice(1);
       tierEl.className = `tier t-${tier}`;
@@ -311,6 +358,16 @@
   fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
   legend { padding: 0; margin-bottom: 12px; }
   .opt { text-transform: none; letter-spacing: 0.04em; }
+  .sub-label { margin: 8px 0 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-2); }
+  .products { display: flex; flex-direction: column; gap: 20px; }
+  .products-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .product-grid :global(.product) { background: var(--ground); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+  .product-grid :global(.p-brand) { margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink); }
+  .product-grid :global(.p-name) { margin: 0; font-size: 20px; font-weight: 400; line-height: 1.2; }
+  .product-grid :global(.p-what) { margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+  .product-grid :global(.p-why) { margin: 0; font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--muted); }
+  .product-grid :global(.p-link) { margin-top: auto; padding-top: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; text-decoration: none; }
   .seg { display: flex; flex-wrap: wrap; gap: 8px; }
   .seg button, .bands :global(button) { min-height: 48px; padding: 0 20px; border-radius: 999px; border: 1px solid rgba(35,32,26,0.22); background: var(--card); color: var(--ink); font-family: var(--sans); font-size: 16px; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
   .seg button[aria-pressed='true'], .bands :global(button[aria-pressed='true']) { background: var(--ink); color: var(--ground); border-color: var(--ink); }
