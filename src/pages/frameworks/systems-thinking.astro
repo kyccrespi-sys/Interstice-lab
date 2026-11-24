@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import Subscribe from '../../components/Subscribe.astro';
+import SystemsPrimer from '../../components/SystemsPrimer.astro';
+---
+<Base title="What is systems thinking?" description="A five-minute primer on systems thinking, the idea under every Interstice Lab framework.">
+  <section class="wrap st-head">
+    <a class="label back" href="/frameworks/">← All frameworks</a>
+  </section>
+  <section class="wrap st-body"><SystemsPrimer /></section>
+  <Subscribe />
+</Base>
+
+<style>
+  .st-head { padding-block: 56px 24px; }
+  .back { text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  .st-body { padding-bottom: 104px; }
+</style>
