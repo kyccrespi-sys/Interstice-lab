@@ -5,8 +5,8 @@ title: "Climate-Rated"
 titleAccent: "Performance"
 pairing: "sleeping-bag temperature ratings, paired with running, hiking and cycling"
 question: "Your sleeping bag has a temperature rating. Why doesn't your run?"
-summary: "Camping gear tells you the temperatures it's built for. This framework gives every outing the same kind of rating, with the fuel, warm-up, effort, kit and recovery to match the weather."
-dek: "Sleeping bags carry a temperature rating. Your run, hike or ride can too: one rating for the weather, and the fuel, warm-up, effort, kit and recovery to match."
+summary: "Camping gear tells you the temperatures it's built for. This framework gives every outing the same kind of rating, with the kit, fuel, warm-up, effort and recovery to match the weather."
+dek: "Sleeping bags carry a temperature rating. Your run, hike or ride can too: one rating for the weather, and the kit, fuel, warm-up, effort and recovery to match."
 category: "Outdoor & Apparel"
 fields: ["Physiology", "Sports nutrition", "Textiles", "Climate"]
 author: "K Crespin"
@@ -36,7 +36,7 @@ sources:
 
 ## A rating for the outing, not just the gear
 
-Camping gear already tells you the temperatures it's built for. Sleeping bags are tested to an international standard and labelled with a Comfort temperature, a Limit and an Extreme. Outdoor activity has nothing like it, even though the same questions decide whether a run, hike or ride goes well: what to eat, how to warm up, how hard to go, what to wear and how to recover.
+Camping gear already tells you the temperatures it's built for. Sleeping bags are tested to an international standard and labelled with a Comfort temperature, a Limit and an Extreme. Outdoor activity has nothing like it, even though the same questions decide whether a run, hike or ride goes well: what to wear, what to eat, how to warm up, how hard to go and how to recover.
 
 This framework borrows the camping model and applies it to the whole outing. Choose your activity and the feels-like temperature, and you get one of three ratings:
 
