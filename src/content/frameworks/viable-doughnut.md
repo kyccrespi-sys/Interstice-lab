@@ -9,8 +9,8 @@ summary: "Stafford Beer's cybernetics, Donella Meadows' feedback loops and Capra
 dek: "Four books, written over forty-four years, describe one idea from four directions: a living system stays free and alive only by regulating itself between limits. Read together, they show how to design an economy that does it on purpose."
 category: "Systems & Economics"
 fields: ["Cybernetics", "Systems dynamics", "Biology", "Economics"]
-author: "[AUTHOR NAME]"
-readingTime: "[X]"
+author: "K Crespin"
+readingTime: "8"
 featured: true
 figure: "viable-doughnut"
 

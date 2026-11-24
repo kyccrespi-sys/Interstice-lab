@@ -9,7 +9,7 @@ summary: "Camping gear tells you the temperatures it's built for. This framework
 dek: "Sleeping bags carry a temperature rating. Your run, hike or ride can too: one rating for the weather, and the fuel, warm-up, effort and kit to match."
 category: "Outdoor & Apparel"
 fields: ["Physiology", "Sports nutrition", "Textiles", "Climate"]
-author: "[AUTHOR NAME]"
+author: "K Crespin"
 readingTime: "3"
 figure: "climate-rated"
 

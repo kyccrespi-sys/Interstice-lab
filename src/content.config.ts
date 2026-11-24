@@ -17,7 +17,7 @@ const frameworks = defineCollection({
     category: z.string(),               // "Systems & Economics"
     fields: z.array(z.string()),
     appliesTo: z.array(z.object({ name: z.string(), how: z.string() })),
-    author: z.string().default('[AUTHOR NAME]'),
+    author: z.string().default('K Crespin'),
     readingTime: z.string().optional(),
     status: z.enum(['published', 'forthcoming']).default('published'),
     featured: z.boolean().default(false),

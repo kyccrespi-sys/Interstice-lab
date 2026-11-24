@@ -9,7 +9,7 @@ export const site = {
     'Interstice Lab reads across biotechnology, ecology, economics and finance, and synthesizes what it finds into frameworks industries can build on.',
 
   // Your name, shown under the editorial statement.
-  editor: '[YOUR NAME]',
+  editor: 'K Crespin',
 
   // The current season and volume, shown on the homepage.
   volume: 'Volume 01 · Roots & Reconnections',
