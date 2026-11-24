@@ -22,6 +22,9 @@ const hale = { x: px(-106.31), y: py(39.42) };
 // Level 2: schematic valley, north up. Valley runs roughly north–south.
 const ridges = Array.from({ length: 9 }, (_, i) => i);
 import { buildCamp } from './camp3d';
+import { buildColorado, buildValley, haleCO } from './hmLevels';
+const colorado = buildColorado();
+const valley = buildValley();
 const camp = buildCamp();
 ---
 <figure id="halemap" class="hm" aria-label="Map: Colorado, the Camp Hale valley and the camp">
@@ -32,64 +35,15 @@ const camp = buildCamp();
   </nav>
   <div class="hm-stage">
     <!-- LEVEL 1 · COLORADO -->
-    <svg viewBox="0 0 1000 625" class="hm-lvl on" data-level="1" role="img" aria-label="Map of Colorado showing Camp Hale near Leadville on the Continental Divide" font-family="IBM Plex Mono, monospace">
+    <svg viewBox="0 0 1000 625" class="hm-lvl on" data-level="1" data-origin={`${(haleCO[0] / 10).toFixed(1)}% ${(haleCO[1] / 6.25).toFixed(1)}%`} role="img" aria-label="Map of Colorado: Camp Hale sits on the Continental Divide in the Rocky Mountains near Leadville, about 75 miles west of Denver" font-family="IBM Plex Mono, monospace">
       <rect width="1000" height="625" fill={BG}></rect>
-      {Array.from({ length: 41 }, (_, i) => <path d={`M${i * 25} 0 L${i * 25} 625`} stroke={FG} stroke-opacity="0.035" stroke-width="0.5"></path>)}
-      {Array.from({ length: 26 }, (_, i) => <path d={`M0 ${i * 25} L1000 ${i * 25}`} stroke={FG} stroke-opacity="0.035" stroke-width="0.5"></path>)}
-      <rect x={X0} y={Y0} width={W} height={H} fill="none" stroke={FG} stroke-opacity="0.8" stroke-width="1"></rect>
-      {[1, 2, 3, 4, 5, 6].map((i) => <path d={`M${X0 + (W / 7) * i} ${Y0} L${X0 + (W / 7) * i} ${Y0 + H}`} stroke={FG} stroke-opacity="0.08" stroke-dasharray="2 4"></path>)}
-      {[1, 2, 3].map((i) => <path d={`M${X0} ${Y0 + (H / 4) * i} L${X0 + W} ${Y0 + (H / 4) * i}`} stroke={FG} stroke-opacity="0.08" stroke-dasharray="2 4"></path>)}
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <text x={X0 + (W / 7) * i} y={Y0 + H + 18} font-size="8" fill={DIM} text-anchor="middle">{109 - i}°W</text>)}
-      {[41, 40, 39, 38, 37].map((l, i) => <text x={X0 - 10} y={Y0 + (H / 4) * i + 3} font-size="8" fill={DIM} text-anchor="end">{l}°N</text>)}
-      <path d={divideD} fill="none" stroke={HON} stroke-width="1.2" stroke-dasharray="6 4" class="flow-slow"></path>
-      <text x={px(-106.95)} y={py(40.75)} font-size="9" fill={HON} letter-spacing="2" text-anchor="end">CONTINENTAL DIVIDE (APPROX.)</text>
-      {places.map((p) => (
-        <g>
-          <circle cx={px(p.lon)} cy={py(p.lat)} r="3" fill="none" stroke={FG} stroke-opacity="0.8"></circle>
-          <text x={px(p.lon) + (p.a === 'start' ? 9 : -9)} y={py(p.lat) + 3} font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5" text-anchor={p.a}>{p.n.toUpperCase()}</text>
-        </g>
-      ))}
-      <g class="hm-target">
-        <circle cx={hale.x} cy={hale.y} r="24" fill="none" stroke={HON} stroke-width="0.9"></circle>
-        <path d={`M${hale.x - 34} ${hale.y} L${hale.x + 34} ${hale.y} M${hale.x} ${hale.y - 34} L${hale.x} ${hale.y + 34}`} stroke={HON} stroke-width="0.7"></path>
-        <circle cx={hale.x} cy={hale.y} r="3.5" fill={HON}></circle>
-      </g>
-      <path d={`M${hale.x + 18} ${hale.y - 18} L${hale.x + 90} ${hale.y - 92}`} stroke={FG} stroke-opacity="0.4" stroke-width="0.6"></path>
-      <text x={hale.x + 96} y={hale.y - 96} font-size="10" fill={HON} letter-spacing="2">CAMP HALE · 9,200 FT</text>
-      <text x={hale.x + 96} y={hale.y - 82} font-size="8" fill={DIM} letter-spacing="1.5">PANDO, EAGLE RIVER VALLEY · 1942–1945</text>
-      <text x="930" y="40" font-size="10" fill={FG} fill-opacity="0.7" text-anchor="end" letter-spacing="2">N ↑</text>
-      <text x={X0} y={Y0 + H + 40} font-size="8" fill={DIM} letter-spacing="1.5">COLORADO · STATE BOUNDARY 37–41°N, 102°03′–109°03′W · DIVIDE APPROXIMATE</text>
+      <g set:html={colorado}></g>
     </svg>
 
     <!-- LEVEL 2 · THE VALLEY (schematic) -->
-    <svg viewBox="0 0 1000 625" class="hm-lvl" data-level="2" role="img" aria-label="Schematic of the valley around Camp Hale: Eagle River, railroad, Cooper Hill ski area, Tennessee Pass, Homestake Peak and Resolution Creek" font-family="IBM Plex Mono, monospace">
+    <svg viewBox="0 0 1000 625" class="hm-lvl" data-level="2" role="img" aria-label="Map of the valley: Camp Hale in Eagle Park along the north-flowing Eagle River and the railroad, Pando at the north end, Tennessee Pass and Cooper Hill to the south, Homestake Peak to the southwest, and the D-Series maneuver area in the high country east toward Resolution Mountain" font-family="IBM Plex Mono, monospace">
       <rect width="1000" height="625" fill={BG}></rect>
-      {ridges.map((i) => <path d={`M${80 + i * 18} 40 C ${120 + i * 14} 200, ${60 + i * 16} 420, ${110 + i * 12} 600`} fill="none" stroke={FG} stroke-opacity={0.08 + i * 0.03} stroke-width="0.7"></path>)}
-      {ridges.map((i) => <path d={`M${920 - i * 18} 40 C ${880 - i * 14} 220, ${940 - i * 16} 400, ${890 - i * 12} 600`} fill="none" stroke={FG} stroke-opacity={0.08 + i * 0.03} stroke-width="0.7"></path>)}
-      <path d="M380 30 C 400 160, 420 300, 470 420 S 520 560, 540 610 L 620 610 C 600 540, 560 420, 540 300 S 500 120, 480 30Z" fill={FG} fill-opacity="0.03" stroke={FG} stroke-opacity="0.25" stroke-width="0.7"></path>
-      <text x="400" y="54" font-size="9" fill={DIM} letter-spacing="2">EAGLE PARK · VALLEY FLOOR</text>
-      <path d="M430 30 C 450 180, 470 300, 505 420 S 560 560, 575 610" fill="none" stroke={COOL} stroke-width="1.4" class="flow-slow"></path>
-      <text x="520" y="250" font-size="9" fill={COOL} letter-spacing="2">EAGLE RIVER</text>
-      <path d="M470 30 C 480 170, 500 290, 535 400 S 590 540, 610 610" fill="none" stroke={FG} stroke-opacity="0.75" stroke-width="1" stroke-dasharray="1 0"></path>
-      {Array.from({ length: 26 }, (_, i) => i).map((i) => { const t = i / 25; const x = 470 + t * 140 + Math.sin(t * 3) * 8; const y = 30 + t * 580; return <path d={`M${x - 5} ${y} L${x + 5} ${y}`} stroke={FG} stroke-opacity="0.6" stroke-width="0.8"></path>; })}
-      <text x="560" y="150" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="2">DENVER &amp; RIO GRANDE WESTERN</text>
-      <g class="hm-target"><rect x="440" y="300" width="120" height="150" fill="none" stroke={HON} stroke-width="1"></rect></g>
-      <text x="440" y="292" font-size="10" fill={HON} letter-spacing="2">CAMP HALE</text>
-      <circle cx="560" cy="470" r="4" fill={FG}></circle><text x="572" y="474" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5">PANDO</text>
-      <path d="M640 560 L700 500" stroke={HON} stroke-width="1.4"></path>
-      <circle cx="700" cy="500" r="3" fill={HON}></circle>
-      <text x="712" y="498" font-size="9" fill={HON} letter-spacing="1.5">COOPER HILL · T-BAR</text>
-      <text x="712" y="512" font-size="8" fill={DIM} letter-spacing="1.2">BUILT BY THE TROOPS · NOW SKI COOPER</text>
-      <path d="M560 600 L 600 580" stroke={FG} stroke-opacity="0.6"></path>
-      <text x="530" y="596" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5" text-anchor="end">TENNESSEE PASS ↓ LEADVILLE</text>
-      <path d="M215 330 l 14 -26 l 14 26z" fill="none" stroke={FG} stroke-opacity="0.8"></path>
-      <text x="229" y="350" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5" text-anchor="middle">HOMESTAKE PEAK</text>
-      <path d="M760 220 l 14 -26 l 14 26z" fill="none" stroke={FG} stroke-opacity="0.8"></path>
-      <text x="774" y="240" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="1.5" text-anchor="middle">RESOLUTION CREEK</text>
-      <path d="M240 360 C 300 420, 380 440, 440 420 M560 360 C 640 330, 700 280, 760 240" fill="none" stroke={WARM} stroke-width="1" stroke-dasharray="4 5" class="flow"></path>
-      <text x="260" y="450" font-size="8" fill={WARM} letter-spacing="1.5">D-SERIES MANEUVERS · 1944</text>
-      <text x="930" y="40" font-size="10" fill={FG} fill-opacity="0.7" text-anchor="end" letter-spacing="2">N ↑</text>
-      <text x="40" y="604" font-size="8" fill={DIM} letter-spacing="1.5">SCHEMATIC · NOT TO SCALE · POSITIONS APPROXIMATE</text>
+      <g set:html={valley}></g>
     </svg>
 
     <!-- LEVEL 3 · THE CAMP (illustrative) -->
@@ -109,7 +63,7 @@ const camp = buildCamp();
     </div>
     <div data-text="2" hidden>
       <p class="label">Level 2 · The valley</p>
-      <p class="small">The camp filled Eagle Park, a long, flat meadow. Troops built their own ski area, Cooper Hill, with what was then the world's longest T-bar. In 1944 the whole division marched out for weeks of subzero mock battles between Tennessee Pass and Resolution Mountain.</p>
+      <p class="small">North is up. The camp filled Eagle Park, a flat meadow on the Eagle River, with the railroad running alongside and the village of Pando at its north end. Troops built their own ski area, Cooper Hill, with what was then the world's longest T-bar. In 1944 the whole division marched out for weeks of subzero mock battles between Tennessee Pass and Resolution Mountain.</p>
     </div>
     <div data-text="3" hidden>
       <p class="label">Level 3 · The camp</p>
@@ -135,7 +89,7 @@ const camp = buildCamp();
       const inward = n > cur;
       const from = lv[cur - 1], to = lv[n - 1];
       from.style.transformOrigin = inward ? origins[cur] ?? '50% 50%' : '50% 50%';
-      if (cur === 1 && inward) from.style.transformOrigin = '50% 52%';
+      if (cur === 1 && inward) from.style.transformOrigin = from.dataset.origin || '50% 52%';
       from.classList.remove('on'); from.classList.add(inward ? 'out-in' : 'out-out');
       to.classList.remove('out-in', 'out-out'); to.classList.add(inward ? 'from-small' : 'from-big');
       requestAnimationFrame(() => requestAnimationFrame(() => { to.classList.remove('from-small', 'from-big'); to.classList.add('on'); }));
@@ -166,6 +120,8 @@ const camp = buildCamp();
   .hm-cap { position: absolute; left: 18px; top: 14px; margin: 0; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #C99242; }
   .hm-stage :global(.hm-target) { animation: hmglow 3s ease-in-out infinite; }
   .hm-stage :global(.flow) { animation: hmflow 1.6s linear infinite; }
+  .hm-stage :global(.flow-rev) { animation: hmflowrev 3s linear infinite; }
+  @keyframes hmflowrev { to { stroke-dashoffset: 40; } }
   .hm-stage :global(.flow-slow) { stroke-dasharray: 10 8; animation: hmflow 4s linear infinite; }
   .hm-stage :global(.smoke) { stroke-dasharray: 3 5; animation: hmflow 3s linear infinite; }
   .hm-stage :global(.haze) { animation: hmglow 6s ease-in-out infinite; }
