@@ -1,0 +1,93 @@
+---
+// Herman Kahn's 44-rung escalation ladder (On Escalation: Metaphors and Scenarios, 1965).
+// Rung names paraphrase the published ladder; layout and illustration are original.
+const groups = [
+  { n: 'Subcrisis maneuvering', rungs: ['Ostensible crisis', 'Political, economic and diplomatic gestures', 'Solemn and formal declarations'], th: 'Don’t rock the boat' },
+  { n: 'Traditional crises', rungs: ['Hardening of positions', 'Show of force', 'Significant mobilization', '“Legal” harassment', 'Harassing acts of violence', 'Dramatic military confrontations'], th: 'Nuclear war is unthinkable' },
+  { n: 'Intense crises', rungs: ['Provocative break in diplomatic relations', 'Super-ready status', 'Large conventional war', 'Large compound escalation', 'Declaration of limited conventional war', 'Barely nuclear war', 'Nuclear “ultimatums”', 'Limited evacuations (≈20%)', 'Spectacular show of force', '“Justifiable” counterforce attack', '“Peaceful” worldwide embargo or blockade'], th: 'No nuclear use' },
+  { n: 'Bizarre crises', rungs: ['Local nuclear war, exemplary', 'Declaration of limited nuclear war', 'Local nuclear war, military', 'Unusual, provocative countermeasures', 'Evacuation (≈70%)'], th: 'Central sanctuary' },
+  { n: 'Exemplary central attacks', rungs: ['Demonstration attack on home territory', 'Exemplary attack on military', 'Exemplary attacks against property', 'Exemplary attacks on population', 'Complete evacuation', 'Reciprocal reprisals'], th: 'Central war' },
+  { n: 'Military central wars', rungs: ['Formal declaration of general war', 'Slow-motion counter-property war', 'Slow-motion counterforce war', 'Constrained force-reduction salvo', 'Constrained disarming attack', 'Counterforce-with-avoidance attack', 'Unmodified counterforce attack'], th: 'City targeting' },
+  { n: 'Civilian central wars', rungs: ['Slow-motion countercity war', 'Countervalue salvo', 'Augmented disarming attack', 'Civilian devastation attack', 'Other kinds of controlled general war', 'Spasm or insensate war'], th: '' },
+];
+const tones = ['#B9C9A6', '#D8C58E', '#E8A33D', '#D9826B', '#C2603F', '#A8432C', '#6E2A1B'];
+let k = 0;
+const rows = groups.map((g, gi) => ({ ...g, gi, tone: tones[gi], items: g.rungs.map((r) => ({ r, i: ++k })) }));
+---
+<figure class="ladder" id="ladder" aria-label="Herman Kahn's 44-rung escalation ladder">
+  <div class="lad-head">
+    <p class="label">On Escalation · 1965</p>
+    <p class="lad-read"><span class="lad-num" data-num>01</span><span class="lad-name" data-name>Ostensible crisis</span><span class="lad-grp" data-grp>Subcrisis maneuvering</span></p>
+    <div class="lad-ctl">
+      <button type="button" data-step="-1" aria-label="Down one rung">↓</button>
+      <input type="range" min="1" max="44" value="1" data-range aria-label="Rung" />
+      <button type="button" data-step="1" aria-label="Up one rung">↑</button>
+    </div>
+  </div>
+  <ol class="lad-list" reversed>
+    {[...rows].reverse().map((g) => (
+      <>
+        {g.th && <li class="lad-th" aria-hidden="false"><span>Threshold · {g.th}</span></li>}
+        {[...g.items].reverse().map((it) => (
+          <li class="lad-rung" data-i={it.i} data-g={g.n} style={`--tone:${g.tone}`}>
+            <button type="button" data-pick={it.i}><span class="rn">{String(it.i).padStart(2, '0')}</span><span class="rt">{it.r}</span></button>
+          </li>
+        ))}
+        <li class="lad-group" style={`--tone:${g.tone}`}><span>{String(g.gi + 1).padStart(2, '0')} · {g.n}</span></li>
+      </>
+    ))}
+  </ol>
+  <figcaption class="lad-cap">Drag the slider or tap a rung to climb. Seven groups and six thresholds, from a diplomatic standoff (rung 1) to all-out war (rung 44). Rung names are paraphrased from Kahn’s <em>On Escalation</em> (1965); illustration is original.</figcaption>
+</figure>
+
+<script>
+  const root = document.getElementById('ladder');
+  if (root) {
+    const rungs = Array.from(root.querySelectorAll<HTMLElement>('.lad-rung'));
+    const range = root.querySelector<HTMLInputElement>('[data-range]')!;
+    const num = root.querySelector('[data-num]')!, name = root.querySelector('[data-name]')!, grp = root.querySelector('[data-grp]')!;
+    const set = (n: number) => {
+      n = Math.max(1, Math.min(44, n));
+      range.value = String(n);
+      rungs.forEach((r) => {
+        const i = Number(r.dataset.i);
+        r.classList.toggle('lit', i <= n);
+        r.classList.toggle('cur', i === n);
+        if (i === n) { name.textContent = r.querySelector('.rt')!.textContent; grp.textContent = r.dataset.g || ''; }
+      });
+      num.textContent = String(n).padStart(2, '0');
+    };
+    range.addEventListener('input', () => set(Number(range.value)));
+    root.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((b) => b.addEventListener('click', () => set(Number(range.value) + Number(b.dataset.step))));
+    root.querySelectorAll<HTMLButtonElement>('[data-pick]').forEach((b) => b.addEventListener('click', () => set(Number(b.dataset.pick))));
+    set(1);
+  }
+</script>
+
+<style>
+  .ladder { margin: 8px 0 0; background: #F3ECDF; border: 1px solid rgba(35,32,26,.14); border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .lad-head { position: sticky; top: 64px; z-index: 2; background: #F3ECDF; padding-bottom: 12px; border-bottom: 1px solid rgba(35,32,26,.14); display: flex; flex-direction: column; gap: 10px; }
+  .lad-read { margin: 0; display: grid; grid-template-columns: auto 1fr; column-gap: 16px; align-items: baseline; }
+  .lad-num { grid-row: 1 / 3; font-family: 'Inter Tight', sans-serif; font-weight: 300; font-size: 56px; line-height: 1; color: var(--clay); }
+  .lad-name { font-family: var(--serif); font-size: 24px; line-height: 1.25; color: var(--ink); }
+  .lad-grp { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); }
+  .lad-ctl { display: flex; align-items: center; gap: 10px; }
+  .lad-ctl input { flex: 1; accent-color: #A8432C; }
+  .lad-ctl button { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(35,32,26,.3); background: #FBF7EF; font-size: 16px; cursor: pointer; color: var(--ink); }
+  .lad-ctl button:hover { background: var(--ink); color: var(--ground); }
+  .lad-list { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; display: flex; flex-direction: column; gap: 2px; }
+  .lad-list::before, .lad-list::after { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(35,32,26,.35); }
+  .lad-list::before { left: 8px; }
+  .lad-list::after { right: 8px; }
+  .lad-rung button { all: unset; box-sizing: border-box; width: calc(100% - 36px); display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 6px 12px; border-radius: 3px; cursor: pointer; background: rgba(35,32,26,.04); border-left: 4px solid rgba(35,32,26,.12); font-size: 14px; color: var(--ink-2); transition: background .2s, border-color .2s; }
+  .lad-rung .rn { font-family: var(--mono); font-size: 11px; opacity: .7; padding-top: 2px; }
+  .lad-rung.lit button { background: color-mix(in srgb, var(--tone) 28%, #FBF7EF); border-left-color: var(--tone); color: var(--ink); }
+  .lad-rung.cur button { background: var(--tone); color: #FBF7EF; box-shadow: 0 6px 18px -8px rgba(35,32,26,.5); }
+  .lad-rung.cur .rn { opacity: 1; }
+  .lad-rung button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .lad-group span { display: block; margin: 6px 36px 10px 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--tone); filter: brightness(.7); }
+  .lad-th span { display: block; margin: 10px 36px 10px -28px; padding: 6px 0 6px 28px; border-top: 1.5px dashed #A8432C; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #A8432C; }
+  .lad-cap { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--muted-2); line-height: 1.6; }
+  @media (max-width: 640px) { .ladder { padding: 16px; } .lad-num { font-size: 44px; } .lad-name { font-size: 20px; } .lad-head { top: 56px; } }
+  @media (prefers-reduced-motion: reduce) { .lad-rung button { transition: none; } }
+</style>

@@ -1,0 +1,282 @@
+---
+import Base from '../../layouts/Base.astro';
+import EscalationLadder from '../../components/kahn/EscalationLadder.astro';
+import ScenarioLineage from '../../components/kahn/ScenarioLineage.astro';
+import ScenarioTree from '../../components/kahn/ScenarioTree.astro';
+import Subscribe from '../../components/Subscribe.astro';
+
+const tabs = [
+  { id: 'why', label: 'Why', sub: 'The idea' },
+  { id: 'life', label: 'Life', sub: 'The timeline' },
+  { id: 'bomb', label: 'The Bomb', sub: 'The near miss' },
+  { id: 'strategy', label: 'Strategy', sub: 'The unthinkable' },
+  { id: 'scenarios', label: 'Scenarios', sub: 'The method' },
+  { id: 'futures', label: 'Futures', sub: 'Hudson & policy' },
+  { id: 'legacy', label: 'Legacy', sub: 'Critics & heirs' },
+];
+
+const timeline = [
+  { d: 'Feb 15, 1922', t: 'Born in Bayonne, New Jersey, to Jewish immigrant parents from Eastern Europe. His father is a tailor.' },
+  { d: '1930s', t: 'Grows up in the Bronx, then in Los Angeles after his parents divorce. The family is poor and at times relies on public assistance.' },
+  { d: '1940', t: 'Graduates from Fairfax High School in Los Angeles.' },
+  { d: '1943–45', t: 'Enlists in the Army and serves in Burma with the Signal Corps as a telephone lineman. He never sees combat.' },
+  { d: '1945', t: 'Graduates from UCLA in physics, then works in the aircraft industry and earns a master’s degree at Caltech.' },
+  { d: '1947–48', t: 'Joins the RAND Corporation in Santa Monica, recruited by his college friend Sam Cohen.' },
+  { d: '1949–53', t: 'Publishes Monte Carlo methods for radiation shielding, including an early form of importance sampling.' },
+  { d: '1950s', t: 'Works on hydrogen-bomb calculations at Livermore, loses his clearance there after an anonymous accusation, and returns to RAND.' },
+  { d: '1959', t: 'Takes leave to lecture on civil defense across the country, including a series at Princeton.' },
+  { d: '1960', t: 'Publishes <em>On Thermonuclear War</em>, a 652-page book that makes him famous and notorious.' },
+  { d: '1961', t: 'Leaves RAND and co-founds the Hudson Institute north of New York City.' },
+  { d: '1962', t: 'Publishes <em>Thinking About the Unthinkable</em>, with a first 16-step escalation ladder.' },
+  { d: '1965', t: 'Publishes <em>On Escalation</em>, with the full 44-rung ladder.' },
+  { d: '1967', t: 'Publishes <em>The Year 2000</em> with Anthony J. Wiener, and the scenario goes mainstream.' },
+  { d: '1970', t: 'Publishes <em>The Emerging Japanese Superstate</em>.' },
+  { d: '1976', t: 'Publishes <em>The Next 200 Years</em>, an optimistic answer to the decade’s gloom.' },
+  { d: 'July 7, 1983', t: 'Dies of a stroke at home in Chappaqua, New York, aged 61.' },
+];
+
+const positions = [
+  { n: 'Civil defense', y: '1958–60', t: 'A national network of fallout shelters. He argued shelters would make deterrence more believable and could cut American deaths in a war from about 30 million to about 10 million.' },
+  { n: 'Second-strike deterrence', y: '1960', t: 'The Soviets had to believe the United States could absorb an attack and still hit back. Credible survival, he argued, made war less likely.' },
+  { n: 'Counterforce targeting', y: '1960s', t: 'If war came, aim at Soviet airfields and missile sites rather than cities, to limit what the enemy could still do.' },
+  { n: 'Vietnam', y: '1968', t: 'His book <em>Can We Win in Viet Nam?</em> answered its own question with a yes.' },
+  { n: 'Energy independence', y: '1973–74', t: 'After the oil shock he urged energy independence and pitched developing Canada’s Athabasca oil sands. The Canadian cabinet was largely uninterested.' },
+  { n: 'Growth optimism', y: '1976–83', t: 'He believed technology and capitalism could beat resource and pollution limits, and wrote approvingly of Ronald Reagan’s agenda in <em>The Coming Boom</em>.' },
+];
+
+const forecasts = [
+  { c: 'Mixed', n: 'Japan rises', t: 'In 1970 he forecast Japan would become an economic superpower to rival the US and USSR. Japan did boom through the 1980s, but it never matched the size of the US economy, as he expected it might by 2000.' },
+  { c: 'Hit', n: 'South Korea', t: 'In the mid-1970s he said South Korea would become one of the world’s ten leading powers by 2000. It was a bold call for a poor country at the time, and Korea’s rise broadly bore it out.' },
+  { c: 'Hit', n: 'The home computer', t: '<em>The Year 2000</em> listed home computers that would run the household and talk to the outside world, and direct broadcasts from satellites to homes.' },
+  { c: 'Miss', n: 'Damming the Amazon', t: 'Around 1968 he promoted a plan for “Great Lakes” in South America by damming the Amazon. Brazil’s foreign ministry rejected it as neo-colonial.' },
+  { c: 'Miss', n: 'Colonial Angola', t: 'In 1969 he advised Portugal’s colonial government on development schemes. Angola became independent in 1975.' },
+  { c: 'Mixed', n: 'One hundred innovations', t: 'Later reviews of <em>The Year 2000</em>’s list of 100 “very likely” innovations found real hits alongside many misses, and judged the authors overconfident.' },
+];
+
+const people = [
+  { n: 'Sam Cohen', r: 'The friend', t: 'A UCLA friend who served on the Manhattan Project at Los Alamos, then brought Kahn into RAND. Later known as the father of the neutron bomb.' },
+  { n: 'Albert Wohlstetter', r: 'The rival', t: 'RAND’s leading strategist. Shown a draft of <em>On Thermonuclear War</em>, he told Kahn to burn it.' },
+  { n: 'Max Singer', r: 'The co-founder', t: 'A RAND colleague who co-founded the Hudson Institute with Kahn and lawyer Oscar Ruebhausen in 1961.' },
+  { n: 'Anthony J. Wiener', r: 'The co-author', t: 'Co-wrote <em>The Year 2000</em> and the classic Hudson essay on how to use scenarios.' },
+  { n: 'Pierre Wack', r: 'The heir', t: 'Head of planning at Royal Dutch Shell, who turned Kahn’s method into a business tool and saw the 1973 oil shock coming.' },
+  { n: 'Stanley Kubrick', r: 'The satirist', t: 'Corresponded with Kahn and borrowed his Doomsday Machine, by name, for <em>Dr. Strangelove</em> (1964).' },
+];
+---
+<Base title="Herman Kahn" description="Curiosity Corner: Herman Kahn, the physicist who thought about the unthinkable and invented the scenario.">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <p class="label">Curiosity Corner · No. 02</p>
+      <h1 class="t-title">Herman Kahn <span class="it">and the Invention of the Scenario</span></h1>
+      <p class="t-dek">A Burma telephone lineman turned bomb physicist, the most notorious nuclear strategist of the Cold War, and the man who taught governments and companies to plan for more than one future.</p>
+      <div class="stats">
+        <div><span class="n">652</span><span class="l">Pages in On Thermonuclear War</span></div>
+        <div><span class="n">44</span><span class="l">Rungs on his escalation ladder</span></div>
+        <div><span class="n">1961</span><span class="l">Hudson Institute founded</span></div>
+        <div><span class="n">1967</span><span class="l">The Year 2000</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap art">
+    <nav class="rail" aria-label="Article sections">
+      <p class="label muted rail-head">In this story</p>
+      {tabs.map((t, i) => (
+        <a href={`#${t.id}`} class="rail-tab" data-tab={t.id} aria-current={i === 0 ? 'true' : undefined}>
+          <span class="rail-n">0{i + 1}</span>
+          <span class="rail-l">{t.label}</span>
+          <span class="rail-s">{t.sub}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="panels">
+      <!-- WHY -->
+      <section class="panel" id="why" data-panel="why">
+        <p class="label">01 · Why</p>
+        <h2 class="h2">Someone had to <span class="it clay">think it through.</span></h2>
+        <p class="body">By the late 1950s the United States and the Soviet Union could each destroy the other’s cities within hours. Most people, including many in government, treated nuclear war as something too terrible to plan for in detail. Herman Kahn thought that was the most dangerous attitude of all.</p>
+        <p class="body">His argument was simple and shocking: a war no one has thought about is a war no one can prevent, limit or survive. So he thought about it, out loud, in public, in numbers. He compared outcomes of ten million dead against a hundred million, asked how a war might start and stop, and insisted that planners face the details.</p>
+        <p class="body">To do that he needed a way to talk about futures that had not happened yet. He borrowed a word from Hollywood, where a scenario was the script for a film, and used it for a story of how events might plausibly unfold. That habit of writing several stories about the future, instead of betting on one forecast, became what we now call scenario planning.</p>
+        <blockquote class="pull">A scenario, Kahn and Wiener wrote, is not a prediction. It is a way to see the range of what could happen, and where the choices are.</blockquote>
+      </section>
+
+      <!-- LIFE -->
+      <section class="panel" id="life" data-panel="life" hidden>
+        <p class="label">02 · Life</p>
+        <h2 class="h2">From the Bronx <span class="it clay">to the Pentagon’s briefing rooms.</span></h2>
+        <p class="body">Kahn grew up poor, worked long hours to help support his family, and studied physics. He was large, loud, funny and relentless, famous for lectures that could run for hours. By his death he had briefed presidents from Truman to Reagan.</p>
+        <ol class="timeline">
+          {timeline.map((e) => <li><span class="tl-d">{e.d}</span><span class="tl-t" set:html={e.t}></span></li>)}
+        </ol>
+      </section>
+
+      <!-- BOMB -->
+      <section class="panel" id="bomb" data-panel="bomb" hidden>
+        <p class="label">03 · The Bomb</p>
+        <h2 class="h2">Close to the Manhattan Project, <span class="it clay">but not on it.</span></h2>
+        <p class="body">Two physics students and friends from UCLA went to war. One, Sam Cohen, was sent by the Army to Los Alamos, where he worked on the Manhattan Project calculating how neutrons behaved inside the Nagasaki bomb. The other, Herman Kahn, was sent to Burma to string telephone wire.</p>
+        <div class="split">
+          <article class="card fork"><p class="label muted">1944 · Los Alamos, New Mexico</p><h3 class="h3">Sam Cohen</h3><p class="small">Manhattan Project, efficiency group. Neutron calculations for the “Fat Man” bomb.</p></article>
+          <article class="card fork"><p class="label muted">1944 · Burma</p><h3 class="h3">Herman Kahn</h3><p class="small">Army Signal Corps telephone lineman, in a non-combat role.</p></article>
+        </div>
+        <p class="body">After the war, the paths joined. Cohen went to RAND, the new Air Force think tank in Santa Monica, and recruited his friend. Kahn arrived as a mathematician and was soon doing the kind of bomb physics he had missed: how radiation passes through shielding, worked out with random-number simulations called Monte Carlo methods. A 1949 paper of his contains one of the earliest clear statements of <em>importance sampling</em>, a technique still used in statistics and machine learning.</p>
+        <p class="body">That work took him to the new Livermore laboratory and the hydrogen bomb, alongside figures like Edward Teller and John von Neumann. Then an anonymous informant told the FBI he was a communist. The FBI traced the claim to a spiteful co-worker, but his clearance at Livermore was never restored. Kahn went back to RAND full time and turned from building the bomb to thinking about its use.</p>
+        <blockquote class="pull">He missed the first bomb, helped calculate the second kind, and spent the rest of his life on the question neither project answered: what happens after.</blockquote>
+      </section>
+
+      <!-- STRATEGY -->
+      <section class="panel" id="strategy" data-panel="strategy" hidden>
+        <p class="label">04 · Strategy</p>
+        <h2 class="h2">Thinking about <span class="it clay">the unthinkable.</span></h2>
+        <p class="body">At RAND, Kahn studied war with game theory, systems analysis and war games. In 1958 he led a RAND study of non-military defense and became convinced the country needed fallout shelters. When the Eisenhower administration turned the plan down, he took leave in 1959 and lectured on it nationwide. His Princeton lectures became <em>On Thermonuclear War</em> (1960).</p>
+        <p class="body">The book argued that nuclear war would be a catastrophe, but not necessarily the end of everything, and that how a country prepared would decide whether tens of millions or a hundred million died. It sold 14,000 copies in its first two months. One reviewer called it a moral tract on mass murder. Bertrand Russell said it proved why such a war must never be fought.</p>
+        <div class="card doom">
+          <p class="label">The Doomsday Machine</p>
+          <p class="small">Kahn’s most notorious idea was a thought experiment: a computer wired to enough hydrogen bombs to end life on Earth, set to fire automatically if the country were attacked. He did not want one built. He invented it to show the absurdity of a strategy that relied only on threatening total retaliation, and pointed out that a coding error could set it off. Kubrick borrowed it, name and all, for <em>Dr. Strangelove</em>.</p>
+        </div>
+        <h3 class="h3 gap-top">The escalation ladder</h3>
+        <p class="body">His most lasting strategic tool came in <em>On Escalation</em> (1965): a ladder of 44 rungs, from a war of words to all-out nuclear war, with six thresholds where the nature of the crisis changes. The point was not that wars climb neatly. It was that at every rung leaders still have choices, and that naming the rungs makes it easier to stop, or climb back down. Analysts still use it, most recently to think about Russia’s war in Ukraine.</p>
+        <EscalationLadder />
+      </section>
+
+      <!-- SCENARIOS -->
+      <section class="panel" id="scenarios" data-panel="scenarios" hidden>
+        <p class="label">05 · Scenarios</p>
+        <h2 class="h2">How a word from Hollywood <span class="it clay">became a planning method.</span></h2>
+        <p class="body">At RAND in the late 1940s and 1950s, Kahn began writing short stories about how a nuclear crisis or war might unfold, step by step. He called them scenarios, after the scripts used by film studios. They were deliberately concrete: who decides what, in what order, under what pressure.</p>
+        <p class="body">At the Hudson Institute he widened the lens from war to whole societies. In <em>The Year 2000</em> (1967), he and Anthony Wiener started from long-term trends, built a “surprise-free” projection of where those trends led, and then wrote canonical variations around it: different worlds that could plausibly arrive instead. Kahn and Wiener were explicit that a scenario is not used to predict. It is used to widen the range of possibilities people consider and to force attention to the details.</p>
+        <ScenarioTree />
+        <h3 class="h3 gap-top">From the think tank to the boardroom</h3>
+        <p class="body">Hudson’s work drew in multinational companies. Royal Dutch Shell set up long-term planning based on Kahn’s method in 1965, and a team led by Pierre Wack used it to imagine what could break the oil industry’s comfortable assumptions. In 1972 they warned Shell’s leadership that producing countries could take control of supply, and that oil around $2 a barrel could reach $10. When the 1973 oil crisis hit, Shell was better prepared than its rivals. Wack’s two 1985 articles in the <em>Harvard Business Review</em> carried Kahn’s ideas into business strategy for good.</p>
+        <ScenarioLineage />
+      </section>
+
+      <!-- FUTURES -->
+      <section class="panel" id="futures" data-panel="futures" hidden>
+        <p class="label">06 · Futures</p>
+        <h2 class="h2">The Hudson Institute <span class="it clay">and the policies he pushed.</span></h2>
+        <p class="body">In 1961 Kahn left RAND and, with Max Singer and Oscar Ruebhausen, founded the Hudson Institute, eventually based in Croton-on-Hudson, New York. It kept consulting on defense but moved steadily toward the long-range future. Kahn recruited thinkers well outside strategy, including sociologist Daniel Bell, philosopher Raymond Aron and novelist Ralph Ellison.</p>
+        <h3 class="h3">What he argued for</h3>
+        <div class="people">
+          {positions.map((p) => <article class="card person"><p class="label muted">{p.y}</p><h3 class="h3">{p.n}</h3><p class="small" set:html={p.t}></p></article>)}
+        </div>
+        <h3 class="h3 gap-top">How his forecasts held up</h3>
+        <div class="people">
+          {forecasts.map((f) => <article class="card person"><span class={`chip fc fc-${f.c.toLowerCase()}`}>{f.c}</span><h3 class="h3">{f.n}</h3><p class="small" set:html={f.t}></p></article>)}
+        </div>
+        <p class="body">In 1976, with William Brown and Leon Martel, he published <em>The Next 200 Years</em>, an optimistic scenario for the world in 2176, in which growth continues and technology overcomes the limits on resources. It was written against the pessimism of the era, and that bet on growth is still argued over today.</p>
+      </section>
+
+      <!-- LEGACY -->
+      <section class="panel" id="legacy" data-panel="legacy" hidden>
+        <p class="label">07 · Legacy</p>
+        <h2 class="h2">Dr. Strangelove, <span class="it clay">or the father of foresight?</span></h2>
+        <p class="body">Kahn was one of the models for Kubrick’s Dr. Strangelove, and the film’s “BLAND Corporation” mocked RAND. Sidney Lumet said the cold strategist Groeteschele in <em>Fail Safe</em> (1964) was also based on him. Critics such as Noam Chomsky argued his work only dressed up guesses as science. His jokes about megadeaths struck many as callous.</p>
+        <p class="body">Yet he is also cited, with Pierre Wack, as a father of scenario planning, a method now used by militaries, governments and companies to prepare for futures that no one can predict. When he died in 1983, President Reagan described him as a futurist who welcomed the future.</p>
+        <div class="people">
+          {people.map((p) => <article class="card person"><p class="label muted">{p.r}</p><h3 class="h3">{p.n}</h3><p class="small" set:html={p.t}></p></article>)}
+        </div>
+        <div class="card kit">
+          <p class="label">What we use today that traces back to him</p>
+          <ul>
+            <li>Scenario planning in corporate strategy</li>
+            <li>The “escalation ladder” in crisis analysis</li>
+            <li>Writing several futures instead of one forecast</li>
+            <li>Importance sampling in simulation</li>
+            <li>The think tank devoted to long-range futures</li>
+            <li>Thinking about “wild cards” that seem implausible</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="sources">
+        <p class="label">Sources</p>
+        <ol>
+          <li>Encyclopaedia Britannica, “Herman Kahn.”</li>
+          <li>Encyclopedia.com, “Kahn, Herman Bernard” (Scribner Encyclopedia of American Lives).</li>
+          <li>Wikipedia, “Herman Kahn” and “Samuel T. Cohen,” and the sources they cite, including Ghamari-Tabrizi, <em>The Worlds of Herman Kahn</em> (2005), and Abella, <em>Soldiers of Reason</em> (2008).</li>
+          <li>Atomic Heritage Foundation, “Samuel T. Cohen.”</li>
+          <li>RAND Corporation publications by Kahn and Marshall (1953) and Kahn and Mann (1957); C. Andral, “An attempt to trace the birth of importance sampling” (2022).</li>
+          <li>Herman Kahn and Anthony J. Wiener, “The Use of Scenarios,” Hudson Institute, adapted from <em>The Year 2000</em> (1967).</li>
+          <li>Georgetown Security Studies Review and <em>Prospect</em> on the escalation ladder.</li>
+          <li>SAGE Encyclopedia of Organization Theory, “Scenario planning”; SRI International, “Scenario planning.”</li>
+          <li>Art Kleiner, “The Man Who Saw the Future,” <em>strategy+business</em>; Polytechnique Insights, “How Shell anticipated the 1973 oil crisis.”</li>
+          <li>Open Philanthropy, “Evaluation of some technology forecasts from The Year 2000” (2016).</li>
+          <li><em>TIME</em>, “Thinker of the Unthinkable” (1983); Ronald Reagan, statement on the death of Herman Kahn, July 8, 1983.</li>
+        </ol>
+        <p class="small">All text is an original summary. All illustrations are original; the escalation ladder paraphrases the rung names Kahn published.</p>
+      </section>
+    </div>
+  </div>
+  <Subscribe />
+</Base>
+
+<script>
+  const tabs = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-tab]'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-panel]'));
+  const show = (id: string, scroll = false) => {
+    if (!panels.some((p) => p.dataset.panel === id)) id = 'why';
+    panels.forEach((p) => (p.hidden = p.dataset.panel !== id));
+    tabs.forEach((t) => (t.dataset.tab === id ? t.setAttribute('aria-current', 'true') : t.removeAttribute('aria-current')));
+    if (scroll) document.querySelector('.art')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  tabs.forEach((t) => t.addEventListener('click', (e) => { e.preventDefault(); history.replaceState(null, '', `#${t.dataset.tab}`); show(t.dataset.tab!, true); }));
+  show(location.hash.slice(1) || 'why');
+</script>
+
+<style>
+  .hero { background: #F3ECDF; border-bottom: 1px solid var(--line); }
+  .hero-in { padding-block: 104px 88px; display: flex; flex-direction: column; gap: 28px; }
+  .hero .label { color: var(--accent-ink); }
+  .t-title { margin: 0; font-weight: 300; font-size: clamp(44px, 6.4vw, 96px); line-height: .98; letter-spacing: -0.03em; color: var(--ink); }
+  .t-title .it { font-family: var(--serif); font-style: italic; color: var(--clay); }
+  .t-dek { margin: 0; max-width: 780px; font-family: var(--serif); font-weight: 300; font-size: clamp(21px, 2.2vw, 28px); line-height: 1.4; color: var(--ink-2); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); border-top: 1px solid var(--line); margin-top: 16px; }
+  .stats div { padding: 20px 16px 0 0; display: flex; flex-direction: column; gap: 4px; }
+  .stats .n { font-size: 40px; font-weight: 300; color: var(--ink); }
+  .stats .l { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted-2); }
+
+  .art { display: flex; flex-wrap: wrap; gap: 56px; padding-block: 72px 96px; align-items: flex-start; }
+  .rail { flex: 0 0 210px; position: sticky; top: 24px; display: flex; flex-direction: column; gap: 4px; }
+  .rail-head { margin-bottom: 8px; }
+  .rail-tab { display: grid; grid-template-columns: 28px 1fr; grid-template-rows: auto auto; column-gap: 8px; padding: 12px 14px; border-radius: 14px; text-decoration: none; color: var(--ink); border: 1px solid transparent; }
+  .rail-tab:hover { background: var(--ground-2); color: var(--ink); }
+  .rail-tab[aria-current='true'] { background: var(--ink); color: var(--ground); }
+  .rail-n { grid-row: 1 / 3; font-family: var(--mono); font-size: 11px; opacity: .6; padding-top: 4px; }
+  .rail-l { font-size: 18px; font-weight: 400; }
+  .rail-s { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; opacity: .65; }
+  @media (max-width: 900px) {
+    .rail { flex-basis: 100%; flex-direction: row; overflow-x: auto; top: 0; z-index: 5; background: var(--ground); padding: 8px 0; gap: 6px; }
+    .rail-head { display: none; }
+    .rail-tab { flex: 0 0 auto; display: flex; flex-direction: column; gap: 0; border-color: var(--line); padding: 8px 14px; }
+    .rail-n, .rail-s { display: none; }
+    .rail-l { font-size: 15px; }
+  }
+  .panels { flex: 1 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 56px; }
+  .panel { display: flex; flex-direction: column; gap: 22px; }
+  .panel[hidden] { display: none; }
+  .gap-top { margin-top: 32px; }
+  .pull { margin: 12px 0 0; padding-left: 24px; border-left: 2px solid var(--accent); font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1.35; }
+  .timeline { list-style: none; margin: 8px 0 0; padding: 0; border-left: 1px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 22px 24px; display: flex; flex-direction: column; gap: 4px; }
+  .timeline li::before { content: ''; position: absolute; left: -5px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .tl-d { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); }
+  .tl-t { font-size: 17px; line-height: 1.6; color: var(--ink-2); }
+  .people { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .person { padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .person .h3 { margin: 0; }
+  .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .fork { padding: 24px; display: flex; flex-direction: column; gap: 8px; border-top: 4px solid var(--accent); }
+  .fork:last-child { border-top-color: #3E7F8C; }
+  .doom { padding: 28px; display: flex; flex-direction: column; gap: 10px; background: #F3ECDF; border-left: 4px solid var(--clay); }
+  .doom .label { color: var(--clay); }
+  .fc { align-self: flex-start; }
+  .fc-hit { background: #DCE8D2; color: #3D5A2A; border-color: transparent; }
+  .fc-miss { background: #F2D6CC; color: #8A2E1A; border-color: transparent; }
+  .fc-mixed { background: #F3E3BF; color: #7A5410; border-color: transparent; }
+  .kit { padding: 28px; display: flex; flex-direction: column; gap: 12px; background: #F3ECDF; }
+  .kit .label { color: var(--accent-ink); }
+  .kit ul { margin: 0; padding-left: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 24px; font-size: 16px; line-height: 1.6; }
+  .sources { border-top: 1px solid var(--line); padding-top: 32px; display: flex; flex-direction: column; gap: 14px; }
+  .sources ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-family: var(--serif); font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+</style>

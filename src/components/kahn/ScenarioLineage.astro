@@ -1,0 +1,64 @@
+---
+// How the scenario travelled: from RAND war studies to corporate strategy. Original illustration.
+const rows = [
+  { y: '1948', k: { t: 'RAND', s: 'Kahn joins and starts writing stories of how a nuclear war could unfold.' } },
+  { y: '1960', k: { t: 'On Thermonuclear War', s: 'War treated as a set of scenarios to compare, not one fate.' } },
+  { y: '1961', k: { t: 'Hudson Institute', s: 'Founded to study the long-range future.' } },
+  { y: '1965', k: { t: 'On Escalation', s: 'The 44-rung ladder: a “generalized scenario” of a crisis.' }, s: { t: 'Shell long-term planning', s: 'Set up using Kahn’s scenario method.' } },
+  { y: '1967', k: { t: 'The Year 2000', s: 'With Anthony Wiener: futures for a whole society.' } },
+  { cross: true },
+  { y: '1972', s: { t: 'Energy-crisis scenarios', s: 'Pierre Wack’s team warns that an oil shock is coming.' } },
+  { y: '1973', s: { t: 'Oil crisis', s: 'Shell is ready; its rivals are not.' } },
+  { y: '1985', s: { t: 'Harvard Business Review', s: 'Wack’s two articles carry the method into business strategy.' } },
+];
+---
+<figure class="lin" aria-label="Timeline of how scenario planning travelled from Herman Kahn at RAND and Hudson to Shell">
+  <div class="lin-board">
+    <div class="lin-heads"><p class="lh lh-k">Kahn · RAND → Hudson</p><span></span><p class="lh lh-s">Shell · Pierre Wack</p></div>
+    <ol class="lin-rows">
+      {rows.map((r) => r.cross ? (
+        <li class="lr lr-x"><span class="cross">The idea crosses into business →</span></li>
+      ) : (
+        <li class="lr">
+          <div class="lc lc-k">{r.k && <article class="ev ev-k"><h4>{r.k.t}</h4><p>{r.k.s}</p></article>}</div>
+          <div class="ly"><span class={`dot ${r.k ? 'dk' : ''} ${r.s ? 'ds' : ''}`}></span><span class="yr">{r.y}</span></div>
+          <div class="lc lc-s">{r.s && <article class="ev ev-s"><h4>{r.s.t}</h4><p>{r.s.s}</p></article>}</div>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <figcaption class="lin-cap">Dates from Britannica, the Hudson Institute, Polytechnique Insights and <em>strategy+business</em>. In France, Gaston Berger was developing a parallel method, <em>la prospective</em>, at the same time. Illustration is original.</figcaption>
+</figure>
+
+<style>
+  .lin { margin: 8px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .lin-board { background: #F3ECDF; border: 1px solid rgba(35,32,26,.14); border-radius: 6px; padding: 24px; }
+  .lin-heads, .lr { display: grid; grid-template-columns: 1fr 96px 1fr; gap: 14px; }
+  .lh { margin: 0 0 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
+  .lh-k { color: #8A5A12; text-align: right; }
+  .lh-s { color: #3E7F8C; }
+  .lin-rows { list-style: none; margin: 0; padding: 0; position: relative; }
+  .lin-rows::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-1px); background: linear-gradient(#E8A33D 0 55%, #3E7F8C 60% 100%); }
+  .lr { align-items: center; min-height: 64px; }
+  .lc-k { display: flex; justify-content: flex-end; }
+  .ly { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; background: #FBF7EF; border: 2.5px solid #8F877A; position: relative; z-index: 1; }
+  .dot.dk { border-color: #E8A33D; }
+  .dot.ds { border-color: #3E7F8C; }
+  .dot.dk.ds { background: linear-gradient(90deg, #E8A33D 50%, #3E7F8C 50%); border-color: #23201A; }
+  .yr { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--ink); background: #F3ECDF; padding: 0 4px; position: relative; z-index: 1; }
+  .lr-x { display: flex; justify-content: center; min-height: 0; padding: 8px 0; }
+  .cross { position: relative; font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: #8A5A12; background: #FBF7EF; border: 1px dashed #8A5A12; border-radius: 999px; padding: 3px 10px; z-index: 2; }
+  .ev { max-width: 320px; background: #FBF7EF; border: 1px solid rgba(35,32,26,.12); border-radius: 6px; padding: 10px 14px; margin: 6px 0; }
+  .ev-k { border-right: 3px solid #E8A33D; text-align: right; }
+  .ev-s { border-left: 3px solid #3E7F8C; }
+  .ev h4 { margin: 0 0 2px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .ev p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+  .lin-cap { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--muted-2); line-height: 1.6; }
+  @media (max-width: 640px) {
+    .lin-board { padding: 16px 12px; }
+    .lin-heads, .lr { grid-template-columns: 1fr 52px 1fr; gap: 8px; }
+    .ev { padding: 8px 10px; } .ev h4 { font-size: 13px; } .ev p { font-size: 12px; }
+    .cross { text-align: center; }
+  }
+</style>
