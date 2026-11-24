@@ -3,14 +3,14 @@ number: "004"
 course: 4
 title: "The Forest"
 titleAccent: "Grid"
-pairing: "mixed forests and mycorrhizal markets, paired with energy portfolios and microgrids"
+pairing: "mixed forests, mycorrhizal markets and thermodynamics, paired with energy portfolios and microgrids"
 question: "What would an energy grid look like if it were grown like a mixed forest instead of planted like a monoculture?"
-summary: "Mixed forests out-produce and out-last monocultures, and the fungi beneath them run a two-way market with tree roots. Read alongside energy portfolio theory and the new science of networked microgrids, they suggest a grid that is diverse, local and able to trade with itself."
+summary: "Mixed forests out-produce and out-last monocultures, the fungi beneath them run a two-way market with tree roots, and both obey the same thermodynamics as a power plant. Read alongside energy portfolio theory and networked microgrids, they suggest a grid of many energy species, from solar and wind to hydro, geothermal and nuclear: diverse, local, thrifty with heat and able to trade with itself."
 dek: "A forest of one species falls to one pest. A grid built on one kind of power falls to one kind of weather. Ecology, mycology and finance each found the same answer, and the power grid is starting to find it too."
 category: "Ecology & Energy"
-fields: ["Forest ecology", "Mycology", "Finance", "Energy systems"]
+fields: ["Forest ecology", "Mycology", "Thermodynamics", "Finance", "Energy systems"]
 author: "K Crespin"
-readingTime: "9"
+readingTime: "12"
 figure: "forest-grid"
 status: "published"
 
@@ -25,8 +25,10 @@ appliesTo:
     how: "Treat a portfolio of energy assets the way a forester treats a stand: diversify by how things fail, not by how many you own."
 
 lineage:
+  - { year: "1942", field: "Ecosystem energetics", work: "The Trophic-Dynamic Aspect of Ecology", by: "Raymond Lindeman" }
   - { year: "1952", field: "Finance", work: "Portfolio Selection", by: "Harry Markowitz" }
   - { year: "1997", field: "Forest ecology", work: "Carbon moves between trees through shared fungi", by: "Suzanne Simard et al. · Nature" }
+  - { year: "2009", field: "Thermodynamics of ecosystems", work: "Resilience, efficiency and the window of vitality", by: "Robert Ulanowicz et al." }
   - { year: "2011", field: "Mycology", work: "Reciprocal rewards in the mycorrhizal market", by: "E. Toby Kiers et al. · Science" }
   - { year: "2016", field: "Global forest science", work: "Diversity drives forest productivity", by: "Jingjing Liang et al. · Science" }
   - { year: "2020s", field: "Energy · where it emerges", work: "Networked microgrids", by: "US national laboratories and partners" }
@@ -42,13 +44,17 @@ threads:
       cells: ["Patches, layers and edges", "Fine branching networks underground", "No single position too large", "Local microgrids, linked into a larger web"]
     - name: "Disturbance"
       cells: ["Resists small, selective shocks best; less so huge ones", "Partners can be swapped if one fails", "Diversification cuts risk but not to zero", "Island in a storm; keep a backbone for the big ones"]
+    - name: "Energy and heat"
+      cells: ["Sunlight in, heat out; about a tenth passes up each level", "Carbon from sunlight pays for minerals", "Every conversion has a cost", "Cut handoffs, and put waste heat to work"]
+    - name: "Efficiency vs. reserve"
+      cells: ["Healthy ecosystems are not maximally efficient", "Many partners: redundancy as insurance", "Don't optimize for average cost alone", "Keep spare capacity and storage on purpose"]
 
 synthesis:
   heading: "Design the grid as an"
   accent: "ecosystem, not a machine."
   body:
     - "Each field reaches the same conclusion from a different direction. Foresters found that mixed stands grow more and resist pests better than monocultures, as long as the species differ in how they live. Mycologists found that plants and fungi run a market with no central planner, where good suppliers are rewarded and poor ones lose business. Financial economists found that a portfolio of assets whose risks do not move together is safer than any single asset, and energy economists applied the same math to power plants."
-    - "The grid has been built more like a plantation: a few large plants, long trunk lines and power flowing one way. Wind, sun, water, heat from the earth and storage are different species. Planted together, linked locally and allowed to trade, they make a grid that bends in bad weather instead of breaking. Figure 1 lets you plant the mix. Figure 2 sends a storm through it."
+    - "The grid has been built more like a plantation: a few large plants, long trunk lines and power flowing one way. Wind, sun, water, heat from the earth and storage are different species. Planted together, linked locally and allowed to trade, they make a grid that bends in bad weather instead of breaking. Thermodynamics adds a hard limit: every handoff of energy loses some as heat, and a forest survives by recycling what each level leaves behind. Figure 1 lets you plant the mix and test it in a heat wave. Figure 2 follows the heat. Figure 3 sends a storm through the grid."
 
 principles:
   - title: "Diversify by how things fail"
@@ -60,6 +66,12 @@ principles:
   - title: "Grow patches that can stand alone"
     text: "Build neighborhoods, campuses and critical sites as microgrids that can island in an emergency and share with their neighbors, so one broken line cannot darken a region."
     from: "Forest structure + networked microgrids"
+  - title: "Match the quality of energy to its use"
+    text: "Use high-grade electricity for motors, lights and computers, and low-grade heat for warming buildings and water. Capture the heat that power plants, factories and data centers throw away, the way decomposers feed on a forest's leftovers."
+    from: "Second law + Lindeman"
+  - title: "Stay inside the window of vitality"
+    text: "Don't squeeze the grid to maximum efficiency. Keep spare capacity, storage and several kinds of source on purpose. Healthy ecosystems balance efficiency against reserve, and so should a grid."
+    from: "Ulanowicz + Jactel"
   - title: "Keep a backbone for the big storms"
     text: "Mixed forests resist small, selective shocks better than large ones. A diverse local grid still needs a strong regional backbone and long-distance links for the disasters that hit everything at once."
     from: "Jactel + grid engineering"
@@ -67,7 +79,8 @@ principles:
 questions:
   - "Who pays for the extra resilience of a diverse grid, and who decides how much is enough?"
   - "How do we share costs and power fairly between neighborhoods that can afford their own microgrids and those that cannot?"
-  - "Mixed forests can suffer more in drought, depending on the species. Which energy mixes have a hidden shared weakness, such as heat waves or long, still, cloudy winters?"
+  - "Mixed forests can suffer more in drought, depending on the species. Which energy mixes have a hidden shared weakness? A heat wave can cut hydro, wind and nuclear output at once."
+  - "How much spare capacity is enough? Ulanowicz's window of vitality is measured in ecosystems; can it be measured for a grid?"
   - "The popular story of trees sharing food through fungi is still unproven. What would change if field studies confirmed it, or ruled it out?"
 
 sources:
@@ -77,6 +90,14 @@ sources:
   - "Kiers, E. Toby, et al. \"Reciprocal Rewards Stabilize Cooperation in the Mycorrhizal Symbiosis.\" *Science* 333, 2011."
   - "Simard, Suzanne W., et al. \"Net transfer of carbon between ectomycorrhizal tree species in the field.\" *Nature* 388, 1997."
   - "Karst, Justine, Melanie D. Jones and Jason D. Hoeksema. \"Positive citation bias and overinterpreted results lead to misinformation on common mycorrhizal networks in forests.\" *Nature Ecology & Evolution* 7, 2023."
+  - "Lindeman, Raymond L. \"The Trophic-Dynamic Aspect of Ecology.\" *Ecology* 23, 1942."
+  - "Schneider, Eric D., and James J. Kay. \"Life as a Manifestation of the Second Law of Thermodynamics.\" *Mathematical and Computer Modelling* 19, 1994."
+  - "Ulanowicz, Robert E., Sally J. Goerner, Bernard Lietaer and Rocio Gomez. \"Quantifying sustainability: Resilience, efficiency and the return of information theory.\" *Ecological Complexity* 6, 2009."
+  - "U.S. Energy Information Administration. *Electric Power Annual*, Table 4.08.B, capacity factors, 2025."
+  - "U.S. Energy Information Administration. \"How much electricity is lost in electricity transmission and distribution in the United States?\" and \"What is the efficiency of different types of power plants?\" FAQs."
+  - "World Nuclear Association. \"Cooling Power Plants.\""
+  - "Reuters and Bloomberg reporting on EDF nuclear output cuts during French heat waves, 2022–2026."
+  - "National Renewable Energy Laboratory. Annual Technology Baseline: Concentrating Solar Power, molten-salt towers with thermal storage."
   - "Markowitz, Harry. \"Portfolio Selection.\" *The Journal of Finance* 7, 1952."
   - "Awerbuch, Shimon. \"Portfolio-Based Electricity Generation Planning: Policy Implications for Renewables and Energy Security.\" *Mitigation and Adaptation Strategies for Global Change* 11, 2006."
   - "Roques, Fabien A., David M. Newbery and William J. Nuttall. \"Fuel mix diversification incentives in liberalised electricity markets: a Mean-Variance Portfolio Theory approach.\" EPRG Working Paper, University of Cambridge."
@@ -118,3 +139,29 @@ Energy economists, led by Shimon Awerbuch, applied the same math to power plants
 The traditional grid looks like a plantation: a few large power plants, long transmission lines and power flowing one way to customers. A single failure upstream can darken everything below it.
 
 Microgrids change the shape. A microgrid is a group of homes or buildings with its own sources and storage that can run connected to the main grid or cut loose and run alone in an emergency. Researchers at the US national laboratories are now designing networked microgrids that link neighboring ones so they can share power, including community-owned systems in Adjuntas, Puerto Rico, a town hit hard by hurricanes. Linked together, they behave less like a plantation and more like an understory: many local patches, each able to stand alone, all able to trade.
+
+### V · The species
+
+## Every source has a rhythm and a weak spot
+
+Think of each way of making electricity as a tree species. Solar panels are fast-growing pioneers: cheap and quick to spread, but idle at night and weak in winter. In the United States in 2025 they produced about 24% of what they could running flat out all year. Wind is the tall canopy, at about 34%, strong in storms and fronts but prone to calm spells. Hydro is the riverside tree, also about 34%, flexible but at the mercy of drought.
+
+Then come the deep-rooted, steady species. Geothermal draws on the earth's heat and ran at about 66%, but only where that heat is close to the surface. Nuclear is the old-growth giant, running at about 91% of its capacity, steadier than anything else. Its weak spot is shared with every steam plant: it needs cooling water. During heat waves in France, the operator has repeatedly had to cut reactor output so that warm discharge water would not harm the rivers.
+
+Solar thermal plants, which concentrate sunlight to heat molten salt, are a hybrid: they store the sun's heat in tanks and can keep generating for hours after sunset. Batteries play the part of the fungal store, soaking up surplus and releasing it later, though for hours rather than weeks.
+
+No species is best. Each fails in a different way, which is exactly why they belong together.
+
+### VI · The physics
+
+## Every handoff pays a toll in heat
+
+Thermodynamics sets the rules for forests and grids alike. The first law says energy is never created or destroyed, only changed from one form to another: sunlight into sugar, uranium into heat, heat into electricity. Both a forest and a solar- or wind-powered grid are, at bottom, ways of routing the sun's energy.
+
+The second law says every change loses some energy as heat that can no longer do useful work. In 1942 the ecologist Raymond Lindeman showed that only a small fraction of the energy at one level of a food chain reaches the next, on average about a tenth. Power plants pay the same toll. A steam-cycle plant, whether it burns coal or splits uranium, turns only about a third of its heat into electricity; the other two thirds leave through cooling towers or into rivers. Another 5% or so is lost as heat in U.S. power lines on the way to customers.
+
+Forests cope with the second law by wasting almost nothing. Fungi and microbes live on what every other level leaves behind. A grid can do the same by matching energy to its use: high-grade electricity for lights and machines, and low-grade heat, the kind power plants and data centers throw away, for warming homes and water.
+
+Living systems also stay organized only while energy flows through them. Eric Schneider and James Kay described ecosystems as structures that grow to capture and degrade incoming sunlight, and found that mature forests do this more thoroughly than young or cleared land. A grid is similar: it holds together only by balancing supply and demand every second.
+
+Finally, the ecologist Robert Ulanowicz found that ecosystems that last are not the most efficient ones. They balance efficiency against reserve capacity, inside what he and his colleagues called a "window of vitality." Too efficient and a system becomes brittle; too redundant and it stagnates. A grid squeezed down to a single cheapest source with no spare capacity is a monoculture waiting for its bad day.
