@@ -21,9 +21,8 @@ const hale = { x: px(-106.31), y: py(39.42) };
 
 // Level 2: schematic valley, north up. Valley runs roughly north–south.
 const ridges = Array.from({ length: 9 }, (_, i) => i);
-// Level 3: barracks grid.
-const rows = Array.from({ length: 6 }, (_, i) => i);
-const cols = Array.from({ length: 22 }, (_, i) => i);
+import { buildCamp } from './camp3d';
+const camp = buildCamp();
 ---
 <figure id="halemap" class="hm" aria-label="Map: Colorado, the Camp Hale valley and the camp">
   <nav class="hm-scales" aria-label="Zoom level">
@@ -94,26 +93,11 @@ const cols = Array.from({ length: 22 }, (_, i) => i);
     </svg>
 
     <!-- LEVEL 3 · THE CAMP (illustrative) -->
-    <svg viewBox="0 0 1000 625" class="hm-lvl" data-level="3" role="img" aria-label="Illustrative layout of Camp Hale: rows of barracks, the rail siding, the straightened river, stables, hospital and the coal-smoke haze" font-family="IBM Plex Mono, monospace">
+    <svg viewBox="0 0 1000 625" class="hm-lvl" data-level="3" role="img" aria-label="Illustrative axonometric of Camp Hale in winter: barracks, hospital, HQ, field house and stables, a coal train on the siding, skiers on the slope above camp, climbers on the cliffs, mule trains and falling snow" font-family="IBM Plex Mono, monospace">
       <rect width="1000" height="625" fill={BG}></rect>
-      <path d="M40 120 L960 120 M40 520 L960 520" stroke={FG} stroke-opacity="0.15" stroke-dasharray="2 4"></path>
-      <path d="M40 545 L960 545" stroke={COOL} stroke-width="1.6" class="flow-slow"></path>
-      <text x="40" y="566" font-size="9" fill={COOL} letter-spacing="2">EAGLE RIVER · CHANNELED STRAIGHT TO BUILD THE CAMP</text>
-      <path d="M40 100 L960 100" stroke={FG} stroke-opacity="0.8"></path>
-      {Array.from({ length: 47 }, (_, i) => <path d={`M${40 + i * 20} 96 L${40 + i * 20} 104`} stroke={FG} stroke-opacity="0.7"></path>)}
-      <text x="40" y="86" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="2">RAIL SIDING · COAL TRAINS</text>
-      {[140, 260, 420, 640, 820].map((x, i) => <path d={`M${x} 96 C ${x - 30} ${60 - i * 4}, ${x + 40} ${40}, ${x + 10} ${10}`} fill="none" stroke={DIM} stroke-opacity="0.5" stroke-width="1" class="smoke"></path>)}
-      <rect x="40" y="130" width="920" height="380" fill={DIM} fill-opacity="0.06" class="haze"></rect>
-      <text x="960" y="146" font-size="9" fill={DIM} letter-spacing="2" text-anchor="end">COAL-SMOKE HAZE · “THE PANDO HACK”</text>
-      {rows.map((r) => cols.map((c) => <rect x={150 + c * 30} y={180 + r * 46} width="22" height="30" fill="none" stroke={FG} stroke-opacity="0.65" stroke-width="0.7"></rect>))}
-      <text x="150" y="172" font-size="9" fill={FG} fill-opacity="0.75" letter-spacing="2">BARRACKS · MORE THAN 1,000 BUILDINGS IN ALL</text>
-      <rect x="60" y="180" width="70" height="90" fill="none" stroke={HON} stroke-opacity="0.9"></rect><text x="95" y="290" font-size="8" fill={HON} text-anchor="middle" letter-spacing="1">HQ</text>
-      <rect x="60" y="320" width="70" height="120" fill="none" stroke={FG} stroke-opacity="0.8"></rect><path d="M95 360 L95 400 M75 380 L115 380" stroke={WARM}></path><text x="95" y="456" font-size="8" fill={FG} fill-opacity="0.75" text-anchor="middle" letter-spacing="1">HOSPITAL</text>
-      <rect x="830" y="180" width="110" height="130" fill="none" stroke={FG} stroke-opacity="0.8"></rect>
-      {Array.from({ length: 6 }, (_, i) => <path d={`M${840 + i * 17} 190 L${840 + i * 17} 300`} stroke={FG} stroke-opacity="0.25"></path>)}
-      <text x="885" y="326" font-size="8" fill={FG} fill-opacity="0.75" text-anchor="middle" letter-spacing="1">STABLES · MULES</text>
-      <rect x="830" y="350" width="110" height="80" fill="none" stroke={FG} stroke-opacity="0.8"></rect><text x="885" y="446" font-size="8" fill={FG} fill-opacity="0.75" text-anchor="middle" letter-spacing="1">FIELD HOUSE</text>
-      <text x="40" y="604" font-size="8" fill={DIM} letter-spacing="1.5">ILLUSTRATIVE LAYOUT · RECONSTRUCTED FROM DESCRIPTIONS, NOT A SURVEY PLAN</text>
+      <g set:html={camp}></g>
+      <text x="960" y="30" font-size="10" fill={FG} fill-opacity="0.7" text-anchor="end" letter-spacing="2">CAMP HALE · WINTER 1943–44</text>
+      <text x="40" y="610" font-size="8" fill={DIM} letter-spacing="1.5">ILLUSTRATIVE AXONOMETRIC · RECONSTRUCTED FROM DESCRIPTIONS, NOT A SURVEY PLAN</text>
     </svg>
 
     <p class="hm-cap" data-cap>Colorado · Camp Hale</p>
@@ -129,7 +113,7 @@ const cols = Array.from({ length: 22 }, (_, i) => i);
     </div>
     <div data-text="3" hidden>
       <p class="label">Level 3 · The camp</p>
-      <p class="small">Builders flattened about three miles of valley and channeled the river into a straight ditch. More than a thousand buildings went up: barracks, a hospital, stables, a field house. Coal furnaces and trains filled the valley with smoke, and the cough it caused got a name: the Pando Hack.</p>
+      <p class="small">Stand on the parade ground in winter. Builders flattened about three miles of valley and channeled the river into a straight ditch. More than a thousand buildings went up: barracks, a hospital, stables, a field house. Skiers train on the slope above camp, climbers work the cliffs, mule strings carry loads down the camp road, and coal trains and furnaces fill the air with smoke: the cough it caused got a name, the Pando Hack.</p>
     </div>
     <button type="button" class="btn btn-ink hm-zoom" data-zoom>Zoom in ⊕</button>
   </div>
@@ -187,6 +171,14 @@ const cols = Array.from({ length: 22 }, (_, i) => i);
   .hm-stage :global(.haze) { animation: hmglow 6s ease-in-out infinite; }
   @keyframes hmglow { 50% { opacity: .5; } }
   @keyframes hmflow { to { stroke-dashoffset: -24; } }
+  .hm-stage :global(.c3-smoke) { stroke-dasharray: 60; animation: c3smoke 5s linear infinite; animation-delay: var(--d, 0s); }
+  @keyframes c3smoke { 0% { stroke-dashoffset: 60; opacity: 0; } 20% { opacity: .8; } 100% { stroke-dashoffset: -60; opacity: 0; } }
+  .hm-stage :global(.c3-snow) { animation: c3snow var(--t, 8s) linear infinite; animation-delay: calc(var(--d, 0s) * -1); }
+  @keyframes c3snow { from { transform: translate(0, -40px); } to { transform: translate(-20px, 640px); } }
+  .hm-stage :global(.c3-flow) { animation: c3flow 3s linear infinite; }
+  @keyframes c3flow { to { stroke-dashoffset: -30; } }
+  .hm-stage :global(.c3-flag) { transform-box: fill-box; transform-origin: left center; animation: c3flag 1.6s ease-in-out infinite alternate; }
+  @keyframes c3flag { to { transform: scaleX(.75) skewY(4deg); } }
   @media (prefers-reduced-motion: reduce) { .hm-lvl { transform: none !important; transition: opacity .3s ease; } .hm-stage :global(*) { animation: none !important; } }
   .hm-text { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px; }
   .hm-text > div { flex: 1 1 380px; display: flex; flex-direction: column; gap: 8px; }
