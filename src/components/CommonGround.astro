@@ -39,7 +39,7 @@ const callouts = zones.map((z, i) => {
   return { ...z, num: String(i + 1).padStart(2, '0'), base, tag };
 });
 ---
-<section class="cg" aria-labelledby="cg-h">
+<section class="cg gallery" aria-labelledby="cg-h">
   <div class="wrap cg-in">
     <div class="cg-head">
       <p class="label">Figure 1 · The building</p>
@@ -55,7 +55,7 @@ const callouts = zones.map((z, i) => {
       <div class="plan-body">
         <svg viewBox="0 0 1200 820" role="img" aria-label="Cutaway drawing of the Common Ground building" font-family="IBM Plex Mono, monospace">
           <defs set:html={DEFS}></defs>
-          <rect width="1200" height="820" fill="#F7F5F0"></rect>
+          <rect width="1200" height="820" fill="#FBFAF7"></rect>
           <g set:html={isoSvg}></g>
           <path d="" fill="none" stroke="#A8772F" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#tArrow)" class="flowpath" opacity="0" data-doorflow></path>
           {zones.map((z) => (
@@ -68,15 +68,15 @@ const callouts = zones.map((z, i) => {
               <line x1={c.base[0].toFixed(1)} y1={c.base[1].toFixed(1)} x2={c.tag[0].toFixed(1)} y2={(c.tag[1] + 9).toFixed(1)} stroke="#1F1D1A" stroke-width=".6" stroke-dasharray="1.5 2"></line>
               <circle cx={c.base[0].toFixed(1)} cy={c.base[1].toFixed(1)} r="2" fill="#1F1D1A"></circle>
               <g transform={`translate(${c.tag[0].toFixed(1)} ${c.tag[1].toFixed(1)})`}>
-                <circle r="9" fill="#F7F5F0" stroke="#1F1D1A" stroke-width=".8"></circle>
+                <circle r="9" fill="#FBFAF7" stroke="#1F1D1A" stroke-width=".8"></circle>
                 <text y="3.4" font-size="9" text-anchor="middle" fill="#1F1D1A">{c.num}</text>
-                <rect x="11" y="-7" width={c.n.length * 6.5 + 8} height="14" fill="#F7F5F0" fill-opacity=".9"></rect>
+                <rect x="11" y="-7" width={c.n.length * 6.5 + 8} height="14" fill="#FBFAF7" fill-opacity=".9"></rect>
                 <text x="15" y="3.4" font-size="9" fill="#1F1D1A" letter-spacing="1.2">{c.n.toUpperCase()}</text>
               </g>
             </g>
           ))}
           <g transform="translate(850 708)" font-size="8.5" fill="#1F1D1A" letter-spacing="1.1">
-            <rect width="330" height="98" fill="#F7F5F0" stroke="#1F1D1A" stroke-width=".8"></rect>
+            <rect width="330" height="98" fill="#FBFAF7" stroke="#1F1D1A" stroke-width=".8"></rect>
             <line x1="0" y1="26" x2="330" y2="26" stroke="#1F1D1A" stroke-width=".5"></line>
             <line x1="0" y1="62" x2="330" y2="62" stroke="#1F1D1A" stroke-width=".5"></line>
             <line x1="200" y1="26" x2="200" y2="98" stroke="#1F1D1A" stroke-width=".5"></line>
@@ -169,7 +169,7 @@ const callouts = zones.map((z, i) => {
       const dx = (h - 12.5) * -16, dy = 40 + (1 - k) * 50;
       let s = '';
       const sunP = [1130 - ((h - 7) / 11) * 860, 92 - k * 58];
-      s += `<g><circle cx="${sunP[0].toFixed(1)}" cy="${sunP[1].toFixed(1)}" r="9" fill="#F7F5F0" stroke="#A8772F" stroke-width="1.2"></circle>`;
+      s += `<g><circle cx="${sunP[0].toFixed(1)}" cy="${sunP[1].toFixed(1)}" r="9" fill="#FBFAF7" stroke="#A8772F" stroke-width="1.2"></circle>`;
       for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; s += `<line x1="${(sunP[0] + Math.cos(a) * 12).toFixed(1)}" y1="${(sunP[1] + Math.sin(a) * 12).toFixed(1)}" x2="${(sunP[0] + Math.cos(a) * 17).toFixed(1)}" y2="${(sunP[1] + Math.sin(a) * 17).toFixed(1)}" stroke="#A8772F" stroke-width="1"></line>`; }
       s += '</g>';
       skylights.forEach((q, i) => {
@@ -252,11 +252,11 @@ const callouts = zones.map((z, i) => {
 </script>
 
 <style>
-  .cg { background: #EFEBE3; border-block: 1px solid var(--line); }
+  .cg { background: #F1EEE7; border-block: 1px solid var(--line); }
   .cg-in { padding-block: 88px; display: flex; flex-direction: column; gap: 28px; }
   .cg-head { display: flex; flex-direction: column; gap: 14px; max-width: 780px; }
   .cg-gap { margin-top: 56px; }
-  .plan, .day, .gym { margin: 0; background: #F7F5F0; border: 1px solid var(--line); border-radius: 20px; padding: clamp(16px, 3vw, 28px); display: flex; flex-direction: column; gap: 18px; }
+  .plan, .day, .gym { margin: 0; background: #FBFAF7; border: 1px solid var(--line); border-radius: 20px; padding: clamp(16px, 3vw, 28px); display: flex; flex-direction: column; gap: 18px; }
   .plan-ctl { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; justify-content: space-between; }
   .door-btn, .gym-tabs :global(button) { border: 1px solid rgba(31,29,26,.25); background: var(--accent); border-color: var(--accent); border-radius: 999px; padding: 9px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; color: var(--ink); }
   .door-btn[aria-pressed='true'] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
@@ -273,7 +273,7 @@ const callouts = zones.map((z, i) => {
   .plan :global(.doorpanel.up) { transform: translateY(-62px); opacity: .35; }
   .plan :global(.flowpath) { animation: cgflow 1.2s linear infinite; transition: opacity .4s; }
   @keyframes cgflow { to { stroke-dashoffset: -24; } }
-  .plan-card { --zc: #C99242; background: #EFEBE3; border: 1px solid var(--line); border-top: 4px solid var(--zc); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; position: sticky; top: 24px; }
+  .plan-card { --zc: #C99242; background: #F1EEE7; border: 1px solid var(--line); border-top: 4px solid var(--zc); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; position: sticky; top: 24px; }
   .plan-card .h3 { margin: 0; }
   .plan-ev { margin: 0; padding-top: 10px; border-top: 1px dashed rgba(31,29,26,.2); font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1.45; color: var(--ink); }
   .day-grid { display: flex; flex-direction: column; gap: 10px; overflow-x: auto; }
@@ -282,16 +282,16 @@ const callouts = zones.map((z, i) => {
   .day :global(.day-lane) { display: grid; grid-template-columns: 100px 1fr; gap: 10px; align-items: center; min-width: 750px; }
   .day :global(.day-ln) { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; filter: brightness(.75); }
   .day :global(.day-track) { position: relative; height: 54px; background: repeating-linear-gradient(90deg, transparent 0 calc(100%/11 - 1px), rgba(31,29,26,.07) calc(100%/11 - 1px) calc(100%/11)); border-radius: 8px; }
-  .day :global(.day-b) { position: absolute; top: 4px; bottom: 4px; border: 0; border-radius: 6px; background: color-mix(in srgb, var(--bc) 30%, #F7F5F0); border-left: 3px solid var(--bc); padding: 4px 6px; text-align: left; cursor: pointer; overflow: hidden; font-size: 11px; line-height: 1.2; color: var(--ink); }
+  .day :global(.day-b) { position: absolute; top: 4px; bottom: 4px; border: 0; border-radius: 6px; background: color-mix(in srgb, var(--bc) 30%, #FBFAF7); border-left: 3px solid var(--bc); padding: 4px 6px; text-align: left; cursor: pointer; overflow: hidden; font-size: 11px; line-height: 1.2; color: var(--ink); }
   .day :global(.day-b span) { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .day :global(.day-b:hover), .day :global(.day-b.on) { background: var(--bc); color: #F7F5F0; }
+  .day :global(.day-b:hover), .day :global(.day-b.on) { background: var(--bc); color: #FBFAF7; }
   .day :global(.day-b:focus-visible) { outline: 2px solid var(--ink); outline-offset: 1px; }
   .day-read { margin: 0; font-family: var(--serif); font-size: 19px; line-height: 1.45; color: var(--ink); min-height: 1.5em; }
   .gym-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
   .gym-tabs :global(button) { background: transparent; border-color: rgba(31,29,26,.25); }
   .gym-tabs :global(button[aria-selected='true']) { background: var(--ink); color: var(--ground); border-color: var(--ink); }
   .gym-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px; }
-  .gym-card { border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); background: #EFEBE3; }
+  .gym-card { border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); background: #F1EEE7; }
   .gym-card .h3 { margin: 0; }
   .g-old { border-top: 4px solid #8E7BA8; }
   .g-kid { border-top: 4px solid #C99242; }

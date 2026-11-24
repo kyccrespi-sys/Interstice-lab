@@ -13,18 +13,18 @@ const ends = [
 <figure class="tree" id="stree" aria-label="How a Kahn-style scenario is built, in four steps">
   <div class="tree-stage">
     <svg viewBox="0 0 1000 440" role="img" aria-label="A branching diagram from the present to several possible futures" font-family="IBM Plex Mono, monospace">
-      <rect width="1000" height="440" fill="#EFEBE3"></rect>
+      <rect width="1000" height="440" fill="#F1EEE7"></rect>
       <path d="M110 220 L380 220" stroke="#1F1D1A" stroke-width="2.4"></path>
       <path d="M380 220 C 470 220 480 100 560 100 L 820 60" fill="none" stroke="#C99242" stroke-width="2" class="tr-b"></path>
       <path d="M380 220 C 470 220 480 160 560 160 L 820 140" fill="none" stroke="#C99242" stroke-width="2" class="tr-b"></path>
       <path d="M380 220 L 820 220" fill="none" stroke="#1F1D1A" stroke-width="2" stroke-dasharray="6 5"></path>
       <path d="M380 220 C 470 220 480 290 560 290 L 820 300" fill="none" stroke="#3E7F8C" stroke-width="2" class="tr-b"></path>
       <path d="M560 290 C 640 290 680 380 820 380" fill="none" stroke="#8C4A2F" stroke-width="2" class="tr-b"></path>
-      {ends.map((e) => <g><circle cx="830" cy={e.y} r="5" fill="#F7F5F0" stroke="#1F1D1A"></circle><text x="844" y={e.y + 4} font-size="11" fill="#1F1D1A" letter-spacing="1.2">{e.l.toUpperCase()}</text></g>)}
+      {ends.map((e) => <g><circle cx="830" cy={e.y} r="5" fill="#FBFAF7" stroke="#1F1D1A"></circle><text x="844" y={e.y + 4} font-size="11" fill="#1F1D1A" letter-spacing="1.2">{e.l.toUpperCase()}</text></g>)}
       <text x="110" y="250" font-size="11" fill="#1F1D1A" letter-spacing="1.6" text-anchor="middle">TODAY</text>
       {steps.map((s, i) => (
         <g class="tr-hot" data-step={i} tabindex="0" role="button" aria-label={`Step ${s.k}: ${s.t}`}>
-          <circle cx={s.x} cy={s.y} r="22" fill="#F7F5F0" stroke="#7A5A2E" stroke-width="2"></circle>
+          <circle cx={s.x} cy={s.y} r="22" fill="#FBFAF7" stroke="#7A5A2E" stroke-width="2"></circle>
           <circle cx={s.x} cy={s.y} r="22" fill="none" stroke="#C99242" stroke-width="2" class="tr-pulse"></circle>
           <text x={s.x} y={s.y + 5} font-size="15" fill="#7A5A2E" text-anchor="middle" font-family="Instrument Serif, serif" font-weight="600">{s.k}</text>
         </g>
@@ -58,17 +58,17 @@ const ends = [
 
 <style>
   .tree { margin: 8px 0 0; display: flex; flex-direction: column; gap: 12px; }
-  .tree-stage { border: 1px solid rgba(31,29,26,.14); border-radius: 6px; overflow: hidden; background: #EFEBE3; }
+  .tree-stage { border: 1px solid rgba(31,29,26,.14); border-radius: 6px; overflow: hidden; background: #F1EEE7; }
   .tree-stage svg { width: 100%; height: auto; display: block; }
   .tree :global(.tr-hot) { cursor: pointer; outline: none; }
   .tree :global(.tr-hot.on circle:first-child) { fill: #C99242; }
-  .tree :global(.tr-hot.on text) { fill: #F7F5F0; }
+  .tree :global(.tr-hot.on text) { fill: #FBFAF7; }
   .tree :global(.tr-hot:focus-visible circle:first-child) { stroke: #1F1D1A; stroke-width: 3; }
   .tree :global(.tr-pulse) { transform-box: fill-box; transform-origin: center; animation: trpulse 2.4s ease-out infinite; }
   .tree :global(.tr-b) { stroke-dasharray: 600; stroke-dashoffset: 600; animation: trdraw 2.2s ease forwards; }
   @keyframes trpulse { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.8); opacity: 0; } }
   @keyframes trdraw { to { stroke-dashoffset: 0; } }
-  .tree-card { background: #F7F5F0; border: 1px solid rgba(31,29,26,.14); border-left: 4px solid #C99242; border-radius: 6px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .tree-card { background: #FBFAF7; border: 1px solid rgba(31,29,26,.14); border-left: 4px solid #C99242; border-radius: 6px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px; }
   .tree-card .h3 { margin: 0; }
   .tree-nav { display: flex; gap: 8px; margin-top: 6px; }
   .tree-nav button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(31,29,26,.3); background: transparent; cursor: pointer; font-family: var(--mono); color: var(--ink); }

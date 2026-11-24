@@ -1,7 +1,7 @@
 ---
 // Where they trained: three zoom levels — Colorado → the Camp Hale valley → the camp.
 // Positions on levels 2 and 3 are schematic, reconstructed from published descriptions.
-const BG = '#2A3527', FG = '#E8EADF', HON = '#C99242', COOL = '#8FC1CB', WARM = '#D9826B', DIM = '#A3AC9B';
+const BG = '#1C1D1B', FG = '#E8E4DA', HON = '#C99242', COOL = '#8FC1CB', WARM = '#D9826B', DIM = '#A8A397';
 
 // Level 1 projection: Colorado is a lat/long rectangle (37–41°N, 102.05–109.05°W).
 const X0 = 110, Y0 = 50, W = 780, H = 520;
@@ -172,7 +172,7 @@ const cols = Array.from({ length: 22 }, (_, i) => i);
   .hm-scales button { min-height: 56px; border-radius: 14px; border: 1px solid rgba(31,29,26,0.2); background: var(--card); color: var(--ink); font-family: var(--sans); font-size: 16px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 8px 14px; text-align: left; }
   .hm-scales button span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; opacity: .7; }
   .hm-scales button[aria-pressed='true'] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
-  .hm-stage { position: relative; aspect-ratio: 1000 / 625; border-radius: 6px; overflow: hidden; background: #2A3527; box-shadow: 0 30px 80px -40px rgba(18,17,14,.7); }
+  .hm-stage { position: relative; aspect-ratio: 1000 / 625; border-radius: 6px; overflow: hidden; background: #1C1D1B; box-shadow: 0 30px 80px -40px rgba(18,17,14,.7); }
   .hm-lvl { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .7s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
   .hm-lvl.on { opacity: 1; transform: scale(1); }
   .hm-lvl.out-in { opacity: 0; transform: scale(3); }

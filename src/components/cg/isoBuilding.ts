@@ -9,7 +9,7 @@ const f = (n: number) => n.toFixed(1);
 const pt = (p: P) => `${f(p[0])},${f(p[1])}`;
 const pts = (a: P[]) => a.map(pt).join(' ');
 
-const INK = '#1F1D1A', PAPER = '#F7F5F0';
+const INK = '#1F1D1A', PAPER = '#FBFAF7';
 const HL = `stroke="${INK}" stroke-width=".75" stroke-linejoin="round"`;
 const HL2 = `stroke="${INK}" stroke-width=".45" stroke-linejoin="round"`;
 
