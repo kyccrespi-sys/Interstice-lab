@@ -1,0 +1,163 @@
+---
+// Interactive style map: where 14 leaders sit on how they decide (x) and how they talk (y).
+// Placements are editorial judgments drawn from the sources; the drift line is the running average.
+import { leaders, eras } from '../../data/leaders';
+const W = 1000, H = 620, L = 90, R = 40, T = 40, B = 70;
+const px = (x: number) => L + x * (W - L - R);
+const py = (y: number) => H - B - y * (H - T - B);
+const sorted = [...leaders].sort((a, b) => a.year - b.year);
+// sequential color by year: light ochre (1930s) to deep ink-brown (2020s)
+const ramp = ['#E2C38E', '#D4A867', '#C99242', '#A97832', '#7A5A2E', '#4F3A1F'];
+const colorOf = (yr: number) => ramp[Math.min(ramp.length - 1, Math.max(0, Math.floor((yr - 1930) / 16)))];
+// period averages ("drift"): mean position of the leaders who rose in each period
+const periods = [
+  { label: '1933–60', from: 1900, to: 1960 },
+  { label: '1961–99', from: 1961, to: 1999 },
+  { label: '2000–23', from: 2000, to: 2100 },
+];
+const drift = periods.map((pr) => {
+  const m = leaders.filter((l) => l.year >= pr.from && l.year <= pr.to);
+  return { yr: Math.min(...m.map((l) => l.year)), x: m.reduce((s, l) => s + l.x, 0) / m.length, y: m.reduce((s, l) => s + l.y, 0) / m.length, label: pr.label };
+});
+// label offsets to avoid collisions
+const off: Record<string, [number, number, string]> = {
+  fdr: [12, 4, 'start'], churchill: [12, 4, 'start'], ike: [12, 4, 'start'], mlk: [12, 4, 'start'],
+  thatcher: [12, -8, 'start'], reagan: [12, 4, 'start'], welch: [12, 4, 'start'], oprah: [-12, 4, 'end'],
+  mandela: [12, 4, 'start'], jobs: [12, 4, 'start'], bezos: [12, 4, 'start'], merkel: [12, 4, 'start'],
+  nadella: [12, 4, 'start'], ardern: [-12, 4, 'end'],
+};
+const short: Record<string, string> = { fdr: 'Roosevelt', churchill: 'Churchill', ike: 'Eisenhower', mlk: 'King', thatcher: 'Thatcher', reagan: 'Reagan', welch: 'Welch', oprah: 'Winfrey', mandela: 'Mandela', jobs: 'Jobs', bezos: 'Bezos', merkel: 'Merkel', nadella: 'Nadella', ardern: 'Ardern' };
+const eraLabel = Object.fromEntries(eras.map((e) => [e.id, e.label]));
+---
+<figure class="sm" id="stylemap" aria-label="Style map of fourteen leaders">
+  <div class="sm-bar">
+    <label class="sm-slab" for="sm-year">Show leaders through <output id="sm-out">2025</output></label>
+    <input id="sm-year" type="range" min="1933" max="2025" step="1" value="2025" />
+    <button type="button" class="sm-play" id="sm-play">Play the century ▶</button>
+  </div>
+  <div class="sm-grid">
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Scatter of leaders: horizontal axis from decides at the top to decides with others; vertical axis from formal and distant to conversational and close. Later leaders cluster toward the upper right." font-family="IBM Plex Mono, monospace">
+      <rect x={L} y={T} width={W - L - R} height={H - T - B} fill="#FBFAF7" stroke="#1F1D1A" stroke-opacity=".18"></rect>
+      <line x1={px(0.5)} y1={T} x2={px(0.5)} y2={H - B} stroke="#1F1D1A" stroke-opacity=".12" stroke-dasharray="3 5"></line>
+      <line x1={L} y1={py(0.5)} x2={W - R} y2={py(0.5)} stroke="#1F1D1A" stroke-opacity=".12" stroke-dasharray="3 5"></line>
+      <text x={px(0.02)} y={T + 22} font-size="11" fill="#59534A" letter-spacing="1.5">DIRECTIVE · UP CLOSE</text>
+      <text x={px(0.98)} y={T + 22} font-size="11" fill="#59534A" letter-spacing="1.5" text-anchor="end">SHARED · UP CLOSE</text>
+      <text x={px(0.02)} y={H - B - 12} font-size="11" fill="#59534A" letter-spacing="1.5">DIRECTIVE · FROM A DISTANCE</text>
+      <text x={px(0.98)} y={H - B - 12} font-size="11" fill="#59534A" letter-spacing="1.5" text-anchor="end">SHARED · FROM A DISTANCE</text>
+      <!-- axes -->
+      <text x={L} y={H - B + 28} font-size="11" fill="#36322C" letter-spacing="1.2">← DECIDES AT THE TOP</text>
+      <text x={W - R} y={H - B + 28} font-size="11" fill="#36322C" letter-spacing="1.2" text-anchor="end">DECIDES WITH OTHERS →</text>
+      <text x={(L + W - R) / 2} y={H - B + 52} font-size="11" fill="#59534A" letter-spacing="2" text-anchor="middle">HOW THEY LEAD</text>
+      <text transform={`translate(${L - 22} ${H - B}) rotate(-90)`} font-size="11" fill="#36322C" letter-spacing="1.2">← FORMAL, FROM A DISTANCE</text>
+      <text transform={`translate(${L - 22} ${T}) rotate(-90)`} font-size="11" fill="#36322C" letter-spacing="1.2" text-anchor="end">CONVERSATIONAL, UP CLOSE →</text>
+      <text transform={`translate(${L - 50} ${(T + H - B) / 2}) rotate(-90)`} font-size="11" fill="#59534A" letter-spacing="2" text-anchor="middle">HOW THEY TALK</text>
+      <!-- drift path -->
+      <path id="sm-drift" d={'M' + drift.map((d) => `${px(d.x).toFixed(1)} ${py(d.y).toFixed(1)}`).join(' L')} fill="none" stroke="#8C4A2F" stroke-width="1.6" stroke-dasharray="5 4" stroke-linecap="round"></path>
+      {drift.map((d, i) => <g class="sm-dd" data-year={d.yr}><rect x={px(d.x) - 6} y={py(d.y) - 6} width="12" height="12" fill="#8C4A2F" transform={`rotate(45 ${px(d.x)} ${py(d.y)})`}></rect><text x={px(d.x)} y={py(d.y) + (i === 1 ? -14 : 24)} font-size="10.5" fill="#8C4A2F" letter-spacing="1" text-anchor="middle">AVG {d.label}</text></g>)}
+      <text id="sm-dlab" x="0" y="0" font-size="1" fill="none"></text>
+      <!-- leaders -->
+      {sorted.map((d) => (
+        <g class="sm-pt" data-id={d.id} data-year={d.year} tabindex="0" role="button" aria-label={`${d.name}, ${d.role}, ${d.years}`}>
+          <circle cx={px(d.x)} cy={py(d.y)} r="18" fill="transparent"></circle>
+          <circle class="sm-dot" cx={px(d.x)} cy={py(d.y)} r="8" fill={colorOf(d.year)} stroke="#FBFAF7" stroke-width="2"></circle>
+          <text x={px(d.x) + off[d.id][0]} y={py(d.y) + off[d.id][1]} font-size="12.5" fill="#1F1D1A" text-anchor={off[d.id][2]} font-family="Archivo, sans-serif">{short[d.id]} <tspan fill="#6A645A" font-size="10.5" font-family="IBM Plex Mono, monospace">{d.year}</tspan></text>
+        </g>
+      ))}
+    </svg>
+    <aside class="sm-card" id="sm-card" aria-live="polite">
+      <p class="label">Tap a leader</p>
+      <h3 class="sm-name">Fourteen leaders, one century</h3>
+      <p class="sm-sub">Each dot is placed by how the leader made decisions and how they spoke to people. Darker dots are more recent. The diamonds mark the average position of leaders who rose in each of three periods.</p>
+    </aside>
+  </div>
+  <div class="sm-key" aria-hidden="true">
+    <span>Earlier</span>
+    {ramp.map((c) => <i style={`background:${c}`}></i>)}
+    <span>Later</span>
+    <span class="sm-key-d"><b></b> Period average (◆)</span>
+  </div>
+  <figcaption class="sm-cap">Placements are our editorial judgment from the sources cited on this page, not a measured score. Read them as arguments, and argue back.</figcaption>
+  <script type="application/json" id="sm-data" set:html={JSON.stringify(sorted.map((d) => ({ id: d.id, name: d.name, role: d.role, years: d.years, year: d.year, era: eraLabel[d.era], move: d.move })))}></script>
+</figure>
+
+<script>
+  const root = document.getElementById('stylemap');
+  if (root) {
+    const data = JSON.parse(document.getElementById('sm-data')!.textContent || '[]');
+    const byId = Object.fromEntries(data.map((d: any) => [d.id, d]));
+    const pts = Array.from(root.querySelectorAll<SVGGElement>('.sm-pt'));
+    const dd = Array.from(root.querySelectorAll<SVGGElement>('.sm-dd'));
+    const drift = root.querySelector<SVGPathElement>('#sm-drift')!;
+    const dlab = root.querySelector<SVGTextElement>('#sm-dlab')!;
+    const range = root.querySelector<HTMLInputElement>('#sm-year')!;
+    const out = root.querySelector<HTMLOutputElement>('#sm-out')!;
+    const card = root.querySelector<HTMLElement>('#sm-card')!;
+    const play = root.querySelector<HTMLButtonElement>('#sm-play')!;
+    const full = drift.getAttribute('d')!.slice(1).split(' L');
+    const select = (id: string) => {
+      const d = byId[id]; if (!d) return;
+      pts.forEach((p) => p.classList.toggle('sel', p.dataset.id === id));
+      card.innerHTML = `<p class="label">${d.era} · ${d.years}</p><h3 class="sm-name">${d.name}</h3><p class="sm-sub">${d.role}</p><p class="sm-move">${d.move}</p><a class="sm-more" href="#leaders" data-jump="${d.id}">Read the full profile →</a>`;
+    };
+    const apply = (yr: number) => {
+      out.textContent = String(yr);
+      pts.forEach((p) => p.classList.toggle('off', Number(p.dataset.year) > yr));
+      const n = dd.filter((c) => Number(c.dataset.year) <= yr).length;
+      dd.forEach((c, i) => { c.style.opacity = i < n ? '1' : '0'; });
+      drift.setAttribute('d', n ? 'M' + full.slice(0, n).join(' L') : '');
+      
+    };
+    pts.forEach((p) => {
+      p.addEventListener('click', () => select(p.dataset.id!));
+      p.addEventListener('mouseenter', () => select(p.dataset.id!));
+      p.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(p.dataset.id!); } });
+    });
+    card.addEventListener('click', (e) => {
+      const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('[data-jump]');
+      if (!a) return;
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('leader-jump', { detail: a.dataset.jump }));
+    });
+    range.addEventListener('input', () => apply(Number(range.value)));
+    let timer = 0;
+    play.addEventListener('click', () => {
+      if (timer) { clearInterval(timer); timer = 0; play.textContent = 'Play the century ▶'; return; }
+      let y = 1932; play.textContent = 'Pause ❚❚';
+      timer = window.setInterval(() => {
+        y += 1; range.value = String(y); apply(y);
+        const hit = data.find((d: any) => d.year === y); if (hit) select(hit.id);
+        if (y >= 2025) { clearInterval(timer); timer = 0; play.textContent = 'Play the century ▶'; }
+      }, 90);
+    });
+    apply(2025);
+  }
+</script>
+
+<style>
+  .sm { margin: 0; display: flex; flex-direction: column; gap: 14px; }
+  .sm-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+  .sm-slab { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .sm-slab output { color: var(--ink); font-size: 15px; }
+  #sm-year { flex: 1 1 220px; accent-color: #8C4A2F; }
+  .sm-play { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--ink); background: var(--ink); color: var(--ground); cursor: pointer; }
+  .sm-grid { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 18px; align-items: start; }
+  .sm-grid svg { width: 100%; height: auto; display: block; }
+  .sm-pt { cursor: pointer; transition: opacity .4s ease; outline: none; }
+  .sm-pt.off { opacity: .08; pointer-events: none; }
+  .sm-pt:hover .sm-dot, .sm-pt:focus .sm-dot, .sm-pt.sel .sm-dot { stroke: #1F1D1A; stroke-width: 2; }
+  .sm-pt.sel text { font-weight: 600; }
+  .sm-dd { transition: opacity .3s ease; }
+  .sm-card { background: var(--card, #FBFAF7); border: 1px solid var(--line); border-left: 3px solid #8C4A2F; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 8px; min-height: 220px; }
+  .sm-card .label { color: var(--accent-ink); margin: 0; }
+  :global(.sm-name) { font-family: var(--display); font-weight: 400; font-size: 26px; line-height: 1.1; margin: 0; color: var(--ink); }
+  :global(.sm-sub) { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--muted); }
+  :global(.sm-move) { margin: 4px 0 0; font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.35; color: var(--ink-2); }
+  :global(.sm-more) { margin-top: 6px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .04em; color: var(--clay); }
+  .sm-key { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .sm-key i { width: 18px; height: 10px; border-radius: 2px; display: inline-block; }
+  .sm-key-d { margin-left: 16px; display: inline-flex; align-items: center; gap: 6px; }
+  .sm-key-d b { width: 24px; border-top: 1.6px dashed #8C4A2F; display: inline-block; }
+  .sm-cap { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--muted-2); }
+  @media (max-width: 860px) { .sm-grid { grid-template-columns: 1fr; } .sm-card { min-height: 0; } }
+  @media (prefers-reduced-motion: reduce) { .sm-pt, .sm-dd { transition: none; } }
+</style>

@@ -1,0 +1,334 @@
+---
+import Base from '../../layouts/Base.astro';
+import StyleMap from '../../components/leaders/StyleMap.astro';
+import TrendCharts from '../../components/leaders/TrendCharts.astro';
+import Subscribe from '../../components/Subscribe.astro';
+import { leaders, eras } from '../../data/leaders';
+
+const tabs = [
+  { id: 'why', label: 'Why', sub: 'The question' },
+  { id: 'leaders', label: 'Leaders', sub: '14 profiles' },
+  { id: 'map', label: 'The Map', sub: 'Interactive' },
+  { id: 'data', label: 'The Data', sub: 'What we can measure' },
+  { id: 'verdict', label: 'Changed?', sub: 'The verdict' },
+  { id: 'borrow', label: 'Borrow', sub: 'What to keep' },
+];
+const eraLabel = Object.fromEntries(eras.map((e) => [e.id, e]));
+const byEra = eras.map((e) => ({ ...e, people: leaders.filter((l) => l.era === e.id) }));
+
+// fine-line glyphs for the channel strip
+const FG = '#1F1D1A', AC = '#C99242';
+const glyph: Record<string, string> = {
+  radio: `<rect x="-22" y="-14" width="44" height="30" rx="6" fill="none" stroke="${FG}"/><circle cx="-8" cy="1" r="8" fill="none" stroke="${FG}"/><path d="M6 -6h10M6 0h10M6 6h10" stroke="${FG}"/><path d="M-14 -14 L-4 -26" stroke="${FG}"/>`,
+  org: `<rect x="-18" y="-18" width="36" height="34" fill="none" stroke="${FG}"/><path d="M-12 -10h24M-12 -4h24M-12 2h16M-12 8h20" stroke="${FG}" stroke-opacity=".6"/>`,
+  tv: `<rect x="-24" y="-16" width="48" height="32" rx="4" fill="none" stroke="${FG}"/><rect x="-18" y="-11" width="30" height="22" rx="2" fill="none" stroke="${FG}" stroke-opacity=".6"/><circle cx="18" cy="-4" r="2" fill="${FG}"/><path d="M-8 -16 L-16 -28 M8 -16 L16 -28" stroke="${FG}"/>`,
+  symbol: `<path d="M-18 -16 L-8 -22 L8 -22 L18 -16 L24 -4 L16 0 L16 18 L-16 18 L-16 0 L-24 -4Z" fill="none" stroke="${FG}"/><text x="0" y="10" font-size="14" text-anchor="middle" fill="${AC}" font-family="IBM Plex Mono, monospace">6</text>`,
+  platform: `<path d="M-22 12 L22 12 L26 18 L-26 18Z" fill="none" stroke="${FG}"/><rect x="-18" y="-16" width="36" height="26" rx="2" fill="none" stroke="${FG}"/><path d="M-12 -9h24M-12 -3h24M-12 3h16" stroke="${FG}" stroke-opacity=".6"/>`,
+  network: `<rect x="-12" y="-22" width="24" height="42" rx="5" fill="none" stroke="${FG}"/><circle cx="0" cy="-2" r="6" fill="none" stroke="${AC}"/><path d="M-6 10 Q0 6 6 10" stroke="${AC}" fill="none"/><circle cx="0" cy="15" r="1.5" fill="${FG}"/>`,
+};
+const stripYears: Record<string, number> = { radio: 1933, org: 1953, tv: 1963, symbol: 1995, platform: 2004, network: 2020 };
+const sx = (y: number) => 40 + ((y - 1926) / 100) * 920;
+---
+<Base title="How Leaders Talk" description="Curiosity Corner: a century of leadership and communication styles, from FDR's fireside chats to live video from the kitchen table, and what changed.">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <p class="label">Curiosity Corner · No. 03</p>
+      <h1 class="t-title">How Leaders Talk <span class="it">A Century of Command and Conversation</span></h1>
+      <p class="t-dek">Fourteen of the most studied leaders of the last hundred years, from Roosevelt’s radio to Ardern’s phone, read for two things: how they made decisions, and how they spoke to people. Then the question: has any of it really changed?</p>
+      <svg class="strip" viewBox="0 0 1000 150" role="img" aria-label="Timeline 1926 to 2026 showing the main channel of each era: radio, the organization, television, global media, platforms and networks." font-family="IBM Plex Mono, monospace">
+        <line x1="40" y1="110" x2="960" y2="110" stroke={FG} stroke-opacity=".45"></line>
+        {[1926, 1951, 1976, 2001, 2026].map((y) => <g><line x1={sx(y)} y1="106" x2={sx(y)} y2="114" stroke={FG} stroke-opacity=".5"></line><text x={sx(y)} y="134" font-size="11" fill="#59534A" text-anchor="middle">{y}</text></g>)}
+        {eras.map((e) => (
+          <g transform={`translate(${sx(stripYears[e.id])} 56)`}>
+            <g set:html={glyph[e.id]} stroke-width="1.2"></g>
+            <line x1="0" y1="26" x2="0" y2="50" stroke={AC} stroke-dasharray="2 3"></line>
+            <circle cx="0" cy="54" r="3.5" fill={AC}></circle>
+          </g>
+        ))}
+      </svg>
+      <div class="stats">
+        <div><span class="n">14</span><span class="l">Leaders, 1933–2023</span></div>
+        <div><span class="n">43 → 9</span><span class="l">Seconds per TV sound bite, 1968 → 1988</span></div>
+        <div><span class="n">13.2 → 8.6</span><span class="l">State of the Union grade level</span></div>
+        <div><span class="n">#1</span><span class="l">Habit of Google’s best managers: coaching</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap art">
+    <nav class="rail" aria-label="Article sections">
+      <p class="label muted rail-head">In this story</p>
+      {tabs.map((t, i) => (
+        <a href={`#${t.id}`} class="rail-tab" data-tab={t.id} aria-current={i === 0 ? 'true' : undefined}>
+          <span class="rail-n">0{i + 1}</span>
+          <span class="rail-l">{t.label}</span>
+          <span class="rail-s">{t.sub}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="panels">
+      <!-- WHY -->
+      <section class="panel" id="why" data-panel="why">
+        <p class="label">01 · Why</p>
+        <h2 class="h2">Two questions <span class="it clay">for every leader.</span></h2>
+        <p class="body">“Successful” is an argument, not a fact. So instead of ranking anyone, this story picks fourteen leaders from politics, business, social movements and media whose styles are among the most written about, from 1933 to 2023, and reads each of them through the same two lenses.</p>
+        <div class="split">
+          <article class="card fork"><p class="label muted">Lens one</p><h3 class="h3">How they lead</h3><p class="small">Do they decide at the top and drive it through, or decide with others and build agreement? Psychologist Kurt Lewin’s classic 1939 studies named the poles: autocratic, democratic, and hands-off.</p></article>
+          <article class="card fork"><p class="label muted">Lens two</p><h3 class="h3">How they talk</h3><p class="small">Do they speak formally, from a podium and a distance, or conversationally and up close? And through what channel: radio, television, a memo, a live stream?</p></article>
+        </div>
+        <p class="body">Each profile ends with <strong>the catch</strong>: the cost or the criticism that came with the style. No style here is free, and no leader here is offered as a model to copy whole.</p>
+        <blockquote class="pull">The question isn’t who was best. It’s what changed around them, and what never did.</blockquote>
+      </section>
+
+      <!-- LEADERS -->
+      <section class="panel" id="leaders" data-panel="leaders" hidden>
+        <p class="label">02 · Leaders</p>
+        <h2 class="h2">Fourteen styles, <span class="it clay">six eras.</span></h2>
+        <p class="body">Grouped by the era and the channel that shaped them. Filter by era, or open the map to see them side by side.</p>
+        <div class="era-filter" role="group" aria-label="Filter by era">
+          <button type="button" class="chip on" data-era="all">All</button>
+          {eras.map((e) => <button type="button" class="chip" data-era={e.id}>{e.label} · {e.span}</button>)}
+        </div>
+        {byEra.map((e) => (
+          <div class="era" data-era-block={e.id}>
+            <div class="era-head"><p class="label">{e.span} · {e.label}</p><p class="era-ch">{e.channel}</p></div>
+            <div class="lcards">
+              {e.people.map((l) => (
+                <article class="card lcard" id={`p-${l.id}`}>
+                  <p class="label muted">{l.role} · {l.years}</p>
+                  <h3 class="h3">{l.name}</h3>
+                  <p class="lmove">{l.move}</p>
+                  <dl>
+                    <dt>How they led</dt><dd set:html={l.lead}></dd>
+                    <dt>How they talked</dt><dd set:html={l.talk}></dd>
+                    <dt class="catch">The catch</dt><dd set:html={l.catch}></dd>
+                  </dl>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <!-- MAP -->
+      <section class="panel" id="map" data-panel="map" hidden>
+        <p class="label">03 · The Map</p>
+        <h2 class="h2">Watch the center <span class="it clay">drift.</span></h2>
+        <p class="body">Every leader sits somewhere between deciding at the top and deciding with others, and between speaking formally from a distance and speaking up close. Press play to add them in the order they rose. The diamonds, joined by a dashed line, mark the average position of the leaders who rose in each of three periods: 1933–60, 1961–99 and 2000–23.</p>
+        <StyleMap />
+        <p class="body">The averages move steadily to the right, toward shared decision-making. They do not move steadily up: talk got closer for some, like Winfrey and Ardern, while Bezos’s memos and Merkel’s reserve pulled the other way. And the scatter matters as much as the trend. Jobs and Welch ran some of the most top-down companies of their time and thrived. The center moved; the edges never emptied.</p>
+      </section>
+
+      <!-- DATA -->
+      <section class="panel" id="data" data-panel="data" hidden>
+        <p class="label">04 · The Data</p>
+        <h2 class="h2">Shorter, plainer, <span class="it clay">closer.</span></h2>
+        <p class="body">Style is hard to measure, but some of its footprints are not. Two long-running studies show public speech getting shorter and simpler, at least in American politics.</p>
+        <TrendCharts />
+
+        <h3 class="h3 gap-top">How the experts’ idea of a leader changed</h3>
+        <ol class="timeline">
+          <li><span class="tl-d">1939 · Kurt Lewin</span><span class="tl-t">Studies groups of children led in autocratic, democratic and hands-off styles. The democratic groups do best; the hands-off groups get least done.</span></li>
+          <li><span class="tl-d">1970s · Robert Greenleaf</span><span class="tl-t">Proposes the <em>servant leader</em>, who leads by serving the people being led.</span></li>
+          <li><span class="tl-d">1978 · James MacGregor Burns</span><span class="tl-t">Separates <em>transactional</em> leadership, a trade of reward for effort, from <em>transformational</em> leadership that raises people’s goals. It becomes the best-known leadership theory in management studies.</span></li>
+          <li><span class="tl-d">2008 · Google, Project Oxygen</span><span class="tl-t">Google studies its own managers expecting to prove they don’t matter, and finds the opposite. The first habit of its best managers: being a good coach. The study is refreshed in 2018.</span></li>
+        </ol>
+
+        <div class="split gap-top">
+          <article class="card fork">
+            <p class="label muted">Rise and fall of “rank and yank”</p>
+            <h3 class="h3">From 20-70-10 to coaching</h3>
+            <p class="small">Jack Welch’s forced ranking spread from GE in the 1980s to Motorola, IBM, Ford and others. By one count, about 40% of companies used it in 2009 and 14% by 2014. Microsoft dropped stack ranking in 2013; GE ended its own system in 2015.</p>
+          </article>
+          <article class="card fork">
+            <p class="label muted">What people expect now</p>
+            <h3 class="h3">Speak beyond the job</h3>
+            <p class="small">In Edelman’s 2019 survey across many countries, “my employer” became the most trusted institution, at 75%, ahead of government (48%) and media (47%). In 2020, 92% of employees said CEOs should speak out on issues of the day.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- VERDICT -->
+      <section class="panel" id="verdict" data-panel="verdict" hidden>
+        <p class="label">05 · Changed?</p>
+        <h2 class="h2">Yes, in the medium. <span class="it clay">No, in the method.</span></h2>
+        <p class="body">Put the fourteen side by side and two lists appear: five things that clearly changed over the century, and five that a leader in 1933 would recognize today.</p>
+        <div class="verdict">
+          <div class="vcol">
+            <p class="label">What changed</p>
+            <ol>
+              <li><strong>The channel came closer.</strong> From a voice in the living room, to a face on television, to a talk show built on confession, to a prime minister on a live stream from home. Roosevelt gave about 30 chats in eleven years; Ardern checked in with the country over Facebook on a regular basis.</li>
+              <li><strong>The words got shorter and plainer.</strong> Sound bites fell from 43 seconds to under 9 between 1968 and 1988. State of the Union addresses fell from a 13th-grade level under Kennedy to 8.6 under George H. W. Bush and Obama.</li>
+              <li><strong>The boss became a coach.</strong> The theory moved from command, to service, to transformation, to Google finding that coaching is what its best managers do first.</li>
+              <li><strong>Ranking gave way to growing.</strong> Forced ranking peaked and faded; Microsoft swapped it for a “learn-it-all” culture.</li>
+              <li><strong>Leaders are expected to speak beyond their job.</strong> Employees now say they want CEOs to speak out on public issues, and trust their own employer more than government or media.</li>
+            </ol>
+          </div>
+          <div class="vcol">
+            <p class="label">What stayed the same</p>
+            <ol>
+              <li><strong>The natural ones prepared the most.</strong> Churchill typed his speeches in short lines like a psalm, Jobs rehearsed relentlessly, and a good Amazon memo can take two weeks. Even King’s improvised “dream” drew on years in the pulpit.</li>
+              <li><strong>Plain words were always the secret.</strong> Roosevelt chose the simplest language he could; Churchill reached for short, old English words. The trend toward plainness is an old technique gone mass.</li>
+              <li><strong>A symbol can beat a speech.</strong> Mandela in a rugby jersey said more about reconciliation than any address could.</li>
+              <li><strong>Crisis rewards calm truth-telling.</strong> Roosevelt explaining the banks in 1933, Churchill naming the danger in 1940, Merkel and Ardern saying what was and wasn’t known in 2020.</li>
+              <li><strong>Every strength casts a shadow.</strong> Delegation led to Iran-Contra; conviction to division; ranking to fear; patience to the Nord Stream mistake; closeness to burnout and backlash.</li>
+            </ol>
+          </div>
+        </div>
+        <div class="card doom">
+          <p class="label">Read this with care</p>
+          <p class="small">These are leaders whose styles are famous partly because they succeeded; many people who led the same ways failed and were forgotten. Crisis also tends to reward directive leaders and peacetime the participative ones, so era and circumstance are tangled together. And the measured trends come mostly from American politics. Treat the patterns as strong hints, not laws.</p>
+        </div>
+      </section>
+
+      <!-- BORROW -->
+      <section class="panel" id="borrow" data-panel="borrow" hidden>
+        <p class="label">06 · Borrow</p>
+        <h2 class="h2">Six habits <span class="it clay">worth stealing.</span></h2>
+        <div class="people">
+          <article class="card person"><p class="label muted">From Bezos</p><h3 class="h3">Write it before you say it</h3><p class="small">A narrative forces you to decide what matters most. Slides let you skip that step.</p></article>
+          <article class="card person"><p class="label muted">From Roosevelt</p><h3 class="h3">Use the plainest words you can</h3><p class="small">Concrete examples and everyday analogies reach the most people, then and now.</p></article>
+          <article class="card person"><p class="label muted">From Merkel and Ardern</p><h3 class="h3">Say what you don’t know</h3><p class="small">Honesty about uncertainty built trust in a crisis faster than false confidence.</p></article>
+          <article class="card person"><p class="label muted">From Mandela</p><h3 class="h3">Find the one gesture</h3><p class="small">A single, well-chosen act can carry a message to people who would never listen to a speech.</p></article>
+          <article class="card person"><p class="label muted">From Project Oxygen and Nadella</p><h3 class="h3">Coach, don’t rank</h3><p class="small">The best managers grow people. Learn-it-alls beat know-it-alls.</p></article>
+          <article class="card person"><p class="label muted">From all fourteen</p><h3 class="h3">Match the style to the moment</h3><p class="small">Churchill’s grandeur misfired for years before 1940. No style fits every hour; the skill is knowing which one this hour needs.</p></article>
+        </div>
+      </section>
+
+      <section class="sources">
+        <p class="label">Sources</p>
+        <ol>
+          <li>American Presidency Project (UC Santa Barbara), fireside chats; Britannica, “Fireside chats”; APM Reports, “Radio: FDR’s natural gift”; HISTORY, “Fireside chats.”</li>
+          <li>Museum of Broadcast Communications, “Winston S. Churchill”; Imperial War Museums, “What makes a Churchill speech”; International Churchill Society, <em>Finest Hour</em>; NPR (2012) with Andrew Roberts.</li>
+          <li>Fred I. Greenstein, <em>The Hidden-Hand Presidency</em> (1982) and “Standing Neustadt on His Head” (2010); Greenstein in <em>PS: Political Science &amp; Politics</em>; <em>Political Science Quarterly</em> (2025) on the 1956 highway act.</li>
+          <li>Stanford King Institute; <em>American Heritage</em>, “Martin Luther King’s Big Surprise”; <em>TIME</em> on the March on Washington; reporting on King and Bayard Rustin (CNN, 2020).</li>
+          <li>Margaret Thatcher Foundation archive; <em>History Today</em>, “Thatcher’s Wordsmiths”; Max Atkinson’s analysis of Thatcher’s voice pitch.</li>
+          <li>Ronald Reagan, Farewell Address (January 11, 1989); Cato Institute, “Lessons from Reagan”; Chapman University and NBC News profiles.</li>
+          <li>Stanford GSB, “Jack Welch: Create Candor in the Workplace” (2005); NPR (2022); <em>Fortune</em> (2020); SHRM and CNN on Microsoft’s 2013 change; Cornell ILR on GE (2015); LinkedIn (2014) on forced-ranking prevalence.</li>
+          <li><em>TIME</em>, “Oprah Winfrey: The TV Host”; <em>America</em> magazine (2016); Library and Archives Canada, <em>Mediatribe</em> essay on Winfrey’s style.</li>
+          <li>NPR (2013) with John Carlin; World Rugby; SBS (University of Brighton); Al Jazeera (2013).</li>
+          <li>All About Steve Jobs, “Steve on Stage”; <em>Macworld</em> and <em>Fortune</em> (2007) on the iPhone keynote.</li>
+          <li>Jeff Bezos’s June 9, 2004 email to Amazon’s senior team, as published by <em>Business Insider</em>; CNBC on the 2018 shareholder letter; <em>Inc.</em></li>
+          <li>Harvard Program on Negotiation, “Elements of Negotiation Style: Angela Merkel”; <em>Christian Science Monitor</em>; <em>The Irish Times</em> (2022); <em>Fortune</em> (2024).</li>
+          <li>Stanford GSB (2019); <em>Fortune</em> (2021, 2024); London Business School case by Herminia Ibarra (2016).</li>
+          <li>McGuire et al., <em>Human Resource Development International</em> (2020); Glasgow Caledonian University; NPR and RTÉ (2023).</li>
+          <li>Daniel Hallin, “Sound Bite News” (1992); Kiku Adatto, Shorenstein Center (1990); Smart Politics, University of Minnesota (2013); Lewin, Lippitt and White (1939); Greenleaf (1970s); Burns, <em>Leadership</em> (1978); Google re:Work, Project Oxygen; Edelman Trust Barometer 2019, 2020 and 2025.</li>
+        </ol>
+        <p class="small">All text is an original summary of the sources; short quotations are attributed. The map placements are editorial judgments. All illustrations are original drawings; no photographs of the people profiled are used.</p>
+      </section>
+    </div>
+  </div>
+  <Subscribe />
+</Base>
+
+<script>
+  const tabs = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-tab]'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-panel]'));
+  const show = (id: string, scroll = false) => {
+    if (!panels.some((p) => p.dataset.panel === id)) id = 'why';
+    panels.forEach((p) => (p.hidden = p.dataset.panel !== id));
+    tabs.forEach((t) => (t.dataset.tab === id ? t.setAttribute('aria-current', 'true') : t.removeAttribute('aria-current')));
+    if (scroll) document.querySelector('.art')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  tabs.forEach((t) => t.addEventListener('click', (e) => { e.preventDefault(); history.replaceState(null, '', `#${t.dataset.tab}`); show(t.dataset.tab!, true); }));
+  show(location.hash.slice(1) || 'why');
+  window.addEventListener('hashchange', () => show(location.hash.slice(1) || 'why'));
+
+  // era filter
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-era]'));
+  const blocks = Array.from(document.querySelectorAll<HTMLElement>('[data-era-block]'));
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((x) => x.classList.toggle('on', x === c));
+    blocks.forEach((b) => (b.hidden = c.dataset.era !== 'all' && b.dataset.eraBlock !== c.dataset.era));
+  }));
+
+  // jump from the map to a profile
+  window.addEventListener('leader-jump', (e) => {
+    const id = (e as CustomEvent).detail as string;
+    chips[0]?.click();
+    history.replaceState(null, '', '#leaders');
+    show('leaders');
+    const el = document.getElementById(`p-${id}`);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); }
+  });
+</script>
+
+<style>
+  .hero { background: #F1EEE7; border-bottom: 1px solid var(--line); }
+  .hero-in { padding-block: 104px 72px; display: flex; flex-direction: column; gap: 28px; }
+  .hero .label { color: var(--accent-ink); }
+  .t-title { margin: 0; font-weight: 300; font-size: clamp(44px, 6.4vw, 96px); line-height: .98; letter-spacing: -0.03em; color: var(--ink); }
+  .t-title .it { display: block; font-family: var(--serif); font-style: italic; color: var(--clay); font-size: .6em; margin-top: 10px; }
+  .t-dek { margin: 0; max-width: 780px; font-family: var(--serif); font-weight: 300; font-size: clamp(21px, 2.2vw, 28px); line-height: 1.4; color: var(--ink-2); }
+  .strip { width: 100%; height: auto; display: block; max-width: 1000px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border-top: 1px solid var(--line); margin-top: 4px; }
+  .stats div { padding: 20px 16px 0 0; display: flex; flex-direction: column; gap: 4px; }
+  .stats .n { font-size: 36px; font-weight: 300; color: var(--ink); }
+  .stats .l { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-2); }
+
+  .art { display: flex; flex-wrap: wrap; gap: 56px; padding-block: 72px 96px; align-items: flex-start; }
+  .rail { flex: 0 0 210px; position: sticky; top: 24px; display: flex; flex-direction: column; gap: 4px; }
+  .rail-head { margin-bottom: 8px; }
+  .rail-tab { display: grid; grid-template-columns: 28px 1fr; grid-template-rows: auto auto; column-gap: 8px; padding: 12px 14px; border-radius: 14px; text-decoration: none; color: var(--ink); border: 1px solid transparent; }
+  .rail-tab:hover { background: var(--ground-2); color: var(--ink); }
+  .rail-tab[aria-current='true'] { background: var(--ink); color: var(--ground); }
+  .rail-n { grid-row: 1 / 3; font-family: var(--mono); font-size: 11px; opacity: .6; padding-top: 4px; }
+  .rail-l { font-size: 18px; font-weight: 400; }
+  .rail-s { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; opacity: .65; }
+  @media (max-width: 900px) {
+    .rail { flex-basis: 100%; flex-direction: row; overflow-x: auto; top: 0; z-index: 5; background: var(--ground); padding: 8px 0; gap: 6px; }
+    .rail-head { display: none; }
+    .rail-tab { flex: 0 0 auto; display: flex; flex-direction: column; gap: 0; border-color: var(--line); padding: 8px 14px; }
+    .rail-n, .rail-s { display: none; }
+    .rail-l { font-size: 15px; }
+  }
+  .panels { flex: 1 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 56px; }
+  .panel { display: flex; flex-direction: column; gap: 22px; }
+  .panel[hidden] { display: none; }
+  .gap-top { margin-top: 32px; }
+  .pull { margin: 12px 0 0; padding-left: 24px; border-left: 2px solid var(--accent); font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1.35; }
+  .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .fork { padding: 24px; display: flex; flex-direction: column; gap: 8px; border-top: 4px solid var(--accent); }
+  .fork:last-child { border-top-color: #3E7F8C; }
+  .fork .h3 { margin: 0; }
+
+  .era-filter { display: flex; flex-wrap: wrap; gap: 8px; }
+  .era-filter .chip { cursor: pointer; font: inherit; font-size: 13px; }
+  .era-filter .chip.on { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+  .era { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+  .era[hidden] { display: none; }
+  .era-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+  .era-head .label { color: var(--accent-ink); margin: 0; }
+  .era-ch { margin: 0; font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--muted); }
+  .lcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .lcard { padding: 24px; display: flex; flex-direction: column; gap: 10px; transition: box-shadow .4s ease; }
+  .lcard.flash { box-shadow: 0 0 0 3px var(--accent); }
+  .lcard .h3 { margin: 0; }
+  .lmove { margin: 0; font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.35; color: var(--clay); }
+  .lcard dl { margin: 0; display: flex; flex-direction: column; gap: 2px; }
+  .lcard dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-2); margin-top: 10px; }
+  .lcard dt.catch { color: var(--clay); }
+  .lcard dd { margin: 0; font-size: 15.5px; line-height: 1.55; color: var(--ink-2); }
+
+  .timeline { list-style: none; margin: 8px 0 0; padding: 0; border-left: 1px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 22px 24px; display: flex; flex-direction: column; gap: 4px; }
+  .timeline li::before { content: ''; position: absolute; left: -5px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .tl-d { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); }
+  .tl-t { font-size: 17px; line-height: 1.6; color: var(--ink-2); }
+
+  .verdict { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .vcol { background: var(--card, #FBFAF7); border: 1px solid var(--line); padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .vcol:first-child { border-top: 4px solid var(--accent); }
+  .vcol:last-child { border-top: 4px solid #3E7F8C; }
+  .vcol .label { margin: 0; color: var(--accent-ink); }
+  .vcol ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 12px; font-size: 16px; line-height: 1.55; color: var(--ink-2); }
+  .vcol strong { color: var(--ink); font-weight: 600; }
+  .doom { padding: 28px; display: flex; flex-direction: column; gap: 10px; background: #F1EEE7; border-left: 4px solid var(--clay); }
+  .doom .label { color: var(--clay); }
+  .people { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .person { padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .person .h3 { margin: 0; }
+  .sources { border-top: 1px solid var(--line); padding-top: 32px; display: flex; flex-direction: column; gap: 14px; }
+  .sources ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-family: var(--serif); font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+</style>

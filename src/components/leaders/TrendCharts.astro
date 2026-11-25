@@ -1,0 +1,98 @@
+---
+// Two single-series bar charts: shrinking TV sound bites, and the falling reading level of State of the Union addresses.
+import { sotu, soundbites } from '../../data/leaders';
+const BAR = '#C99242', INK = '#1F1D1A', MUTED = '#59534A', GRID = 'rgba(31,29,26,.12)';
+const rb = (x: number, y: number, w: number, h: number, r = 4) => `M${x} ${y + h} L${x} ${y + r} Q${x} ${y} ${x + r} ${y} L${x + w - r} ${y} Q${x + w} ${y} ${x + w} ${y + r} L${x + w} ${y + h}Z`;
+
+// chart 1
+const W1 = 520, H1 = 300, l1 = 44, r1 = 12, t1 = 22, b1 = 36;
+const max1 = 45, bw1 = (W1 - l1 - r1) / soundbites.length;
+const y1 = (v: number) => H1 - b1 - (v / max1) * (H1 - t1 - b1);
+// chart 2
+const W2 = 680, H2 = 300, l2 = 64, r2 = 12, t2 = 22, b2 = 56;
+const max2 = 14, bw2 = (W2 - l2 - r2) / sotu.length;
+const y2 = (v: number) => H2 - b2 - (v / max2) * (H2 - t2 - b2);
+---
+<div class="tc">
+  <figure class="tc-fig">
+    <p class="label">The sound bite shrank</p>
+    <p class="tc-q">Average length of a candidate’s uninterrupted speech on U.S. network evening news, presidential campaigns</p>
+    <div class="tc-plot">
+      <svg viewBox={`0 0 ${W1} ${H1}`} role="img" aria-label="Bar chart: 43 seconds in 1968, 25 in 1972, 18 in 1976, 12 in 1980, 10 in 1984, under 9 in 1988." font-family="IBM Plex Mono, monospace">
+        {[0, 10, 20, 30, 40].map((v) => <g><line x1={l1} x2={W1 - r1} y1={y1(v)} y2={y1(v)} stroke={GRID}></line><text x={l1 - 8} y={y1(v) + 4} font-size="11" fill={MUTED} text-anchor="end">{v}s</text></g>)}
+        {soundbites.map((d, i) => {
+          const x = l1 + i * bw1 + 8, w = bw1 - 16;
+          return <g class="tc-bar" data-tip={`${d.y}: ${d.s} seconds`}><rect x={x - 6} y={t1} width={w + 12} height={H1 - t1 - b1} fill="transparent"></rect><path d={rb(x, y1(d.s), w, H1 - b1 - y1(d.s))} fill={BAR}></path>
+            {(i === 0 || i === soundbites.length - 1) && <text x={x + w / 2} y={y1(d.s) - 8} font-size="12.5" fill={INK} text-anchor="middle">{d.s}s</text>}
+            <text x={x + w / 2} y={H1 - b1 + 20} font-size="11.5" fill={MUTED} text-anchor="middle">{d.y}</text></g>;
+        })}
+      </svg>
+      <span class="tc-tip" hidden></span>
+    </div>
+    <p class="tc-note">Since 1988 the average has stayed at roughly 7 to 9 seconds. Sources: Daniel Hallin (1992); Kiku Adatto, Shorenstein Center (1990).</p>
+  </figure>
+
+  <figure class="tc-fig">
+    <p class="label">The words got plainer</p>
+    <p class="tc-q">Average reading grade level (Flesch-Kincaid) of each president’s spoken State of the Union addresses</p>
+    <div class="tc-plot">
+      <svg viewBox={`0 0 ${W2} ${H2}`} role="img" aria-label="Bar chart of State of the Union reading level by president, from Coolidge 11.3 and Kennedy 13.2 down to George H. W. Bush and Obama at 8.6." font-family="IBM Plex Mono, monospace">
+        {[0, 4, 8, 12].map((v) => <g><line x1={l2} x2={W2 - r2} y1={y2(v)} y2={y2(v)} stroke={GRID}></line><text x={l2 - 8} y={y2(v) + 4} font-size="11" fill={MUTED} text-anchor="end">{v}</text></g>)}
+        {sotu.map((d, i) => {
+          const x = l2 + i * bw2 + 5, w = bw2 - 10;
+          const lab = d.p === 'Kennedy' || d.p === 'Obama' || d.p === 'F. Roosevelt';
+          return <g class="tc-bar" data-tip={`${d.p}: grade ${d.g}`}><rect x={x - 4} y={t2} width={w + 8} height={H2 - t2 - b2} fill="transparent"></rect><path d={rb(x, y2(d.g), w, H2 - b2 - y2(d.g))} fill={BAR}></path>
+            {lab && <text x={x + w / 2} y={y2(d.g) - 8} font-size="12" fill={INK} text-anchor="middle">{d.g}</text>}
+            <text transform={`translate(${x + w / 2} ${H2 - b2 + 14}) rotate(-40)`} font-size="10.5" fill={MUTED} text-anchor="end">{d.p}</text></g>;
+        })}
+      </svg>
+      <span class="tc-tip" hidden></span>
+    </div>
+    <p class="tc-note">Data through 2013. Grade 12 is a high-school senior; grade 8 is middle school. Source: Smart Politics, University of Minnesota.</p>
+  </figure>
+
+  <details class="tc-table">
+    <summary>Show the numbers as a table</summary>
+    <div class="tc-tables">
+      <table><caption>Sound bite length</caption><thead><tr><th>Campaign</th><th>Seconds</th></tr></thead><tbody>{soundbites.map((d) => <tr><td>{d.y}</td><td>{d.s}</td></tr>)}</tbody></table>
+      <table><caption>State of the Union reading level</caption><thead><tr><th>President</th><th>Grade</th></tr></thead><tbody>{sotu.map((d) => <tr><td>{d.p}</td><td>{d.g}</td></tr>)}</tbody></table>
+    </div>
+  </details>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.tc-plot').forEach((plot) => {
+    const tip = plot.querySelector<HTMLElement>('.tc-tip')!;
+    plot.querySelectorAll<SVGGElement>('.tc-bar').forEach((g) => {
+      const show = (e: PointerEvent) => {
+        const r = plot.getBoundingClientRect();
+        tip.textContent = g.dataset.tip || '';
+        tip.hidden = false;
+        tip.style.left = `${e.clientX - r.left}px`;
+        tip.style.top = `${e.clientY - r.top - 12}px`;
+        g.classList.add('on');
+      };
+      g.addEventListener('pointermove', show);
+      g.addEventListener('pointerleave', () => { tip.hidden = true; g.classList.remove('on'); });
+    });
+  });
+</script>
+
+<style>
+  .tc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); gap: 20px; }
+  @media (max-width: 860px) { .tc { grid-template-columns: 1fr; } }
+  .tc-fig { margin: 0; background: var(--card, #FBFAF7); border: 1px solid var(--line); padding: 22px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .tc-fig .label { color: var(--accent-ink); margin: 0; }
+  .tc-q { margin: 0; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+  .tc-plot { position: relative; }
+  .tc-plot svg { width: 100%; height: auto; display: block; }
+  :global(.tc-bar.on path) { fill: #8C4A2F; }
+  .tc-tip { position: absolute; transform: translate(-50%, -100%); background: #1F1D1A; color: #F6F4EF; font-family: var(--mono); font-size: 11.5px; padding: 5px 9px; border-radius: 4px; pointer-events: none; white-space: nowrap; }
+  .tc-note { margin: 0; font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--muted-2); }
+  .tc-table { grid-column: 1 / -1; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .tc-table summary { cursor: pointer; }
+  .tc-tables { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 12px; }
+  .tc-tables table { border-collapse: collapse; font-size: 12.5px; color: var(--ink-2); }
+  .tc-tables caption { text-align: left; padding-bottom: 6px; color: var(--accent-ink); }
+  .tc-tables th, .tc-tables td { text-align: left; padding: 4px 18px 4px 0; border-bottom: 1px solid var(--line); }
+</style>

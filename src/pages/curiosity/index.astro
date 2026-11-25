@@ -21,6 +21,15 @@ const stories = [
     tabs: ['Why', 'Life', 'The Bomb', 'Strategy', 'Scenarios', 'Futures', 'Legacy'],
     art: 'kahn',
   },
+  {
+    href: '/curiosity/how-leaders-talk/',
+    no: '03',
+    kicker: 'Leadership · Communication · Data',
+    title: 'How Leaders Talk',
+    dek: 'Fourteen leaders across a century, from Roosevelt’s radio to Ardern’s live stream, read for how they decided and how they spoke, and what really changed.',
+    tabs: ['Why', 'Leaders', 'The Map', 'The Data', 'Changed?', 'Borrow'],
+    art: 'leaders',
+  },
 ];
 ---
 <Base title="Curiosity Corner" description="Stories from the edges of history, science and the outdoors.">
@@ -34,7 +43,17 @@ const stories = [
     {stories.map((s) => (
       <a href={s.href} class="feat">
         <div class="feat-art" aria-hidden="true">
-{s.art === 'kahn' ? (
+{s.art === 'leaders' ? (
+          <svg viewBox="0 0 600 380" preserveAspectRatio="xMidYMid slice">
+            <rect width="600" height="380" fill="#F1EEE7"></rect>
+            {Array.from({ length: 6 }, (_, i) => <circle cx="120" cy="190" r={30 + i * 34} fill="none" stroke="#C99242" stroke-opacity={0.55 - i * 0.07} stroke-width="1.1"></circle>)}
+            <circle cx="120" cy="190" r="9" fill="#8C4A2F"></circle>
+            {Array.from({ length: 22 }, (_, i) => { const a = (i * 137.5) % 360 * Math.PI / 180, r = 40 + (i * 23) % 120; return <g><line x1="470" y1="190" x2={470 + r * Math.cos(a)} y2={190 + r * Math.sin(a) * 0.8} stroke="#1F1D1A" stroke-opacity=".25"></line><circle cx={470 + r * Math.cos(a)} cy={190 + r * Math.sin(a) * 0.8} r="4" fill="#FBFAF7" stroke="#1F1D1A" stroke-opacity=".7"></circle></g>; })}
+            <circle cx="470" cy="190" r="7" fill="#C99242"></circle>
+            <path d="M200 190 C 280 150 340 230 420 190" fill="none" stroke="#8C4A2F" stroke-dasharray="4 4"></path>
+            <text x="24" y="356" font-family="IBM Plex Mono, monospace" font-size="11" fill="#7A5A2E" letter-spacing="2">BROADCAST → NETWORK · 1933–2023</text>
+          </svg>
+          ) : s.art === 'kahn' ? (
           <svg viewBox="0 0 600 380" preserveAspectRatio="xMidYMid slice">
             <rect width="600" height="380" fill="#F1EEE7"></rect>
             {Array.from({ length: 12 }, (_, i) => <path d={`M60 190 C 200 190 260 ${190 + (i - 5.5) * 8} 340 ${190 + (i - 5.5) * 22} S 520 ${190 + (i - 5.5) * 30} 580 ${190 + (i - 5.5) * 30}`} fill="none" stroke={i === 5 || i === 6 ? '#1F1D1A' : '#C99242'} stroke-opacity={i === 5 || i === 6 ? 0.8 : 0.35 + (i % 3) * 0.15} stroke-width={i === 5 || i === 6 ? 1.6 : 1.1}></path>)}
