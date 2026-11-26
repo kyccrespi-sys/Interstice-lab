@@ -1,133 +1,140 @@
-// Leaders for "How Leaders Talk". Placements on the style map (x, y) are editorial judgments
-// drawn from the sources, not measured scores.
-//   x: 0 = decides from the top (directive) … 1 = decides with others (participative)
-//   y: 0 = formal, broadcast, from a distance … 1 = conversational, direct, up close
-export interface Leader {
-  id: string; name: string; role: string; years: string; year: number; era: string;
-  lead: string; talk: string; move: string; catch: string; x: number; y: number;
-}
+// Leaders for "What Great Leaders Share". Style labels, trait marks and map placements are
+// editorial judgments drawn from the cited sources, not measured scores.
 
-export const eras = [
-  { id: 'radio', label: 'Radio', span: '1930s–40s', channel: 'A voice in the living room' },
-  { id: 'org', label: 'The organization', span: '1950s', channel: 'The staff system and the press conference' },
-  { id: 'tv', label: 'Television', span: '1960s–80s', channel: 'The image, the stage, the sound bite' },
-  { id: 'symbol', label: 'Global media', span: '1990s', channel: 'One picture seen by the whole world' },
-  { id: 'platform', label: 'Platforms', span: '2000s', channel: 'The keynote, the memo, the talk show' },
-  { id: 'network', label: 'Networks', span: '2010s–20s', channel: 'Live, unfiltered, from the kitchen table' },
-];
+export const styles = {
+  commanding: { label: 'Commanding', src: 'Goleman (“coercive”)', def: 'Sets the direction and demands compliance: “Do what I tell you.” Fast in a crisis, corrosive over time.' },
+  visionary: { label: 'Visionary', src: 'Goleman (“authoritative”)', def: 'Mobilizes people toward a vision and leaves the route to them: “Come with me.”' },
+  pacesetting: { label: 'Pacesetting', src: 'Goleman', def: 'Sets very high standards and models them: “Do as I do, now.” Fast results from strong teams; burns others out.' },
+  democratic: { label: 'Democratic', src: 'Lewin; Goleman', def: 'Builds consensus through participation: “What do you think?”' },
+  affiliative: { label: 'Affiliative', src: 'Goleman', def: 'Creates emotional bonds and harmony: “People come first.”' },
+  coaching: { label: 'Coaching', src: 'Goleman', def: 'Develops people for the future: “Try this.”' },
+  transformational: { label: 'Transformational', src: 'Burns (1978)', def: 'Raises followers’ goals and sense of purpose, changing what people want, not just what they do.' },
+  servant: { label: 'Servant', src: 'Greenleaf (1970s)', def: 'Leads by serving the people being led, putting their growth and the mission ahead of the leader.' },
+  delegative: { label: 'Delegative', src: 'Lewin (“laissez-faire”)', def: 'Sets broad goals, picks people and hands off the details.' },
+} as const;
+export type StyleId = keyof typeof styles;
+
+export const traits = [
+  { id: 'resolve', label: 'Resolve', def: 'Holds course under pressure and setbacks.' },
+  { id: 'comm', label: 'Communication', def: 'Unusually skilled at reaching people, in speech or in writing.' },
+  { id: 'vision', label: 'Clear vision', def: 'A simple, compelling picture of where to go.' },
+  { id: 'adapt', label: 'Adaptability', def: 'Changes course when the facts change.' },
+  { id: 'coalition', label: 'Coalition-building', def: 'Brings rivals, parties or factions together.' },
+  { id: 'decisive', label: 'Decisiveness', def: 'Makes big calls quickly when it counts.' },
+  { id: 'risk', label: 'Risk-taking', def: 'Makes bold bets others avoid.' },
+  { id: 'prep', label: 'Preparation', def: 'Relentless homework, rehearsal or standards.' },
+  { id: 'empathy', label: 'Empathy', def: 'Leads from an understanding of how others feel.' },
+  { id: 'humility', label: 'Humility', def: 'Shares credit, admits error, listens.' },
+  { id: 'delegate', label: 'Delegation', def: 'Lets others run things and owns the result.' },
+] as const;
+export type TraitId = (typeof traits)[number]['id'];
+
+export interface Leader {
+  id: string; name: string; short: string; role: string; years: string; year: number; field: string;
+  style: StyleId; style2?: StyleId; traits: TraitId[];
+  successes: string[]; shortcomings: string[]; contested?: string;
+  talk: string; x: number; y: number;
+}
 
 export const leaders: Leader[] = [
   {
-    id: 'fdr', name: 'Franklin D. Roosevelt', role: 'U.S. president', years: '1933–45', year: 1933, era: 'radio',
-    lead: 'Took office in a banking panic and used the radio to build public support for the New Deal, then for the war.',
-    talk: 'About 30 evening “fireside chats” from 1933 to 1944, in deliberately simple language with concrete examples and analogies. The first came eight days after his inauguration, explaining the bank crisis.',
-    move: 'Talking to one family at a time, at national scale.',
-    catch: 'His formal addresses were another matter: his State of the Union speeches average a 12.5 grade reading level, among the most complex of the century.',
-    x: 0.36, y: 0.78,
+    id: 'fdr', name: 'Franklin D. Roosevelt', short: 'Roosevelt', role: 'U.S. president', years: '1933–45', year: 1933, field: 'Politics',
+    style: 'transformational', style2: 'visionary', traits: ['vision', 'resolve', 'comm', 'adapt', 'coalition', 'decisive', 'risk', 'empathy'],
+    successes: ['Ended the 1933 banking panic in his first weeks, explaining it to the country by radio', 'The New Deal, including Social Security (1935)', 'Led the United States through most of World War II; elected four times'],
+    shortcomings: ['His 1937 plan to enlarge the Supreme Court failed and split his own party', 'Signed Executive Order 9066 (1942), which led to the incarceration of about 120,000 Japanese Americans'],
+    talk: 'About 30 radio “fireside chats” in deliberately plain language.', x: 0.36, y: 0.78,
   },
   {
-    id: 'churchill', name: 'Winston Churchill', role: 'U.K. prime minister', years: '1940–45', year: 1940, era: 'radio',
-    lead: 'A wartime leader who set the direction himself and pressed it hard.',
-    talk: 'Broadcast 24 times on the BBC from June 1940 to May 1945, drawing on the Bible and Shakespeare and favoring short, old English words. He typed his notes in short lines, like a psalm, to pace the delivery.',
-    move: 'Telling the country the truth about the danger, then giving it a reason to fight on.',
-    catch: 'Before 1940 his grand style often seemed out of place. Even after he became prime minister, one Conservative MP dismissed him as a “second-rate rhetorician.”',
-    x: 0.12, y: 0.2,
+    id: 'churchill', name: 'Winston Churchill', short: 'Churchill', role: 'U.K. prime minister', years: '1940–45', year: 1940, field: 'Politics',
+    style: 'visionary', style2: 'commanding', traits: ['vision', 'resolve', 'comm', 'decisive', 'risk', 'prep'],
+    successes: ['Persuaded Britain to fight on alone in 1940', 'Built the wartime alliance with the United States and the Soviet Union', 'Nobel Prize in Literature (1953)'],
+    shortcomings: ['Voted out in the 1945 general election, weeks after victory in Europe', 'His record on empire, including policy during the 1943 Bengal famine, is fiercely criticized'],
+    talk: '24 wartime BBC broadcasts, in short, old English words.', x: 0.12, y: 0.2,
   },
   {
-    id: 'ike', name: 'Dwight D. Eisenhower', role: 'U.S. president', years: '1953–61', year: 1953, era: 'org',
-    lead: 'The general ran the White House like a staff: wide delegation, and much of his influence exercised out of sight. Political scientist Fred Greenstein called it the “hidden-hand presidency.”',
-    talk: 'Often vague in press conferences, sometimes on purpose, but precise on paper.',
-    move: 'Letting others take the credit, and the heat, while he steered.',
-    catch: 'At the time many saw him as passive; a 1962 poll of historians ranked him 21st. A 2025 study argues his behind-the-scenes approach failed on the 1956 highway program.',
-    x: 0.58, y: 0.28,
+    id: 'ike', name: 'Dwight D. Eisenhower', short: 'Eisenhower', role: 'Allied commander, U.S. president', years: '1944–61', year: 1944, field: 'Military and politics',
+    style: 'delegative', style2: 'democratic', traits: ['resolve', 'coalition', 'decisive', 'prep', 'humility', 'delegate'],
+    successes: ['Held the Allied command together and launched D-Day (1944)', 'Ended the fighting in Korea with the 1953 armistice', 'Signed the act that built the Interstate Highway System (1956)'],
+    shortcomings: ['Seen at the time as passive; a 1962 poll of historians ranked him 21st', 'Avoided confronting Senator Joseph McCarthy in public, working against him only behind the scenes'],
+    talk: 'Often vague in press conferences, precise on paper.', x: 0.58, y: 0.28,
   },
   {
-    id: 'mlk', name: 'Martin Luther King Jr.', role: 'Civil rights leader', years: '1955–68', year: 1963, era: 'tv',
-    lead: 'Led through a coalition, as first president of the Southern Christian Leadership Conference, and by listening: advisers such as Bayard Rustin helped shape his commitment to nonviolence.',
-    talk: 'A preacher’s oratory, rich with theology, in front of 250,000 people at the March on Washington in 1963.',
-    move: 'The “dream” passage was not in his prepared text. When Mahalia Jackson called out “Tell them about the dream, Martin,” he set the script aside.',
-    catch: 'Some advisers had argued against the dream lines, and he had only a few minutes. One of the best-known speeches in American history was partly improvised.',
-    x: 0.66, y: 0.46,
+    id: 'mlk', name: 'Martin Luther King Jr.', short: 'King', role: 'Civil rights leader', years: '1955–68', year: 1955, field: 'Social movement',
+    style: 'transformational', style2: 'servant', traits: ['vision', 'resolve', 'comm', 'adapt', 'coalition', 'risk', 'empathy', 'humility'],
+    successes: ['Rose to lead the Montgomery bus boycott (1955–56)', 'The 1963 March on Washington and the “I Have a Dream” speech', 'Helped win the Civil Rights Act (1964) and Voting Rights Act (1965); Nobel Peace Prize (1964)'],
+    shortcomings: ['The Albany, Georgia campaign (1961–62) ended without its main goals', 'The 1966 Chicago campaign against housing segregation won little lasting change'],
+    talk: 'A preacher’s oratory; the “dream” passage was improvised.', x: 0.66, y: 0.46,
   },
   {
-    id: 'thatcher', name: 'Margaret Thatcher', role: 'U.K. prime minister', years: '1979–90', year: 1979, era: 'tv',
-    lead: 'Called herself a conviction politician, not a consensus one, and refused to change course under pressure.',
-    talk: 'Worked with speechwriter Ronald Millar on sharp contrasting lines, and trained her voice lower: one analysis measured a drop of 46 Hz.',
-    move: '“You turn if you want to. The lady’s not for turning” (1980).',
-    catch: 'She said it as unemployment passed two million. Her refusal to turn won admirers and made her one of Britain’s most divisive leaders.',
-    x: 0.1, y: 0.36,
+    id: 'thatcher', name: 'Margaret Thatcher', short: 'Thatcher', role: 'U.K. prime minister', years: '1979–90', year: 1979, field: 'Politics',
+    style: 'commanding', style2: 'visionary', traits: ['vision', 'resolve', 'comm', 'decisive', 'prep'],
+    successes: ['Won three general elections; the longest-serving British prime minister of the 20th century', 'Brought inflation down from above 20%', 'Victory in the Falklands War (1982)'],
+    shortcomings: ['Unemployment passed 3 million in 1982 and stayed that high until 1987', 'The poll tax set off riots in 1990; her own party forced her out that November'],
+    talk: '“The lady’s not for turning”; trained her voice lower.', x: 0.1, y: 0.36,
   },
   {
-    id: 'reagan', name: 'Ronald Reagan', role: 'U.S. president', years: '1981–89', year: 1981, era: 'tv',
-    lead: 'Set a few broad goals, picked people, and delegated the rest.',
-    talk: 'A former radio announcer, actor and General Electric spokesman who had toured GE plants in 38 states. Known for word pictures and stories; earned the nickname “the Great Communicator.”',
-    move: '“I wasn’t a great communicator, but I communicated great things” (farewell address, 1989).',
-    catch: 'Even sympathetic analysts note the cost of loose delegation: people down the line could make serious mistakes, as in the Iran-Contra affair.',
-    x: 0.55, y: 0.6,
+    id: 'reagan', name: 'Ronald Reagan', short: 'Reagan', role: 'U.S. president', years: '1981–89', year: 1981, field: 'Politics',
+    style: 'visionary', style2: 'delegative', traits: ['vision', 'resolve', 'comm', 'adapt', 'delegate'],
+    successes: ['Inflation fell sharply and the longest peacetime expansion to that time followed', 'Re-elected in 1984, carrying 49 of 50 states', 'Signed the INF Treaty with the Soviet Union (1987); his policies contributed to the end of the Cold War'],
+    shortcomings: ['The national debt nearly tripled', 'The Iran-Contra affair, a cost of loose delegation', 'Criticized as slow to respond to the AIDS epidemic'],
+    talk: '“The Great Communicator”: stories and word pictures.', x: 0.55, y: 0.6,
   },
   {
-    id: 'welch', name: 'Jack Welch', role: 'CEO, General Electric', years: '1981–2001', year: 1981, era: 'tv',
-    lead: 'Ranked every manager: top 20% rewarded, middle 70% coached, bottom 10% out. Businesses had to be first or second in their market or be sold.',
-    talk: 'Prized blunt candor, calling the lack of it business’s biggest dirty little secret. Invested his own time in GE’s leadership school at Crotonville.',
-    move: 'Making differentiation the center of management.',
-    catch: 'Early job cuts of roughly 100,000 earned him the nickname “Neutron Jack.” The “rank and yank” system spread widely, then fell out of favor: Microsoft dropped stack ranking in 2013 and GE itself in 2015.',
-    x: 0.06, y: 0.56,
+    id: 'welch', name: 'Jack Welch', short: 'Welch', role: 'CEO, General Electric', years: '1981–2001', year: 1981, field: 'Business',
+    style: 'pacesetting', style2: 'commanding', traits: ['vision', 'resolve', 'comm', 'decisive', 'risk', 'prep'],
+    successes: ['GE’s market value grew from about $14 billion to about $410 billion', 'Fortune named him “manager of the century” (1999)', 'Built GE’s Crotonville school into a pipeline of future CEOs'],
+    shortcomings: ['Tens of thousands of job cuts earned him the name “Neutron Jack”', 'Forced “rank and yank”: the bottom 10% out every year', 'GE Capital, built under him, nearly sank GE in the 2008 financial crisis'],
+    talk: 'Prized blunt candor.', x: 0.06, y: 0.56,
   },
   {
-    id: 'oprah', name: 'Oprah Winfrey', role: 'Talk-show host, media founder', years: '1986–2011', year: 1986, era: 'platform',
-    lead: 'Built her own production company, Harpo, and a media business around her show.',
-    talk: 'Credited with creating a more intimate, confessional form of television: she shared her own life, cried and laughed on air, and drew out guests’ stories. More than 15 million people watched daily.',
-    move: 'Self-disclosure: going first, so the audience feels like a friend.',
-    catch: 'Critics charged her with spreading a confession culture and promoting controversial self-help ideas.',
-    x: 0.72, y: 0.92,
+    id: 'oprah', name: 'Oprah Winfrey', short: 'Winfrey', role: 'Talk-show host, media founder', years: '1986–2011', year: 1986, field: 'Media and business',
+    style: 'affiliative', style2: 'visionary', traits: ['vision', 'resolve', 'comm', 'adapt', 'risk', 'empathy'],
+    successes: ['Hosted the top-rated daytime talk show for 25 seasons', 'Owned her own studio, Harpo, and launched Oprah’s Book Club (1996)', 'Forbes named her the first Black woman billionaire (2003)'],
+    shortcomings: ['Criticized for spreading a “confession culture”', 'Gave a platform to controversial self-help and health ideas'],
+    talk: 'Self-disclosure: going first so the audience feels like a friend.', x: 0.72, y: 0.9,
   },
   {
-    id: 'mandela', name: 'Nelson Mandela', role: 'President of South Africa', years: '1994–99', year: 1995, era: 'symbol',
-    lead: 'Reached out to groups that were not his allies, and spoke of leading from behind, like a shepherd.',
-    talk: 'Let a single act carry the message. At the 1995 Rugby World Cup final he walked out in the Springbok jersey, a symbol of white Afrikaner rugby, wearing captain François Pienaar’s number 6.',
-    move: 'Wearing the other side’s colors.',
-    catch: 'It was not a blank check: a share of the tournament’s profits was set aside for rugby in disadvantaged areas, and he had to persuade his own party to back the event.',
-    x: 0.8, y: 0.5,
+    id: 'mandela', name: 'Nelson Mandela', short: 'Mandela', role: 'President of South Africa', years: '1994–99', year: 1994, field: 'Politics',
+    style: 'servant', style2: 'transformational', traits: ['vision', 'resolve', 'comm', 'adapt', 'coalition', 'empathy', 'humility'],
+    successes: ['Negotiated the end of apartheid; Nobel Peace Prize (1993)', 'First president of a fully democratic South Africa (1994)', 'Made reconciliation visible, as at the 1995 Rugby World Cup, and stepped down after one term'],
+    shortcomings: ['Did little on HIV/AIDS in office, which he later acknowledged; infection among pregnant women rose from 7.6% to 22.4%', 'Deep poverty and high crime remained when he left office'],
+    talk: 'Let symbols speak: the Springbok jersey, number 6.', x: 0.8, y: 0.5,
   },
   {
-    id: 'jobs', name: 'Steve Jobs', role: 'CEO, Apple', years: '1997–2011', year: 2007, era: 'platform',
-    lead: 'Exacting and hands-on; colleagues described a “reality distortion field” that could make the impossible feel settled.',
-    talk: 'Rehearsed keynotes relentlessly. At Macworld 2007 he teased three products, an iPod, a phone and an internet device, then revealed they were one: the iPhone.',
-    move: 'The rule of three, and the reveal.',
-    catch: 'The same field that inspired people could, in the words of an early colleague, bend any fact to fit the purpose at hand.',
-    x: 0.1, y: 0.72,
+    id: 'jobs', name: 'Steve Jobs', short: 'Jobs', role: 'CEO, Apple', years: '1997–2011', year: 1997, field: 'Business',
+    style: 'visionary', style2: 'pacesetting', traits: ['vision', 'resolve', 'comm', 'decisive', 'risk', 'prep'],
+    successes: ['Returned in 1997 to an Apple near bankruptcy and turned it around', 'The iMac, iPod, iPhone and iPad', 'Funded and led Pixar through its first feature films'],
+    shortcomings: ['Pushed out of Apple by its board in 1985', 'Known for harsh treatment of colleagues, and a “reality distortion field” that could bend facts'],
+    talk: 'Rehearsed keynotes relentlessly; the rule of three.', x: 0.1, y: 0.72,
   },
   {
-    id: 'bezos', name: 'Jeff Bezos', role: 'CEO, Amazon', years: '1994–2021', year: 2004, era: 'platform',
-    lead: 'In June 2004 banned slide presentations in senior meetings and required written, narratively structured memos of up to six pages.',
-    talk: 'Meetings begin in silence while everyone reads. He argued a memo is harder to write than a 20-page deck because it forces you to decide what matters most.',
-    move: 'Writing it down before talking it through.',
-    catch: 'Amazon was still listed among large companies ranking employees against each other in 2014.',
-    x: 0.38, y: 0.14,
+    id: 'bezos', name: 'Jeff Bezos', short: 'Bezos', role: 'Founder and CEO, Amazon', years: '1994–2021', year: 2000, field: 'Business',
+    style: 'pacesetting', style2: 'visionary', traits: ['vision', 'resolve', 'comm', 'adapt', 'decisive', 'risk', 'prep'],
+    successes: ['Grew an online bookstore into the world’s largest online retailer', 'Launched Amazon Web Services and much of the cloud-computing market', 'Built a culture of long-term bets and written six-page memos'],
+    shortcomings: ['Long-running criticism of warehouse working conditions', 'Sued by the FTC and 17 states in 2023 for illegally maintaining monopoly power', 'Still ranked employees against each other in the 2010s'],
+    talk: 'Banned slides in senior meetings; memos read in silence.', x: 0.38, y: 0.14,
   },
   {
-    id: 'merkel', name: 'Angela Merkel', role: 'Chancellor of Germany', years: '2005–21', year: 2005, era: 'network',
-    lead: 'A scientist with a doctorate in quantum chemistry: quiet, patient, deliberate, moving “step by step” and building consensus.',
-    talk: 'Understated and unemotional, and willing to say what was not yet known, which drew praise during the COVID-19 pandemic.',
-    move: 'Waiting, listening, then reframing the deal.',
-    catch: 'Critics now call her a tactician more than a strategist. She backed the Nord Stream 2 gas pipeline after Russia took Crimea, and in 2022 conceded she had not responded adequately to Russian aggression.',
-    x: 0.74, y: 0.24,
+    id: 'merkel', name: 'Angela Merkel', short: 'Merkel', role: 'Chancellor of Germany', years: '2005–21', year: 2005, field: 'Politics',
+    style: 'democratic', traits: ['resolve', 'adapt', 'coalition', 'prep', 'humility'],
+    successes: ['Won four elections and led for 16 years', 'Steered Europe through the euro crisis', 'Praised for calm, science-based communication early in the COVID-19 pandemic'],
+    shortcomings: ['Backed Nord Stream 2 after Russia took Crimea; later conceded she had not responded adequately to Russian aggression', 'Critics cite a reform backlog and under-investment in defense'],
+    contested: 'In 2015 she kept Germany open to refugees, and more than a million asylum seekers arrived. Admired as humane, attacked as reckless; still argued over.',
+    talk: 'Understated, “step by step,” honest about the unknown.', x: 0.74, y: 0.24,
   },
   {
-    id: 'nadella', name: 'Satya Nadella', role: 'CEO, Microsoft', years: '2014–', year: 2014, era: 'network',
-    lead: 'Set out to turn a combative “know-it-all” culture into “learn-it-alls,” borrowing Carol Dweck’s idea of the growth mindset.',
-    talk: 'Asked his top executives to read <em>Nonviolent Communication</em>, and treats empathy as a hard skill, not a soft one.',
-    move: 'Leading the culture change by example rather than decree.',
-    catch: 'Some of the ground was laid before him: Microsoft ended its stack-ranking reviews in late 2013, months before he became CEO.',
-    x: 0.86, y: 0.64,
+    id: 'nadella', name: 'Satya Nadella', short: 'Nadella', role: 'CEO, Microsoft', years: '2014–', year: 2014, field: 'Business',
+    style: 'coaching', style2: 'transformational', traits: ['vision', 'comm', 'adapt', 'coalition', 'risk', 'empathy', 'humility'],
+    successes: ['Grew Microsoft’s market value from about $300 billion to more than $3 trillion', 'Turned the company toward cloud computing', 'Changed a “know-it-all” culture into one of “learn-it-alls”'],
+    shortcomings: ['About 10,000 job cuts in 2023, after 7,800 in 2015 when the inherited Nokia phone deal was written off', 'Very large AI bets whose payoff is not yet proven'],
+    talk: 'Treats empathy as a hard skill.', x: 0.86, y: 0.64,
   },
   {
-    id: 'ardern', name: 'Jacinda Ardern', role: 'Prime minister of New Zealand', years: '2017–23', year: 2020, era: 'network',
-    lead: 'Science-led and empathetic in crisis, after the 2019 Christchurch attack and in the 2020 pandemic.',
-    talk: 'Went on Facebook Live in casual clothes, after putting her toddler to bed, to “check in” with the country. Researchers credited the informal sessions with building “a team of five million.”',
-    move: 'Talking from the kitchen table, not the podium.',
-    catch: 'Border closures drew criticism at home, polls fell in 2022, and in January 2023 she resigned, saying she no longer had “enough in the tank.”',
-    x: 0.84, y: 0.88,
+    id: 'ardern', name: 'Jacinda Ardern', short: 'Ardern', role: 'Prime minister of New Zealand', years: '2017–23', year: 2017, field: 'Politics',
+    style: 'affiliative', style2: 'democratic', traits: ['comm', 'adapt', 'coalition', 'decisive', 'empathy'],
+    successes: ['Banned military-style semi-automatic weapons 26 days after the Christchurch attack, by 119 votes to 1', 'One of the lowest COVID-19 death rates in the developed world early in the pandemic', 'Won a landslide re-election in 2020'],
+    shortcomings: ['Missed promised goals on housing and child poverty', 'Border closures drew criticism at home; she resigned in 2023 as polls fell'],
+    talk: 'Facebook Live from home after putting her toddler to bed.', x: 0.84, y: 0.88,
   },
 ];
 
@@ -141,8 +148,14 @@ export const sotu = [
   { p: 'G.W. Bush', y: 2002, g: 10.4 }, { p: 'Obama', y: 2010, g: 8.6 },
 ];
 
-// Average length of a candidate sound bite on U.S. network evening news, presidential campaigns.
-// Sources: Hallin (1992); summarized in Rhetoric & Public Affairs (2012).
+// Average length of a candidate sound bite on U.S. network evening news, presidential campaigns. Source: Hallin (1992).
 export const soundbites = [
   { y: 1968, s: 43 }, { y: 1972, s: 25 }, { y: 1976, s: 18 }, { y: 1980, s: 12 }, { y: 1984, s: 10 }, { y: 1988, s: 8.9 },
+];
+
+// Periods used for "what shifted": by the year each leader rose to their defining role.
+export const periods = [
+  { label: '1933–1960', from: 1900, to: 1960 },
+  { label: '1961–1999', from: 1961, to: 1999 },
+  { label: '2000–2023', from: 2000, to: 2100 },
 ];

@@ -1,0 +1,326 @@
+---
+import Base from '../../layouts/Base.astro';
+import TraitMatrix from '../../components/leaders/TraitMatrix.astro';
+import StyleShift from '../../components/leaders/StyleShift.astro';
+import StyleMap from '../../components/leaders/StyleMap.astro';
+import TrendCharts from '../../components/leaders/TrendCharts.astro';
+import Subscribe from '../../components/Subscribe.astro';
+import { leaders, styles, traits } from '../../data/leaders';
+
+const tabs = [
+  { id: 'why', label: 'The Question', sub: 'Styles defined' },
+  { id: 'leaders', label: 'Leaders', sub: '14 profiles' },
+  { id: 'traits', label: 'Shared Traits', sub: 'Common to all?' },
+  { id: 'shift', label: 'What Shifted', sub: 'Over 100 years' },
+  { id: 'verdict', label: 'Verdict', sub: 'What it adds up to' },
+];
+const sorted = [...leaders].sort((a, b) => a.year - b.year);
+const traitLabel = Object.fromEntries(traits.map((t) => [t.id, t.label]));
+const fieldGroup = (f: string) => (f.startsWith('Business') ? 'business' : f.includes('Politics') || f.includes('politics') ? 'politics' : 'society');
+const groups = [
+  { id: 'all', label: 'All 14' },
+  { id: 'politics', label: 'Politics' },
+  { id: 'business', label: 'Business' },
+  { id: 'society', label: 'Movements and media' },
+];
+---
+<Base title="What Great Leaders Share" description="Curiosity Corner: fourteen of the most successful leaders of the last hundred years, their leadership styles and core traits, their successes and shortcomings, and what changed over time.">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <p class="label">Curiosity Corner · No. 03</p>
+      <h1 class="t-title">What Great Leaders Share <span class="it">Styles, traits, wins and failures, 1933–2023</span></h1>
+      <p class="t-dek">Fourteen of the most successful leaders of the last hundred years, from Roosevelt to Nadella. For each: the leadership style, the core traits, what they achieved and where they failed. Then two questions: do great leaders share the same traits, and have the styles changed?</p>
+      <div class="stats">
+        <div><span class="n">14</span><span class="l">Leaders across politics, business, movements and media</span></div>
+        <div><span class="n">9</span><span class="l">Leadership styles identified</span></div>
+        <div><span class="n">0</span><span class="l">Traits shared by all fourteen</span></div>
+        <div><span class="n">3</span><span class="l">Near-universal: resolve, communication, vision</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap art">
+    <nav class="rail" aria-label="Article sections">
+      <p class="label muted rail-head">In this story</p>
+      {tabs.map((t, i) => (
+        <a href={`#${t.id}`} class="rail-tab" data-tab={t.id} aria-current={i === 0 ? 'true' : undefined}>
+          <span class="rail-n">0{i + 1}</span>
+          <span class="rail-l">{t.label}</span>
+          <span class="rail-s">{t.sub}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="panels">
+      <!-- WHY -->
+      <section class="panel" id="why" data-panel="why">
+        <p class="label">01 · The Question</p>
+        <h2 class="h2">Is there a formula <span class="it clay">for great leadership?</span></h2>
+        <p class="body">We picked fourteen leaders whose success is hard to dispute on its own terms: results at very large scale, results that lasted, and recognition from critics as well as admirers. They come from politics, business, social movements and media, and they rose between 1933 and 2017.</p>
+        <p class="body">For each one we name a main leadership style (and a second where it fits), mark the core traits the record shows, and list both the successes and the shortcomings. Success here never means flawless: every profile has real failures in it.</p>
+        <h3 class="h3 gap-top">The nine styles</h3>
+        <p class="small muted-p">Most come from psychologist Daniel Goleman’s 2000 study of 3,871 executives, which found six distinct styles. The others come from Kurt Lewin (1939), Robert Greenleaf (1970s) and James MacGregor Burns (1978).</p>
+        <div class="glossary">
+          {Object.entries(styles).map(([id, s]) => (
+            <article class="gcard"><p class="g-src">{s.src}</p><h4>{s.label}</h4><p>{s.def}</p></article>
+          ))}
+        </div>
+        <blockquote class="pull">The question isn’t who was best. It’s what the best had in common, and what changed.</blockquote>
+      </section>
+
+      <!-- LEADERS -->
+      <section class="panel" id="leaders" data-panel="leaders" hidden>
+        <p class="label">02 · Leaders</p>
+        <h2 class="h2">Fourteen leaders, <span class="it clay">their wins and their failures.</span></h2>
+        <div class="era-filter" role="group" aria-label="Filter by field">
+          {groups.map((g, i) => <button type="button" class={`chip${i === 0 ? ' on' : ''}`} data-group={g.id}>{g.label}</button>)}
+        </div>
+        <div class="lcards">
+          {sorted.map((l) => (
+            <article class="card lcard" id={`p-${l.id}`} data-g={fieldGroup(l.field)}>
+              <p class="label muted">{l.role} · {l.years}</p>
+              <h3 class="h3">{l.name}</h3>
+              <div class="stags">
+                <span class="stag main" title={styles[l.style].def}>{styles[l.style].label}</span>
+                {l.style2 && <span class="stag" title={styles[l.style2].def}>{styles[l.style2].label}</span>}
+              </div>
+              <div class="tchips" aria-label="Core traits">{l.traits.map((t) => <span class="tchip">{traitLabel[t]}</span>)}</div>
+              <div class="sl">
+                <p class="sl-h ok">Successes</p>
+                <ul class="ok">{l.successes.map((s) => <li>{s}</li>)}</ul>
+                <p class="sl-h bad">Shortcomings</p>
+                <ul class="bad">{l.shortcomings.map((s) => <li>{s}</li>)}</ul>
+                {l.contested && <><p class="sl-h mix">Still argued over</p><p class="mixp">{l.contested}</p></>}
+              </div>
+              <p class="ltalk"><span>How they communicated</span>{l.talk}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- TRAITS -->
+      <section class="panel" id="traits" data-panel="traits" hidden>
+        <p class="label">03 · Shared Traits</p>
+        <h2 class="h2">Three traits come close. <span class="it clay">None is universal.</span></h2>
+        <p class="body">Eleven traits, fourteen leaders. Read across a row to see one leader’s profile, or down a column to see how common a trait is.</p>
+        <TraitMatrix />
+        <div class="findings">
+          <article class="card find"><p class="label">Near-universal</p><h3 class="h3">Resolve, communication, vision</h3><p class="small">Resolve and communication each show up in 12 of 14 leaders, clear vision in 11. Eleven of the fourteen have at least two of the three. If great leaders share a core, this is it.</p></article>
+          <article class="card find"><p class="label">The exceptions</p><h3 class="h3">Great without the core</h3><p class="small">Eisenhower and Merkel were neither great speakers nor grand visionaries; they won through organization, patience and coalitions. Ardern led through empathy and communication more than a long-range plan. The core is common, not required.</p></article>
+          <article class="card find"><p class="label">Common</p><h3 class="h3">Adaptability, decisiveness, risk, coalitions, preparation</h3><p class="small">Each appears in 7 to 9 leaders. These vary with the job: founders take risks, coalition leaders build alliances, crisis leaders decide fast.</p></article>
+          <article class="card find"><p class="label">Less common</p><h3 class="h3">Empathy, humility, delegation</h3><p class="small">Empathy shows up in 6, humility in 5, real delegation in only 2. Many of history’s most successful leaders were not especially humble, and many held tight control.</p></article>
+        </div>
+        <h3 class="h3 gap-top">Every strength casts a shadow</h3>
+        <p class="body">Line up the shortcomings and a pattern appears: most failures were a leader’s greatest strength, pushed too far, or a blind spot outside their main mission.</p>
+        <div class="shadow">
+          <div><span class="sh-s">Resolve</span><span class="sh-a">→</span><span class="sh-w">Thatcher would not turn, even on the poll tax that ended her premiership.</span></div>
+          <div><span class="sh-s">Delegation</span><span class="sh-a">→</span><span class="sh-w">Reagan’s loose hand let Iran-Contra happen; Eisenhower looked passive.</span></div>
+          <div><span class="sh-s">High standards</span><span class="sh-a">→</span><span class="sh-w">Welch’s forced ranking and Jobs’s harshness drove people out.</span></div>
+          <div><span class="sh-s">Patience and consensus</span><span class="sh-a">→</span><span class="sh-w">Merkel’s steady deal-making with Russia became a strategic mistake.</span></div>
+          <div><span class="sh-s">Single-minded mission</span><span class="sh-a">→</span><span class="sh-w">Mandela, focused on reconciliation, did little on HIV/AIDS in office; Reagan was criticized as slow on AIDS.</span></div>
+        </div>
+      </section>
+
+      <!-- SHIFT -->
+      <section class="panel" id="shift" data-panel="shift" hidden>
+        <p class="label">04 · What Shifted</p>
+        <h2 class="h2">The traits held. <span class="it clay">The styles changed.</span></h2>
+        <p class="body">Sort the fourteen by when they rose and two different stories appear. The way they led moved a long way. The traits underneath moved much less.</p>
+        <StyleShift />
+        <div class="findings">
+          <article class="card find"><p class="label">Styles: a clear shift</p><h3 class="h3">From command toward coaching</h3><p class="small">Commanding appears only among leaders who rose between 1940 and 1981: Churchill, Thatcher and Welch. Democratic and coaching appear as a main style only after 2000, with Merkel and Nadella, and affiliative from Winfrey onward.</p></article>
+          <article class="card find"><p class="label">Traits: mostly steady</p><h3 class="h3">The core didn’t move</h3><p class="small">Resolve, communication and vision appear in every period, though less uniformly among the leaders who rose after 2000. The one clear rise is adaptability, seen in all four leaders who rose after 2000. Empathy and humility, despite their reputation as modern traits, are about as common among the earliest group as the latest.</p></article>
+        </div>
+        <h3 class="h3 gap-top">The research moved the same way</h3>
+        <ol class="timeline">
+          <li><span class="tl-d">1939 · Kurt Lewin</span><span class="tl-t">Compares autocratic, democratic and hands-off leaders of children’s groups. The democratic groups do best.</span></li>
+          <li><span class="tl-d">1970s · Robert Greenleaf</span><span class="tl-t">Proposes the servant leader, who leads by serving.</span></li>
+          <li><span class="tl-d">1978 · James MacGregor Burns</span><span class="tl-t">Separates transactional leadership, a trade of reward for effort, from transformational leadership that raises people’s goals.</span></li>
+          <li><span class="tl-d">1980s–2015 · Rank and yank</span><span class="tl-t">Welch’s forced ranking spreads from GE; Microsoft drops stack ranking in 2013 and GE its own system in 2015.</span></li>
+          <li><span class="tl-d">2000 · Daniel Goleman</span><span class="tl-t">Finds that commanding and pacesetting styles hurt the working climate, the visionary style helps it most, and the best leaders switch among several styles.</span></li>
+          <li><span class="tl-d">2008 · Google, Project Oxygen</span><span class="tl-t">Studies its own managers and finds the first habit of the best ones: being a good coach.</span></li>
+        </ol>
+        <h3 class="h3 gap-top">How they talk changed too</h3>
+        <p class="body">The way leaders communicate moved from formal and distant toward plain and close. Two long-running measures from American politics:</p>
+        <TrendCharts />
+        <h3 class="h3 gap-top">Explore: how they decided and how they spoke</h3>
+        <p class="body">Each leader placed by how they made decisions and how they spoke to people. Press play to add them in the order they rose.</p>
+        <StyleMap />
+      </section>
+
+      <!-- VERDICT -->
+      <section class="panel" id="verdict" data-panel="verdict" hidden>
+        <p class="label">05 · Verdict</p>
+        <h2 class="h2">What it <span class="it clay">adds up to.</span></h2>
+        <div class="qa">
+          <div><p class="q">Do great leaders share the same traits?</p><p class="a">Mostly, but not completely. Resolve, communication and a clear vision appear in nearly all of them. No single trait appears in every one, and some of the most effective, like Eisenhower and Merkel, succeeded without the famous ones.</p></div>
+          <div><p class="q">Did leadership styles change over the century?</p><p class="a">Yes. Commanding leaders cluster in the middle of the century; consensus and coaching styles arrive after 2000. Research moved the same way, from command toward coaching.</p></div>
+          <div><p class="q">Did the traits change?</p><p class="a">Much less. The core traits are present in every period. What changed is how they show up: resolve expressed as steady patience instead of defiance, communication through a live stream instead of a podium.</p></div>
+          <div><p class="q">What explains their failures?</p><p class="a">Usually a strength overused, or a blind spot outside the main mission. The trait that made them great was often the one that hurt them.</p></div>
+        </div>
+        <div class="people">
+          <article class="card person"><p class="label muted">Borrow</p><h3 class="h3">Build the core three</h3><p class="small">Resolve, communication and a clear picture of where you are going are the closest thing to a common denominator.</p></article>
+          <article class="card person"><p class="label muted">Borrow</p><h3 class="h3">Have more than one style</h3><p class="small">Churchill’s style suited 1940 and misfired for years before it. The research says the best leaders switch styles to fit the moment.</p></article>
+          <article class="card person"><p class="label muted">Watch for</p><h3 class="h3">Your strength, overused</h3><p class="small">Ask what your best trait looks like at twice the strength. That is where your biggest mistake is likely to come from.</p></article>
+        </div>
+        <div class="card doom">
+          <p class="label">Read this with care</p>
+          <p class="small">Fourteen leaders is a small group, chosen because they succeeded; many people with the same traits failed and were forgotten. The styles and trait marks are our judgment from the sources, not measured scores. Treat the patterns as strong hints, not laws.</p>
+        </div>
+      </section>
+
+      <section class="sources">
+        <p class="label">Sources</p>
+        <ol>
+          <li>Daniel Goleman, “Leadership That Gets Results,” <em>Harvard Business Review</em> (2000); Lewin, Lippitt and White (1939); Robert Greenleaf (1970s); James MacGregor Burns, <em>Leadership</em> (1978); Google re:Work, Project Oxygen.</li>
+          <li>Roosevelt: American Presidency Project (UC Santa Barbara); Britannica and HISTORY on the fireside chats; National Archives on Executive Order 9066.</li>
+          <li>Churchill: Museum of Broadcast Communications; Imperial War Museums; International Churchill Society.</li>
+          <li>Eisenhower: Fred I. Greenstein, <em>The Hidden-Hand Presidency</em> (1982); <em>Political Science Quarterly</em> (2025).</li>
+          <li>King: Stanford King Institute; <em>American Heritage</em>; <em>TIME</em>.</li>
+          <li>Thatcher: Margaret Thatcher Foundation; <em>History Today</em>; Ipsos; accounts of the 1990 leadership election.</li>
+          <li>Reagan: Reagan Library; Miller Center; Britannica; Cato Institute, “Lessons from Reagan.”</li>
+          <li>Welch: <em>Fortune</em> (2020); NPR (2020, 2022); GE; Stanford GSB (2005); SHRM and CNN on Microsoft (2013); Cornell ILR on GE (2015).</li>
+          <li>Winfrey: <em>TIME</em>; Biography.com; CBS News (2003) on the Forbes list; <em>America</em> magazine (2016).</li>
+          <li>Mandela: NPR (2013); World Rugby; PBS <em>Frontline</em>, “Nelson Mandela’s Mixed Legacy on HIV/AIDS”; <em>Mail &amp; Guardian</em> (2013).</li>
+          <li>Jobs: Britannica, “Saving Apple”; <em>Fortune</em> (2011); All About Steve Jobs.</li>
+          <li>Bezos: his 2004 email on memos, via <em>Business Insider</em>; CNBC and <em>Fortune</em> (2023) on the FTC lawsuit.</li>
+          <li>Merkel: Harvard Program on Negotiation; <em>The Irish Times</em> (2022); <em>Fortune</em> (2024); HISTORY on “Wir schaffen das.”</li>
+          <li>Nadella: Stanford GSB (2019); <em>Fortune</em> (2015, 2021, 2023, 2024); CNBC (2024); <em>Computerworld</em>.</li>
+          <li>Ardern: McGuire et al., <em>Human Resource Development International</em> (2020); CBS News and RNZ (2019) on the gun law; NPR and RTÉ (2023).</li>
+          <li>Communication data: Daniel Hallin (1992); Smart Politics, University of Minnesota (2013).</li>
+        </ol>
+        <p class="small">All text is an original summary of the sources. Style labels, trait marks and map placements are editorial judgments. All illustrations are original; no photographs of the people profiled are used.</p>
+      </section>
+    </div>
+  </div>
+  <Subscribe />
+</Base>
+
+<script>
+  const tabs = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-tab]'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-panel]'));
+  const show = (id: string, scroll = false) => {
+    if (!panels.some((p) => p.dataset.panel === id)) id = 'why';
+    panels.forEach((p) => (p.hidden = p.dataset.panel !== id));
+    tabs.forEach((t) => (t.dataset.tab === id ? t.setAttribute('aria-current', 'true') : t.removeAttribute('aria-current')));
+    if (scroll) document.querySelector('.art')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  tabs.forEach((t) => t.addEventListener('click', (e) => { e.preventDefault(); history.replaceState(null, '', `#${t.dataset.tab}`); show(t.dataset.tab!, true); }));
+  show(location.hash.slice(1) || 'why');
+  window.addEventListener('hashchange', () => show(location.hash.slice(1) || 'why'));
+
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-group]'));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.lcard'));
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((x) => x.classList.toggle('on', x === c));
+    cards.forEach((k) => (k.hidden = c.dataset.group !== 'all' && k.dataset.g !== c.dataset.group));
+  }));
+
+  window.addEventListener('leader-jump', (e) => {
+    const id = (e as CustomEvent).detail as string;
+    chips[0]?.click();
+    history.replaceState(null, '', '#leaders');
+    show('leaders');
+    const el = document.getElementById(`p-${id}`);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); }
+  });
+</script>
+
+<style>
+  .hero { background: #F1EEE7; border-bottom: 1px solid var(--line); }
+  .hero-in { padding-block: 104px 72px; display: flex; flex-direction: column; gap: 28px; }
+  .hero .label { color: var(--accent-ink); }
+  .t-title { margin: 0; font-weight: 300; font-size: clamp(44px, 6.4vw, 96px); line-height: .98; letter-spacing: -0.03em; color: var(--ink); }
+  .t-title .it { display: block; font-family: var(--serif); font-style: italic; color: var(--clay); font-size: .55em; margin-top: 12px; }
+  .t-dek { margin: 0; max-width: 800px; font-family: var(--serif); font-weight: 300; font-size: clamp(21px, 2.2vw, 28px); line-height: 1.4; color: var(--ink-2); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border-top: 1px solid var(--line); margin-top: 4px; }
+  .stats div { padding: 20px 16px 0 0; display: flex; flex-direction: column; gap: 4px; }
+  .stats .n { font-size: 40px; font-weight: 300; color: var(--ink); }
+  .stats .l { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-2); }
+
+  .art { display: flex; flex-wrap: wrap; gap: 56px; padding-block: 72px 96px; align-items: flex-start; }
+  .rail { flex: 0 0 210px; position: sticky; top: 24px; display: flex; flex-direction: column; gap: 4px; }
+  .rail-head { margin-bottom: 8px; }
+  .rail-tab { display: grid; grid-template-columns: 28px 1fr; grid-template-rows: auto auto; column-gap: 8px; padding: 12px 14px; border-radius: 14px; text-decoration: none; color: var(--ink); border: 1px solid transparent; }
+  .rail-tab:hover { background: var(--ground-2); color: var(--ink); }
+  .rail-tab[aria-current='true'] { background: var(--ink); color: var(--ground); }
+  .rail-n { grid-row: 1 / 3; font-family: var(--mono); font-size: 11px; opacity: .6; padding-top: 4px; }
+  .rail-l { font-size: 18px; font-weight: 400; }
+  .rail-s { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; opacity: .65; }
+  @media (max-width: 900px) {
+    .rail { flex-basis: 100%; flex-direction: row; overflow-x: auto; top: 0; z-index: 5; background: var(--ground); padding: 8px 0; gap: 6px; }
+    .rail-head { display: none; }
+    .rail-tab { flex: 0 0 auto; display: flex; flex-direction: column; gap: 0; border-color: var(--line); padding: 8px 14px; }
+    .rail-n, .rail-s { display: none; }
+    .rail-l { font-size: 15px; }
+  }
+  .panels { flex: 1 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 56px; }
+  .panel { display: flex; flex-direction: column; gap: 22px; }
+  .panel[hidden] { display: none; }
+  .gap-top { margin-top: 28px; }
+  .muted-p { color: var(--muted); margin: -8px 0 0; }
+  .pull { margin: 12px 0 0; padding-left: 24px; border-left: 2px solid var(--accent); font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1.35; }
+
+  .glossary { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .gcard { background: var(--card, #FBFAF7); border: 1px solid var(--line); border-top: 3px solid var(--accent); padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+  .gcard h4 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 24px; color: var(--ink); }
+  .gcard p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+  .gcard .g-src { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2); }
+
+  .era-filter { display: flex; flex-wrap: wrap; gap: 8px; }
+  .era-filter .chip { cursor: pointer; font: inherit; font-size: 13px; }
+  .era-filter .chip.on { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+  .lcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .lcard { padding: 24px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow .4s ease; }
+  .lcard[hidden] { display: none; }
+  .lcard.flash { box-shadow: 0 0 0 3px var(--accent); }
+  .lcard .h3 { margin: 0; }
+  .lcard .label { margin: 0; }
+  .stags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stag { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--clay); color: var(--clay); cursor: help; }
+  .stag.main { background: var(--clay); color: #F6F4EF; }
+  .tchips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tchip { font-size: 12px; padding: 3px 9px; border-radius: 4px; background: var(--ground-2); color: var(--ink-2); }
+  .sl { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .sl-h { margin: 6px 0 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; }
+  .sl-h.ok { color: #3D6B4A; } .sl-h.bad { color: #9A3B24; } .sl-h.mix { color: var(--accent-ink); }
+  .sl ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .sl li { position: relative; padding-left: 22px; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+  .sl ul.ok li::before { content: '✓'; position: absolute; left: 2px; top: 0; color: #3D6B4A; font-weight: 600; }
+  .sl ul.bad li::before { content: '✕'; position: absolute; left: 2px; top: 0; color: #9A3B24; font-weight: 600; }
+  .mixp { margin: 0; font-size: 15px; line-height: 1.45; color: var(--ink-2); padding-left: 22px; position: relative; }
+  .mixp::before { content: '◐'; position: absolute; left: 0; color: var(--accent-ink); }
+  .ltalk { margin: auto 0 0; padding-top: 10px; border-top: 1px dashed var(--line); font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--muted); }
+  .ltalk span { display: block; font-family: var(--mono); font-style: normal; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-2); margin-bottom: 2px; }
+
+  .findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+  .find { padding: 22px; display: flex; flex-direction: column; gap: 8px; }
+  .find .label { margin: 0; color: var(--accent-ink); }
+  .find .h3 { margin: 0; }
+  .shadow { display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--card, #FBFAF7); }
+  .shadow div { display: grid; grid-template-columns: 190px 28px 1fr; gap: 8px; padding: 14px 18px; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .shadow div:last-child { border-bottom: 0; }
+  .sh-s { font-family: var(--display); font-size: 21px; color: var(--ink); }
+  .sh-a { color: var(--clay); font-size: 18px; }
+  .sh-w { font-size: 15.5px; line-height: 1.5; color: var(--ink-2); }
+  @media (max-width: 640px) { .shadow div { grid-template-columns: 1fr; gap: 2px; } .sh-a { display: none; } }
+
+  .timeline { list-style: none; margin: 8px 0 0; padding: 0; border-left: 1px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 20px 24px; display: flex; flex-direction: column; gap: 4px; }
+  .timeline li::before { content: ''; position: absolute; left: -5px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .tl-d { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); }
+  .tl-t { font-size: 16.5px; line-height: 1.6; color: var(--ink-2); }
+
+  .qa { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+  .qa div { padding: 18px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 8px 28px; }
+  .q { margin: 0; font-family: var(--display); font-size: 24px; line-height: 1.2; color: var(--ink); }
+  .a { margin: 0; font-size: 16.5px; line-height: 1.6; color: var(--ink-2); }
+  @media (max-width: 720px) { .qa div { grid-template-columns: 1fr; } }
+  .people { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .person { padding: 22px; display: flex; flex-direction: column; gap: 8px; }
+  .person .h3 { margin: 0; }
+  .doom { padding: 26px; display: flex; flex-direction: column; gap: 10px; background: #F1EEE7; border-left: 4px solid var(--clay); }
+  .doom .label { color: var(--clay); }
+  .sources { border-top: 1px solid var(--line); padding-top: 32px; display: flex; flex-direction: column; gap: 14px; }
+  .sources ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-family: var(--serif); font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+</style>

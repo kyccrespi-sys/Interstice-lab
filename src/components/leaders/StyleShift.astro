@@ -1,0 +1,77 @@
+---
+// When each leadership style shows up across the century, and how trait frequency changes by period.
+import { leaders, styles, traits, periods, type StyleId } from '../../data/leaders';
+const lanes: StyleId[] = ['commanding', 'pacesetting', 'visionary', 'transformational', 'delegative', 'democratic', 'servant', 'affiliative', 'coaching'];
+const W = 1000, L = 150, R = 30, T = 30, LANE = 44, H = T + lanes.length * LANE + 46;
+const x = (y: number) => L + ((y - 1930) / 95) * (W - L - R);
+const ly = (s: StyleId) => T + lanes.indexOf(s) * LANE + LANE / 2;
+const sorted = [...leaders].sort((a, b) => a.year - b.year);
+// label nudges where names would collide in the same lane
+const dy: Record<string, number> = { reagan: -14, jobs: 14, welch: -14, bezos: 14, thatcher: -14 };
+const inPeriod = periods.map((p) => leaders.filter((l) => l.year >= p.from && l.year <= p.to));
+const share = (tid: string, i: number) => inPeriod[i].filter((l) => l.traits.includes(tid as any)).length / inPeriod[i].length;
+---
+<div class="ss">
+  <figure class="ss-fig">
+    <p class="label">Styles across the century</p>
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Timeline of leadership styles: commanding appears only among leaders who rose between 1940 and 1981; democratic and coaching as main styles appear only after 2000." font-family="IBM Plex Mono, monospace">
+      {[1930, 1950, 1970, 1990, 2010].map((y) => <g><line x1={x(y)} x2={x(y)} y1={T - 6} y2={H - 40} stroke="#1F1D1A" stroke-opacity=".08"></line><text x={x(y)} y={H - 22} font-size="11" fill="#59534A" text-anchor="middle">{y}</text></g>)}
+      {lanes.map((s, i) => (
+        <g>
+          <rect x={L} y={T + i * LANE + 4} width={W - L - R} height={LANE - 8} fill={i % 2 ? 'transparent' : 'rgba(31,29,26,.035)'}></rect>
+          <text x={L - 12} y={ly(s) + 4} font-size="12" fill="#1F1D1A" text-anchor="end" font-family="Archivo, sans-serif">{styles[s].label}</text>
+        </g>
+      ))}
+      {sorted.filter((l) => l.style2).map((l) => <circle cx={x(l.year)} cy={ly(l.style2!)} r="5" fill="#FBFAF7" stroke="#8C4A2F" stroke-width="1.5"><title>{l.name}: secondary style</title></circle>)}
+      {sorted.map((l) => (
+        <g>
+          <circle cx={x(l.year)} cy={ly(l.style)} r="7" fill="#C99242" stroke="#FBFAF7" stroke-width="2"><title>{l.name}: main style</title></circle>
+          <text x={x(l.year) + 11} y={ly(l.style) + 4 + (dy[l.id] ?? 0)} font-size="11" fill="#36322C">{l.short}</text>
+        </g>
+      ))}
+    </svg>
+    <div class="ss-key"><span><b class="f"></b> Main style</span><span><b class="h"></b> Secondary style</span></div>
+  </figure>
+
+  <figure class="ss-fig">
+    <p class="label">Traits by period</p>
+    <p class="ss-q">Share of leaders in each period who show the trait ({periods.map((p, i) => `${p.label}: ${inPeriod[i].length} leaders`).join(' · ')})</p>
+    <div class="ss-grid">
+      <div class="ss-hd"></div>
+      {periods.map((p) => <div class="ss-hd">{p.label}</div>)}
+      {traits.map((t) => (
+        <>
+          <div class="ss-t">{t.label}</div>
+          {periods.map((_, i) => (
+            <div class="ss-c" title={`${t.label}, ${periods[i].label}: ${Math.round(share(t.id, i) * 100)}%`}>
+              <span class="ss-b"><i style={`width:${share(t.id, i) * 100}%`}></i></span>
+              <span class="ss-v">{Math.round(share(t.id, i) * 100)}%</span>
+            </div>
+          ))}
+        </>
+      ))}
+    </div>
+    <p class="ss-note">Small groups: one leader moves a bar by 17 to 25 points. Read the big differences, not the small ones.</p>
+  </figure>
+</div>
+
+<style>
+  .ss { display: flex; flex-direction: column; gap: 20px; }
+  .ss-fig { margin: 0; background: var(--card, #FBFAF7); border: 1px solid var(--line); padding: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .ss-fig .label { margin: 0; color: var(--accent-ink); }
+  .ss-fig svg { width: 100%; height: auto; display: block; }
+  .ss-key { display: flex; gap: 20px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .ss-key span { display: inline-flex; align-items: center; gap: 8px; }
+  .ss-key b { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .ss-key .f { background: #C99242; } .ss-key .h { border: 1.5px solid #8C4A2F; background: #FBFAF7; }
+  .ss-q { margin: 0; font-size: 14px; color: var(--ink-2); }
+  .ss-grid { display: grid; grid-template-columns: minmax(120px, 170px) repeat(3, minmax(0, 1fr)); gap: 6px 14px; align-items: center; }
+  .ss-hd { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  .ss-t { font-size: 14px; color: var(--ink); }
+  .ss-c { display: flex; align-items: center; gap: 8px; }
+  .ss-b { flex: 1; height: 10px; background: var(--ground-2); border-radius: 0 3px 3px 0; overflow: hidden; }
+  .ss-b i { display: block; height: 100%; background: #C99242; border-radius: 0 3px 3px 0; }
+  .ss-v { font-family: var(--mono); font-size: 11px; color: var(--ink-2); width: 34px; text-align: right; }
+  .ss-note { margin: 0; font-family: var(--mono); font-size: 11px; color: var(--muted-2); }
+  @media (max-width: 600px) { .ss-grid { grid-template-columns: 96px repeat(3, minmax(0, 1fr)); gap: 6px 6px; } .ss-v { display: none; } .ss-t { font-size: 12.5px; } }
+</style>

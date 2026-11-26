@@ -1,0 +1,93 @@
+---
+// Leaders × traits grid, traits ordered by how many leaders show them.
+import { leaders, traits, styles, periods } from '../../data/leaders';
+const sorted = [...leaders].sort((a, b) => a.year - b.year);
+const counts = Object.fromEntries(traits.map((t) => [t.id, leaders.filter((l) => l.traits.includes(t.id)).length]));
+const cols = [...traits].sort((a, b) => counts[b.id] - counts[a.id]);
+const n = leaders.length;
+const tier = (c: number) => (c >= 11 ? 'core' : c >= 7 ? 'common' : 'rare');
+const periodOf = (y: number) => periods.findIndex((p) => y >= p.from && y <= p.to);
+---
+<figure class="tm" id="traitmatrix" aria-label="Which leaders show which traits">
+  <div class="tm-scroll">
+    <table class="tm-t">
+      <thead>
+        <tr>
+          <th class="tm-corner" scope="col"><span>Leader</span><span class="tm-sub">Style</span></th>
+          {cols.map((t) => (
+            <th scope="col" class={`tm-h ${tier(counts[t.id])}`} data-col={t.id} title={t.def}>
+              <span class="tm-hl">{t.label}</span>
+              <span class="tm-bar" aria-hidden="true"><i style={`height:${(counts[t.id] / n) * 100}%`}></i></span>
+              <span class="tm-c">{counts[t.id]}/{n}</span>
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {sorted.map((l, i) => {
+          const p = periodOf(l.year), prev = i > 0 ? periodOf(sorted[i - 1].year) : -1;
+          return (
+            <>
+              {p !== prev && <tr class="tm-period"><th colspan={cols.length + 1} scope="rowgroup">Rose {periods[p].label}</th></tr>}
+              <tr data-row={l.id}>
+                <th scope="row" class="tm-name"><span class="tm-n">{l.short} <em>{l.year}</em></span><span class="tm-sub">{styles[l.style].label}{l.style2 ? ` · ${styles[l.style2].label}` : ''}</span></th>
+                {cols.map((t) => {
+                  const on = l.traits.includes(t.id);
+                  return <td data-col={t.id} class={on ? 'on' : ''} aria-label={`${t.label}: ${on ? 'yes' : 'no'}`}>{on ? <span class="dot"></span> : <span class="no">·</span>}</td>;
+                })}
+              </tr>
+            </>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+  <div class="tm-key">
+    <span><b class="k core"></b> In 11 or more of 14: near-universal</span>
+    <span><b class="k common"></b> In 7 to 10: common</span>
+    <span><b class="k rare"></b> In 6 or fewer: less common</span>
+  </div>
+  <figcaption class="tm-cap">Each mark is our judgment from the sources, shown so you can check it and disagree. Hover a column to see the trait’s definition.</figcaption>
+</figure>
+
+<script>
+  const tm = document.getElementById('traitmatrix');
+  if (tm) {
+    const cells = Array.from(tm.querySelectorAll<HTMLElement>('[data-col]'));
+    cells.forEach((c) => {
+      c.addEventListener('mouseenter', () => cells.forEach((x) => x.classList.toggle('hl', x.dataset.col === c.dataset.col)));
+      c.addEventListener('mouseleave', () => cells.forEach((x) => x.classList.remove('hl')));
+    });
+  }
+</script>
+
+<style>
+  .tm { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .tm-scroll { overflow-x: auto; border: 1px solid var(--line); background: var(--card, #FBFAF7); }
+  .tm-t { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 13px; }
+  .tm-t th, .tm-t td { border-bottom: 1px solid var(--line); }
+  .tm-corner { position: sticky; left: 0; z-index: 2; background: var(--card, #FBFAF7); text-align: left; vertical-align: bottom; padding: 10px 12px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: table-cell; }
+  .tm-corner span { display: block; }
+  .tm-h { vertical-align: bottom; padding: 10px 4px; width: 62px; font-weight: 400; }
+  .tm-hl { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .04em; line-height: 1.25; color: var(--ink-2); min-height: 38px; }
+  .tm-bar { display: flex; align-items: flex-end; justify-content: center; height: 46px; margin: 6px auto 4px; width: 14px; background: var(--ground-2); border-radius: 3px 3px 0 0; }
+  .tm-bar i { display: block; width: 100%; border-radius: 3px 3px 0 0; background: #C99242; }
+  .tm-h.core .tm-bar i { background: #8C4A2F; }
+  .tm-h.rare .tm-bar i { background: #D9C3A0; }
+  .tm-c { display: block; font-family: var(--mono); font-size: 11px; color: var(--ink); }
+  .tm-period th { text-align: left; padding: 8px 12px 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); background: var(--ground-2); position: sticky; left: 0; }
+  .tm-name { position: sticky; left: 0; z-index: 1; background: var(--card, #FBFAF7); text-align: left; padding: 8px 12px; font-weight: 400; min-width: 170px; }
+  .tm-n { display: block; font-size: 14.5px; color: var(--ink); }
+  .tm-n em { font-style: normal; font-family: var(--mono); font-size: 10.5px; color: var(--muted-2); }
+  .tm-sub { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .04em; color: var(--clay); margin-top: 2px; }
+  .tm-t td { text-align: center; padding: 6px 2px; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #C99242; }
+  .no { color: var(--line); color: rgba(31,29,26,.25); }
+  .tm-t .hl { background: rgba(201,146,66,.12); }
+  .tm-t th.hl { background: rgba(201,146,66,.18); }
+  .tm-key { display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .tm-key span { display: inline-flex; align-items: center; gap: 8px; }
+  .k { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+  .k.core { background: #8C4A2F; } .k.common { background: #C99242; } .k.rare { background: #D9C3A0; }
+  .tm-cap { font-family: var(--mono); font-size: 11px; color: var(--muted-2); }
+</style>

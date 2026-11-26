@@ -22,12 +22,12 @@ const stories = [
     art: 'kahn',
   },
   {
-    href: '/curiosity/how-leaders-talk/',
+    href: '/curiosity/great-leaders/',
     no: '03',
-    kicker: 'Leadership · Communication · Data',
-    title: 'How Leaders Talk',
-    dek: 'Fourteen leaders across a century, from Roosevelt’s radio to Ardern’s live stream, read for how they decided and how they spoke, and what really changed.',
-    tabs: ['Why', 'Leaders', 'The Map', 'The Data', 'Changed?', 'Borrow'],
+    kicker: 'Leadership · Traits · History',
+    title: 'What Great Leaders Share',
+    dek: 'Fourteen of the century’s most successful leaders: their styles, core traits, successes and shortcomings, and whether great leaders really share the same traits.',
+    tabs: ['The Question', 'Leaders', 'Shared Traits', 'What Shifted', 'Verdict'],
     art: 'leaders',
   },
 ];
@@ -51,7 +51,7 @@ const stories = [
             {Array.from({ length: 22 }, (_, i) => { const a = (i * 137.5) % 360 * Math.PI / 180, r = 40 + (i * 23) % 120; return <g><line x1="470" y1="190" x2={470 + r * Math.cos(a)} y2={190 + r * Math.sin(a) * 0.8} stroke="#1F1D1A" stroke-opacity=".25"></line><circle cx={470 + r * Math.cos(a)} cy={190 + r * Math.sin(a) * 0.8} r="4" fill="#FBFAF7" stroke="#1F1D1A" stroke-opacity=".7"></circle></g>; })}
             <circle cx="470" cy="190" r="7" fill="#C99242"></circle>
             <path d="M200 190 C 280 150 340 230 420 190" fill="none" stroke="#8C4A2F" stroke-dasharray="4 4"></path>
-            <text x="24" y="356" font-family="IBM Plex Mono, monospace" font-size="11" fill="#7A5A2E" letter-spacing="2">BROADCAST → NETWORK · 1933–2023</text>
+            <text x="24" y="356" font-family="IBM Plex Mono, monospace" font-size="11" fill="#7A5A2E" letter-spacing="2">14 LEADERS · 11 TRAITS · 1933–2023</text>
           </svg>
           ) : s.art === 'kahn' ? (
           <svg viewBox="0 0 600 380" preserveAspectRatio="xMidYMid slice">
