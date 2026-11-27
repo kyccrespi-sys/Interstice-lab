@@ -1,0 +1,91 @@
+---
+// One summary card per trait: definition, research, prevalence among the 29, change by period, exemplars, dark side.
+import { leaders, traits, periods } from '../../data/leaders';
+const byId = Object.fromEntries(leaders.map((l) => [l.id, l]));
+const P = (y: number) => periods.findIndex((p) => y >= p.from && y <= p.to);
+const pn = periods.map((_, i) => leaders.filter((l) => P(l.year) === i).length);
+
+const extra: Record<string, { best: string[]; dark: string }> = {
+  vision: { best: ['gandhi', 'mlk', 'jobs', 'lky'], dark: 'A vision with no check on it. Lee Kuan Yew’s long-range plan came with detention of opponents without trial.' },
+  comm: { best: ['churchill', 'fdr', 'mlk', 'reagan'], dark: 'Charisma can outrun substance. The research finds that outgoing people get chosen as leaders more reliably than they lead well.' },
+  resolve: { best: ['churchill', 'mandela', 'thatcher', 'maathai'], dark: 'Resolve turns into refusal. Thatcher would not retreat on the poll tax, and it ended her premiership.' },
+  decisive: { best: ['ike', 'ardern', 'graham', 'marshall'], dark: 'Speed without restraint. Roosevelt’s fast hand also produced the court-packing plan and Executive Order 9066.' },
+  competence: { best: ['marshall', 'oppenheimer', 'buffett', 'merkel'], dark: 'Expertise is not judgment. Oppenheimer mastered the science but misled security officers in ways that hurt a friend.' },
+  team: { best: ['ike', 'fdr', 'mandela', 'hesselbein'], dark: 'Keeping everyone on board can mean avoiding hard breaks. Merkel’s patient deal-making with Russia later looked like a strategic error.' },
+  standards: { best: ['wooden', 'jobs', 'bezos', 'ferguson'], dark: 'Standards that become fear. Welch’s forced ranking, Jobs’s harshness and Ferguson’s tirades drove people out.' },
+  adapt: { best: ['fdr', 'ferguson', 'nadella', 'oprah'], dark: 'Too much flexibility reads as no conviction. Few clear cases in our records, and the trait that rose most over time.' },
+  humility: { best: ['marshall', 'buffett', 'hesselbein', 'kelleher'], dark: 'Low profile, low credit. Eisenhower was seen as passive and ranked 21st by historians in 1962; he is now rated near the top.' },
+  empathy: { best: ['ardern', 'kelleher', 'nadella', 'mandela'], dark: 'Empathy is not delivery. Ardern was admired for her care but missed her promised goals on housing and child poverty.' },
+  risk: { best: ['gandhi', 'graham', 'morita', 'bezos'], dark: 'Big bets can sink the house. GE Capital, built under Welch, nearly brought GE down in 2008.' },
+  delegate: { best: ['buffett', 'ike', 'reagan', 'graham'], dark: 'Loose reins, missed problems. Iran-Contra happened under Reagan’s hands-off style; Buffett admits he let weak businesses drift.' },
+};
+
+const cards = traits.map((t) => {
+  const has = leaders.filter((l) => l.traits.includes(t.id));
+  const pct = periods.map((_, i) => Math.round((100 * has.filter((l) => P(l.year) === i).length) / pn[i]));
+  const d = pct[2] - pct[0];
+  const trend = d >= 20 ? 'Rose' : d <= -20 ? 'Fell' : 'Steady';
+  return { ...t, n: has.length, pct, trend, ...extra[t.id] };
+}).sort((a, b) => b.n - a.n);
+const N = leaders.length;
+const short = ['to 1959', '1960–89', '1990 on'];
+---
+<div class="tcards">
+  {cards.map((c, i) => (
+    <article class={`card tc${i < 3 ? ' core' : ''}`} id={`trait-${c.id}`}>
+      <header class="tc-top">
+        <div>
+          {i < 3 && <p class="tc-core">Core trait</p>}
+          <h3 class="h3">{c.label}</h3>
+          <p class="tc-def">{c.def}</p>
+        </div>
+        <div class="tc-n" aria-label={`${c.n} of ${N} leaders`}><span class="big">{c.n}</span><span class="of">of {N}</span></div>
+      </header>
+      <div class="tc-bar" aria-hidden="true"><span style={`width:${(100 * c.n) / N}%`}></span></div>
+      <dl class="tc-dl">
+        <dt>Research</dt><dd>{c.research}</dd>
+        <dt>Shows it best</dt><dd>{c.best.map((id) => byId[id].short).join(', ')}</dd>
+        <dt>Over time</dt>
+        <dd class="tc-time">
+          <span class={`tr ${c.trend.toLowerCase()}`}>{c.trend === 'Rose' ? '↑' : c.trend === 'Fell' ? '↓' : '→'} {c.trend}</span>
+          <span class="pers">
+            {c.pct.map((p, k) => (
+              <span class="per" title={`${periods[k].label}: ${p}% of leaders`}>
+                <span class="pb"><span style={`height:${p}%`}></span></span>
+                <span class="pl">{short[k]}<br /><b>{p}%</b></span>
+              </span>
+            ))}
+          </span>
+        </dd>
+        <dt>Dark side</dt><dd class="dark">{c.dark}</dd>
+      </dl>
+    </article>
+  ))}
+</div>
+
+<style>
+  .tcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .tc { padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .tc.core { border-top: 3px solid var(--accent); }
+  .tc-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+  .tc-core { margin: 0 0 2px; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); }
+  .tc .h3 { margin: 0; }
+  .tc-def { margin: 4px 0 0; font-size: 14.5px; color: var(--muted); line-height: 1.45; }
+  .tc-n { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+  .tc-n .big { font-size: 40px; font-weight: 300; color: var(--ink); }
+  .tc-n .of { font-family: var(--mono); font-size: 11px; color: var(--muted-2); }
+  .tc-bar { height: 6px; background: var(--ground-2); border-radius: 3px; overflow: hidden; }
+  .tc-bar span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  .tc-dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 2px; font-size: 14.5px; line-height: 1.5; }
+  .tc-dl dt { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2); padding-top: 3px; }
+  .tc-dl dd { margin: 0 0 10px; color: var(--ink-2); }
+  .tc-dl dd.dark { color: #7A2F1C; }
+  .tc-time { display: flex; align-items: flex-end; gap: 14px; }
+  .tr { font-family: var(--mono); font-size: 12px; padding: 3px 8px; border-radius: 4px; background: var(--ground-2); color: var(--ink); white-space: nowrap; align-self: center; }
+  .tr.rose { background: #E4ECE3; color: #2F5A3B; } .tr.fell { background: #F1DED6; color: #7A2F1C; }
+  .pers { display: flex; gap: 10px; }
+  .per { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 58px; }
+  .pb { width: 22px; height: 40px; background: var(--ground-2); border-radius: 3px; display: flex; align-items: flex-end; overflow: hidden; }
+  .pb span { display: block; width: 100%; background: var(--accent); border-radius: 3px 3px 0 0; }
+  .pl { font-family: var(--mono); font-size: 9.5px; color: var(--muted-2); text-align: center; line-height: 1.25; }
+</style>

@@ -1,0 +1,188 @@
+---
+// Sortable, filterable comparison table. Each row expands into a full profile.
+import { leaders, styles, traits, fields, periods } from '../../data/leaders';
+const tl = Object.fromEntries(traits.map((t) => [t.id, t.label]));
+const P = (y: number) => periods.findIndex((p) => y >= p.from && y <= p.to);
+const sorted = [...leaders].sort((a, b) => a.year - b.year);
+const styleIds = Object.keys(styles) as (keyof typeof styles)[];
+const fieldIds = Object.keys(fields) as (keyof typeof fields)[];
+---
+<div class="lt" id="leadertable">
+  <div class="lt-filters">
+    <div class="lt-chips" role="group" aria-label="Filter by field">
+      <button type="button" class="chip on" data-f="all">All fields</button>
+      {fieldIds.map((f) => <button type="button" class="chip" data-f={f}>{fields[f]}</button>)}
+    </div>
+    <div class="lt-sel">
+      <label>Era
+        <select data-filter="era"><option value="all">All eras</option>{periods.map((p, i) => <option value={String(i)}>Rose {p.label}</option>)}</select>
+      </label>
+      <label>Style
+        <select data-filter="style"><option value="all">Any style</option>{styleIds.map((s) => <option value={s}>{styles[s].label}</option>)}</select>
+      </label>
+      <label>Trait
+        <select data-filter="trait"><option value="all">Any trait</option>{traits.map((t) => <option value={t.id}>{t.label}</option>)}</select>
+      </label>
+      <span class="lt-count" aria-live="polite"><b>{leaders.length}</b> leaders</span>
+    </div>
+  </div>
+
+  <div class="lt-head" role="row">
+    <button type="button" data-sort="name">Leader</button>
+    <button type="button" data-sort="year" class="on asc">Rose</button>
+    <button type="button" data-sort="field" class="hide-s">Field</button>
+    <button type="button" data-sort="style">Main style</button>
+    <button type="button" data-sort="traits" class="hide-s">Core traits</button>
+  </div>
+
+  <div class="lt-body">
+    {sorted.map((l) => (
+      <details class="lrow" id={`p-${l.id}`} data-name={l.name.split(' ').slice(-1)[0]} data-year={l.year} data-field={l.field} data-era={P(l.year)} data-style={`${l.style} ${l.style2 ?? ''}`} data-main={l.style} data-traits={l.traits.join(' ')} data-n={l.traits.length}>
+        <summary>
+          <span class="c-name"><b>{l.name}</b><small>{l.role}</small></span>
+          <span class="c-year">{l.years}</span>
+          <span class="c-field hide-s">{fields[l.field]}</span>
+          <span class="c-style"><span class="stag main">{styles[l.style].label}</span>{l.style2 && <span class="stag">{styles[l.style2].label}</span>}</span>
+          <span class="c-traits hide-s">{traits.map((t) => <i class={l.traits.includes(t.id) ? 'on' : ''} title={t.label}></i>)}</span>
+          <span class="c-tog" aria-hidden="true">+</span>
+        </summary>
+        <div class="prof">
+          <p class="p-sum">{l.summary} <span class="p-reg">{l.region}</span></p>
+          <div class="p-grid">
+            <div class="p-key">
+              <p class="p-h">Defining characteristics</p>
+              <ol>{l.key.map((k) => <li><b>{k.t}.</b> {k.e}</li>)}</ol>
+              <p class="p-h">Signature decision</p>
+              <p class="p-dec">{l.decision}</p>
+              <p class="p-h">Traits marked</p>
+              <div class="tchips">{l.traits.map((t) => <span class="tchip">{tl[t]}</span>)}</div>
+              <p class="p-style"><b>{styles[l.style].label}:</b> {styles[l.style].def}{l.style2 && <><br /><b>{styles[l.style2].label}:</b> {styles[l.style2].def}</>}</p>
+            </div>
+            <div class="p-sl">
+              <p class="p-h ok">Successes</p>
+              <ul class="ok">{l.successes.map((s) => <li>{s}</li>)}</ul>
+              <p class="p-h bad">Shortcomings</p>
+              <ul class="bad">{l.shortcomings.map((s) => <li>{s}</li>)}</ul>
+            </div>
+          </div>
+        </div>
+      </details>
+    ))}
+    <p class="lt-empty" hidden>No leader matches all of those filters.</p>
+  </div>
+  <p class="lt-key"><span class="c-traits"><i class="on"></i></span> Dots show the 12 traits in this order: {traits.map((t) => t.label).join(' · ')}.</p>
+</div>
+
+<script>
+  const root = document.getElementById('leadertable');
+  if (root) {
+    const rows = Array.from(root.querySelectorAll<HTMLDetailsElement>('.lrow'));
+    const body = root.querySelector<HTMLElement>('.lt-body')!;
+    const empty = root.querySelector<HTMLElement>('.lt-empty')!;
+    const count = root.querySelector<HTMLElement>('.lt-count b')!;
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-f]'));
+    const sels = Array.from(root.querySelectorAll<HTMLSelectElement>('[data-filter]'));
+    const sorts = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-sort]'));
+    const state: Record<string, string> = { f: 'all', era: 'all', style: 'all', trait: 'all' };
+    let key = 'year', dir = 1;
+    const apply = () => {
+      let n = 0;
+      rows.forEach((r) => {
+        const d = r.dataset;
+        const ok = (state.f === 'all' || d.field === state.f) && (state.era === 'all' || d.era === state.era)
+          && (state.style === 'all' || d.style!.split(' ').includes(state.style)) && (state.trait === 'all' || d.traits!.split(' ').includes(state.trait));
+        r.hidden = !ok; if (ok) n++;
+      });
+      count.textContent = String(n); empty.hidden = n > 0;
+    };
+    const order = () => {
+      const val = (r: HTMLElement) => key === 'year' ? +r.dataset.year! : key === 'traits' ? +r.dataset.n! : (r.dataset[key === 'style' ? 'main' : key] || '');
+      rows.sort((a, b) => { const x = val(a), y = val(b); return (x < y ? -1 : x > y ? 1 : 0) * dir; }).forEach((r) => body.insertBefore(r, empty));
+    };
+    chips.forEach((c) => c.addEventListener('click', () => { chips.forEach((x) => x.classList.toggle('on', x === c)); state.f = c.dataset.f!; apply(); }));
+    sels.forEach((s) => s.addEventListener('change', () => { state[s.dataset.filter!] = s.value; apply(); }));
+    sorts.forEach((b) => b.addEventListener('click', () => {
+      if (key === b.dataset.sort) dir = -dir; else { key = b.dataset.sort!; dir = key === 'traits' ? -1 : 1; }
+      sorts.forEach((x) => { x.classList.toggle('on', x === b); x.classList.toggle('asc', x === b && dir === 1); x.classList.toggle('desc', x === b && dir === -1); });
+      order();
+    }));
+    window.addEventListener('leader-jump', (e) => {
+      const id = (e as CustomEvent).detail as string;
+      chips[0].click(); sels.forEach((s) => { s.value = 'all'; state[s.dataset.filter!] = 'all'; }); apply();
+      const el = document.getElementById(`p-${id}`) as HTMLDetailsElement | null;
+      if (el) { el.open = true; setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); }
+    });
+  }
+</script>
+
+<style>
+  .lt { display: flex; flex-direction: column; gap: 14px; }
+  .lt-filters { display: flex; flex-direction: column; gap: 12px; }
+  .lt-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .lt-chips .chip { cursor: pointer; font: inherit; font-size: 13px; }
+  .lt-chips .chip.on { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+  .lt-sel { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+  .lt-sel label { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .lt-sel select { font: inherit; font-family: var(--sans); font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+  .lt-count { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .lt-count b { color: var(--ink); font-size: 15px; }
+
+  .lt-head, .lrow summary { display: grid; grid-template-columns: minmax(180px, 2.2fr) 90px minmax(120px, 1.2fr) minmax(150px, 1.5fr) 150px 22px; gap: 14px; align-items: center; }
+  .lt-head { padding: 0 16px 8px; border-bottom: 1px solid var(--ink); }
+  .lt-head button { all: unset; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .lt-head button.on { color: var(--ink); }
+  .lt-head button.asc::after { content: ' ↑'; } .lt-head button.desc::after { content: ' ↓'; }
+  .lt-head button:focus-visible { outline: 2px solid var(--accent); }
+  .lt-body { display: flex; flex-direction: column; }
+  .lrow { border-bottom: 1px solid var(--line); background: var(--card); transition: box-shadow .4s; scroll-margin-top: 80px; }
+  .lrow[hidden] { display: none; }
+  .lrow.flash { box-shadow: 0 0 0 3px var(--accent); }
+  .lrow summary { list-style: none; cursor: pointer; padding: 12px 16px; }
+  .lrow summary::-webkit-details-marker { display: none; }
+  .lrow summary:hover { background: var(--ground-2); }
+  .lrow[open] summary { background: #F1EEE7; }
+  .c-name { display: flex; flex-direction: column; min-width: 0; }
+  .c-name b { font-weight: 500; font-size: 16px; color: var(--ink); }
+  .c-name small { font-size: 12.5px; color: var(--muted); }
+  .c-year { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+  .c-field { font-size: 13px; color: var(--ink-2); }
+  .c-style { display: flex; flex-wrap: wrap; gap: 4px; }
+  .stag { font-family: var(--mono); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--clay); color: var(--clay); white-space: nowrap; }
+  .stag.main { background: var(--clay); color: #F6F4EF; }
+  .c-traits { display: inline-flex; gap: 3px; }
+  .c-traits i { width: 9px; height: 9px; border-radius: 50%; background: var(--ground-2); border: 1px solid rgba(31,29,26,.12); }
+  .c-traits i.on { background: var(--accent); border-color: var(--accent); }
+  .c-tog { font-size: 20px; color: var(--muted); text-align: center; transition: transform .2s; }
+  .lrow[open] .c-tog { transform: rotate(45deg); }
+
+  .prof { padding: 8px 16px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .p-sum { margin: 0; font-family: var(--serif); font-size: 20px; line-height: 1.4; color: var(--ink); }
+  .p-reg { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2); margin-left: 6px; }
+  .p-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; }
+  .p-h { margin: 10px 0 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); }
+  .p-h:first-child { margin-top: 0; }
+  .p-h.ok { color: #3D6B4A; } .p-h.bad { color: #9A3B24; }
+  .p-key ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+  .p-key ol b { color: var(--ink); font-weight: 600; }
+  .p-dec { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-2); padding-left: 12px; border-left: 2px solid var(--accent); }
+  .tchips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tchip { font-size: 12px; padding: 3px 9px; border-radius: 4px; background: var(--ground-2); color: var(--ink-2); }
+  .p-style { margin: 10px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+  .p-sl ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .p-sl li { position: relative; padding-left: 22px; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+  .p-sl ul.ok li::before { content: '✓'; position: absolute; left: 2px; color: #3D6B4A; font-weight: 600; }
+  .p-sl ul.bad li::before { content: '✕'; position: absolute; left: 2px; color: #9A3B24; font-weight: 600; }
+  .lt-empty { padding: 24px 16px; color: var(--muted); }
+  .lt-key { margin: 0; font-family: var(--mono); font-size: 11px; line-height: 1.6; color: var(--muted-2); }
+  .lt-key .c-traits { vertical-align: middle; margin-right: 6px; }
+
+  @media (max-width: 860px) {
+    .hide-s, .c-style .stag:not(.main) { display: none !important; }
+    .c-style .stag { font-size: 9px; padding: 3px 6px; }
+    .lt-head, .lrow summary { grid-template-columns: minmax(0, 1fr) 70px minmax(0, .9fr) 18px; gap: 10px; }
+    .lrow summary { padding: 12px 10px; }
+    .p-grid { grid-template-columns: 1fr; gap: 8px; }
+    .lt-count { margin-left: 0; }
+    .prof { padding: 8px 10px 20px; }
+  }
+</style>

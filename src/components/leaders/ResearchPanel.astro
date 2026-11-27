@@ -1,0 +1,162 @@
+---
+// Research evidence: Kouzes & Posner trend (small multiples), Big Five correlations, GLOBE universals, study cards.
+import { kp, bigFive, globePositive, globeNegative } from '../../data/leaders';
+const BAR = '#C99242', NEG = '#8C4A2F', INK = '#1F1D1A', MUTED = '#59534A', GRID = 'rgba(31,29,26,.14)';
+
+// Sparkline geometry (y axis 30–100%)
+const SW = 220, SH = 64, sp = 8, lo = 30, hi = 100;
+const sx = (i: number) => sp + (i * (SW - 2 * sp)) / (kp.years.length - 1);
+const sy = (v: number) => SH - sp - ((v - lo) / (hi - lo)) * (SH - 2 * sp);
+
+// Big Five bars
+const BW = 560, rowH = 44, lab = 200, zero = lab + 140, scale = 520; // px per 1.0 r
+const BH = bigFive.length * rowH + 30;
+---
+<div class="rp">
+  <figure class="card rfig">
+    <p class="label">What followers say they want</p>
+    <h3 class="h3">Four qualities, steady for 25 years</h3>
+    <p class="small q">Kouzes and Posner asked tens of thousands of people on six continents to pick the seven qualities they most admire in a leader they would willingly follow, from a list of 20. Share choosing each quality, 1987–2012.</p>
+    <div class="kp" role="table" aria-label="Kouzes and Posner admired leader qualities">
+      <div class="kp-h" role="row"><span role="columnheader">Quality</span><span role="columnheader">1987 → 2012</span><span role="columnheader" class="num">1987</span><span role="columnheader" class="num">2012</span></div>
+      {kp.rows.map((r, ri) => (
+        <div class={`kp-r${ri === 4 ? ' dim' : ''}`} role="row">
+          <span role="cell" class="kq">{r.q}</span>
+          <svg role="cell" viewBox={`0 0 ${SW} ${SH}`} class="spark" aria-label={`${r.q}: ${r.v.join(', ')} percent`}>
+            <line x1={sp} x2={SW - sp} y1={sy(50)} y2={sy(50)} stroke={GRID} stroke-dasharray="2 3" />
+            <polyline points={r.v.map((v, i) => `${sx(i)},${sy(v)}`).join(' ')} fill="none" stroke={ri === 4 ? MUTED : BAR} stroke-width="2" stroke-linejoin="round" />
+            {r.v.map((v, i) => (
+              <g class="tip" data-tip={`${r.q}, ${kp.years[i]}: ${v}%`}>
+                <circle cx={sx(i)} cy={sy(v)} r="12" fill="transparent" />
+                <circle cx={sx(i)} cy={sy(v)} r="4" fill={ri === 4 ? MUTED : BAR} stroke="#FBFAF7" stroke-width="2" />
+              </g>
+            ))}
+          </svg>
+          <span role="cell" class="num">{r.v[0]}%</span>
+          <span role="cell" class="num strong">{r.v[4]}%</span>
+        </div>
+      ))}
+    </div>
+    <p class="small note">Dashed line marks 50%. “Intelligent,” shown in gray, is the next most chosen quality and never reaches half. The top four held across countries too, though their order varies: in Japan “forward-looking” came first, in Scandinavia “inspiring.”</p>
+  </figure>
+
+  <figure class="card rfig">
+    <p class="label">What predicts who leads</p>
+    <h3 class="h3">Personality matters, modestly</h3>
+    <p class="small q">Judge, Bono, Ilies and Gerhardt (2002) combined 222 correlations from 73 samples. Correlation of each Big Five personality trait with leadership (0 = no link, 1 = perfect).</p>
+    <svg viewBox={`0 0 ${BW} ${BH}`} class="bf" role="img" aria-label="Big Five correlations with leadership">
+      {[-0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3].map((v) => (
+        <g>
+          <line x1={zero + v * scale} x2={zero + v * scale} y1="4" y2={BH - 26} stroke={v === 0 ? INK : GRID} stroke-width={v === 0 ? 1 : 1} />
+          <text x={zero + v * scale} y={BH - 8} text-anchor="middle" font-size="13" fill={MUTED} font-family="IBM Plex Mono, monospace">{v > 0 ? '+' : ''}{v.toFixed(1)}</text>
+        </g>
+      ))}
+      {bigFive.map((b, i) => {
+        const y = 10 + i * rowH, w = Math.abs(b.r) * scale, x = b.r >= 0 ? zero : zero - w;
+        return (
+          <g class="tip" data-tip={`${b.t}: r = ${b.r > 0 ? '+' : ''}${b.r.toFixed(2)}`}>
+            <rect x="0" y={y - 4} width={BW} height={rowH - 4} fill="transparent" />
+            <text x={lab - 12} y={y + 17} text-anchor="end" font-size="17" fill={INK} font-family="Archivo, sans-serif">{b.t}</text>
+            <rect x={x} y={y + 4} width={w} height="22" rx="4" fill={b.r >= 0 ? BAR : NEG} />
+            <text x={b.r >= 0 ? zero + w + 8 : zero + 8} y={y + 20} font-size="15" fill={INK} font-family="IBM Plex Mono, monospace">{b.r > 0 ? '+' : '−'}{Math.abs(b.r).toFixed(2)}</text>
+          </g>
+        );
+      })}
+    </svg>
+    <p class="small note">Together the five traits explain a meaningful share of who leads (multiple correlation .48), but none is close to destiny. Extraversion is the most consistent and predicts who <em>emerges</em> as a leader better than who leads <em>well</em>. Agreeableness barely registers. Anxiety and moodiness (neuroticism) count against.</p>
+  </figure>
+
+  <figure class="card rfig wide">
+    <p class="label">GLOBE · 62 societies · about 17,300 managers</p>
+    <h3 class="h3">What is universal, and what is not</h3>
+    <p class="small q">The GLOBE project (House et al., 2004) asked middle managers in banking, food processing and telecoms which attributes help or hinder outstanding leadership. Twenty-two were endorsed in every culture, eight rejected in every culture. Most of the rest depend on where you are.</p>
+    <div class="gl">
+      <div>
+        <p class="gl-h ok">✓ Universally positive · 22</p>
+        <div class="gchips">{globePositive.map((g) => <span class="gch ok">{g}</span>)}</div>
+      </div>
+      <div>
+        <p class="gl-h bad">✕ Universally negative · 8</p>
+        <div class="gchips">{globeNegative.map((g) => <span class="gch bad">{g}</span>)}</div>
+        <p class="gl-h mix">◐ Depends on culture · 35</p>
+        <p class="small">Including risk-taking, ambition, being self-effacing, status-consciousness and being individualistic. Listening carefully, for example, rated as important in the U.S. and much less so in China.</p>
+      </div>
+    </div>
+  </figure>
+
+  <div class="studies">
+    <article class="card st">
+      <p class="label">Collins · Good to Great (2001)</p>
+      <h3 class="h3">Level 5: humility plus will</h3>
+      <p class="small">From 1,435 Fortune 500 companies, Jim Collins found 11 that beat the market at least threefold for 15 years. All 11 were led by people who paired personal humility with intense professional will, not by celebrity CEOs.</p>
+      <p class="small crit"><span>The catch</span>Picked in hindsight. Circuit City went bankrupt in 2009 and Fannie Mae was taken over by the government in 2008. A classic case of survivorship bias, which applies to this page too.</p>
+    </article>
+    <article class="card st">
+      <p class="label">Goleman · 3,871 executives (2000)</p>
+      <h3 class="h3">The best leaders switch styles</h3>
+      <p class="small">Daniel Goleman linked six styles to the working climate. Commanding and pacesetting hurt it; visionary helped it most. The leaders with the best climate and results used four or more styles and switched between them as needed.</p>
+      <p class="small crit"><span>The catch</span>Climate is not the same as results, and the data came from a single consulting firm’s surveys.</p>
+    </article>
+    <article class="card st">
+      <p class="label">Gallup · managers and engagement</p>
+      <h3 class="h3">The boss is most of the job</h3>
+      <p class="small">Gallup estimates that managers account for at least 70% of the variation in how engaged their teams are. Only about 30% of U.S. employees, and fewer worldwide, say they are engaged at work.</p>
+      <p class="small crit"><span>The catch</span>Engagement is a survey measure, and Gallup sells the tools to improve it.</p>
+    </article>
+    <article class="card st">
+      <p class="label">Google · Project Oxygen (2008, 2018)</p>
+      <h3 class="h3">Coaching tops the list</h3>
+      <p class="small">Google studied its own managers to see if they mattered. The best ones were, first, good coaches. They also empowered the team without micromanaging, showed care for people’s wellbeing and communicated a clear vision.</p>
+      <p class="small crit"><span>The catch</span>One company, of highly educated knowledge workers.</p>
+    </article>
+  </div>
+  <div class="rtip" role="tooltip" hidden></div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.rp').forEach((root) => {
+    const tip = root.querySelector<HTMLElement>('.rtip')!;
+    root.querySelectorAll<SVGGElement>('.tip').forEach((g) => {
+      g.addEventListener('pointerenter', () => { tip.textContent = g.dataset.tip || ''; tip.hidden = false; });
+      g.addEventListener('pointermove', (e) => {
+        const r = root.getBoundingClientRect();
+        tip.style.left = `${Math.min(e.clientX - r.left + 12, r.width - 200)}px`;
+        tip.style.top = `${e.clientY - r.top - 36}px`;
+      });
+      g.addEventListener('pointerleave', () => (tip.hidden = true));
+    });
+  });
+</script>
+
+<style>
+  .rp { position: relative; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+  .rfig { margin: 0; padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .rfig.wide, .studies { grid-column: 1 / -1; }
+  .rfig .label, .st .label { margin: 0; color: var(--accent-ink); }
+  .rfig .h3, .st .h3 { margin: 0; }
+  .q { margin: 0; color: var(--muted); }
+  .note { margin: 4px 0 0; color: var(--muted); }
+  .kp { display: flex; flex-direction: column; }
+  .kp-h, .kp-r { display: grid; grid-template-columns: 1fr 1.3fr 48px 48px; align-items: center; gap: 10px; }
+  .kp-h { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2); padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  .kp-r { border-bottom: 1px solid var(--line); padding: 2px 0; }
+  .kp-r.dim .kq, .kp-r.dim .num { color: var(--muted); }
+  .kq { font-size: 16px; color: var(--ink); }
+  .num { font-family: var(--mono); font-size: 13px; text-align: right; color: var(--ink-2); }
+  .num.strong { color: var(--ink); font-weight: 600; }
+  .spark { width: 100%; height: auto; display: block; }
+  .bf { width: 100%; height: auto; display: block; }
+  .gl { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px 32px; }
+  .gl-h { margin: 0 0 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+  .gl-h.ok { color: #3D6B4A; } .gl-h.bad { color: #9A3B24; } .gl-h.mix { color: var(--accent-ink); margin-top: 18px; }
+  .gchips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .gch { font-size: 13.5px; padding: 4px 10px; border-radius: 4px; color: var(--ink); }
+  .gch.ok { background: #E4ECE3; } .gch.bad { background: #F1DED6; }
+  .studies { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+  .st { padding: 22px; display: flex; flex-direction: column; gap: 8px; }
+  .st .small { margin: 0; }
+  .crit { margin-top: auto !important; padding-top: 10px; border-top: 1px dashed var(--line); color: var(--muted); }
+  .crit span { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--clay); margin-bottom: 2px; }
+  .rtip { position: absolute; z-index: 10; pointer-events: none; background: var(--ink); color: var(--ground); font-family: var(--mono); font-size: 12px; padding: 6px 10px; border-radius: 6px; white-space: nowrap; }
+  .rtip[hidden] { display: none; }
+</style>

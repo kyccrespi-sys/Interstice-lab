@@ -5,7 +5,7 @@ const sorted = [...leaders].sort((a, b) => a.year - b.year);
 const counts = Object.fromEntries(traits.map((t) => [t.id, leaders.filter((l) => l.traits.includes(t.id)).length]));
 const cols = [...traits].sort((a, b) => counts[b.id] - counts[a.id]);
 const n = leaders.length;
-const tier = (c: number) => (c >= 11 ? 'core' : c >= 7 ? 'common' : 'rare');
+const tier = (c: number) => (c >= 20 ? 'core' : c >= 12 ? 'common' : 'rare');
 const periodOf = (y: number) => periods.findIndex((p) => y >= p.from && y <= p.to);
 ---
 <figure class="tm" id="traitmatrix" aria-label="Which leaders show which traits">
@@ -30,7 +30,7 @@ const periodOf = (y: number) => periods.findIndex((p) => y >= p.from && y <= p.t
             <>
               {p !== prev && <tr class="tm-period"><th colspan={cols.length + 1} scope="rowgroup">Rose {periods[p].label}</th></tr>}
               <tr data-row={l.id}>
-                <th scope="row" class="tm-name"><span class="tm-n">{l.short} <em>{l.year}</em></span><span class="tm-sub">{styles[l.style].label}{l.style2 ? ` · ${styles[l.style2].label}` : ''}</span></th>
+                <th scope="row" class="tm-name"><a class="tm-n" href={`#p-${l.id}`} data-jump={l.id}>{l.short} <em>{l.year}</em></a><span class="tm-sub">{styles[l.style].label}{l.style2 ? ` · ${styles[l.style2].label}` : ''}</span></th>
                 {cols.map((t) => {
                   const on = l.traits.includes(t.id);
                   return <td data-col={t.id} class={on ? 'on' : ''} aria-label={`${t.label}: ${on ? 'yes' : 'no'}`}>{on ? <span class="dot"></span> : <span class="no">·</span>}</td>;
@@ -43,11 +43,11 @@ const periodOf = (y: number) => periods.findIndex((p) => y >= p.from && y <= p.t
     </table>
   </div>
   <div class="tm-key">
-    <span><b class="k core"></b> In 11 or more of 14: near-universal</span>
-    <span><b class="k common"></b> In 7 to 10: common</span>
-    <span><b class="k rare"></b> In 6 or fewer: less common</span>
+    <span><b class="k core"></b> In 20 or more of 29: near-universal</span>
+    <span><b class="k common"></b> In 12 to 19: common</span>
+    <span><b class="k rare"></b> In 11 or fewer: less common</span>
   </div>
-  <figcaption class="tm-cap">Each mark is our judgment from the sources, shown so you can check it and disagree. Hover a column to see the trait’s definition.</figcaption>
+  <figcaption class="tm-cap">Each mark is our judgment from the sources, shown so you can check it and disagree. Hover a column to highlight it; click a name to open that leader’s profile.</figcaption>
 </figure>
 
 <script>
@@ -59,6 +59,7 @@ const periodOf = (y: number) => periods.findIndex((p) => y >= p.from && y <= p.t
       c.addEventListener('mouseleave', () => cells.forEach((x) => x.classList.remove('hl')));
     });
   }
+  document.querySelectorAll<HTMLAnchorElement>('[data-jump]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('leader-jump', { detail: a.dataset.jump })); }));
 </script>
 
 <style>
@@ -77,7 +78,7 @@ const periodOf = (y: number) => periods.findIndex((p) => y >= p.from && y <= p.t
   .tm-c { display: block; font-family: var(--mono); font-size: 11px; color: var(--ink); }
   .tm-period th { text-align: left; padding: 8px 12px 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); background: var(--ground-2); position: sticky; left: 0; }
   .tm-name { position: sticky; left: 0; z-index: 1; background: var(--card, #FBFAF7); text-align: left; padding: 8px 12px; font-weight: 400; min-width: 170px; }
-  .tm-n { display: block; font-size: 14.5px; color: var(--ink); }
+  .tm-n { display: block; text-decoration: none; font-size: 14.5px; color: var(--ink); }
   .tm-n em { font-style: normal; font-family: var(--mono); font-size: 10.5px; color: var(--muted-2); }
   .tm-sub { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .04em; color: var(--clay); margin-top: 2px; }
   .tm-t td { text-align: center; padding: 6px 2px; }
